@@ -24,13 +24,17 @@ module.exports = (commands, start) => amqp.connect(`amqp:rabbitmq`, async (amqpE
   const channel = await createChannel(connection)
   
   const events = Object.keys(config.events)
-    .reduce((acc, event) => ({
-      ...acc,
-      [event]: data => {
-        console.log(data)
-        // channel.sendToQueue(`${publicKey}:${event}`, encrypt(data))
+    .reduce((acc, event) => {
+      const queue = [publicKey, event].join(':')
+      channel.assertQueue(queue, { durable: false })
+      return {
+        ...acc,
+        [event]: data => {
+          console.log(data)
+          channel.sendToQueue(queue, encrypt(data))
+        }
       }
-    }), {})
+    }, {})
 
   const commandListeners = Object.keys(commands)
     .map(command => {
@@ -40,6 +44,7 @@ module.exports = (commands, start) => amqp.connect(`amqp:rabbitmq`, async (amqpE
           ...acc,
           [event]: events[event]
         }), {})
+      channel.assertQueue(queue, { durable: false })
       channel.consume(
         queue, 
         ({ content }) => commands[command](decrypt(content), commandEvents),
