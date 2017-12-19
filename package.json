@@ -10,7 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.5.2",
-    "crypto": "^1.0.1",
     "js-yaml": "^3.10.0"
   }
 }
