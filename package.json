@@ -1,0 +1,16 @@
+{
+  "name": "mesg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Anthony Estebe <contact@anthonyestebe.com> (http://microblog.anthonyestebe.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "crypto": "^1.0.1",
+    "js-yaml": "^3.10.0"
+  }
+}
