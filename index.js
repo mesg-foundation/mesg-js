@@ -9,16 +9,16 @@ const createChannel = connection => new Promise((resolve, reject) => connection
 
 module.exports = (commands, start) => amqp.connect(`amqp:rabbitmq`, async (amqpError, connection) => {
   if (amqpError) throw new Error(amqpError.message)
-
+  
   const config = safeLoad(readFileSync(process.cwd() + '/config.yml'))
-
-  const missingCommands = diff(Object.keys(config.commands), Object.keys(commands))
+  
+  const missingCommands = diff(Object.keys((config.commands || [])), Object.keys((commands || {})))
   if (missingCommands.length) throw new Error(`Commands missing ${missingCommands.join(', ')}`)
 
   const privateKey = 'xxxx' // TODO
   const publicKey = 'xxxx' // TODO
-  
-  const encrypt = data => new Buffer(JSON.stringify(data))
+
+  const encrypt = data => Buffer.from(JSON.stringify(data))
   const decrypt = data => JSON.parse(data.toString())
 
   const channel = await createChannel(connection)
@@ -54,4 +54,10 @@ module.exports = (commands, start) => amqp.connect(`amqp:rabbitmq`, async (amqpE
     })
 
   if (start) start(events)
+
+  channel.assertQueue('registration', { durable: false })
+  channel.sendToQueue('registration', Buffer.from(JSON.stringify({
+    config,
+    publicKey  
+  })))
 })
