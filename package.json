@@ -1,10 +1,9 @@
 {
   "name": "experimentation-mesg-js",
-  "version": "1.0.0-beta5",
+  "version": "1.0.0-beta6",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "start": "MESG_ENDPOINT_TCP=localhost:50052 node lib/index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anthony Estebe <anthony@mesg.tech>",
