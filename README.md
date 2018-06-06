@@ -25,8 +25,9 @@ tasks:
 ```javascript
 const MESG = require('experimentation-mesg-js').service
 
+//               Inputs          Outputs
 const start = ({ isValid }, { valid, error }) => isValid
-  ? valid({})
+  ? valid({}) // every output is a promise so you can chain them if needed
   : error({})
 
 MESG.listenTask({ start })
@@ -39,5 +40,5 @@ const MESG = require('experimentation-mesg-js').service
 
 MESG.emitEvent("eventX", {
   foo: "bar"
-}).then(...)
+}) // every emit is a promise so you can chain them if needed
 ```
