@@ -1,15 +1,16 @@
 {
   "name": "experimentation-mesg-js",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta3",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "start": "MESG_ENDPOINT_TCP=localhost:50052 node lib/index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Anthony Estebe <contact@anthonyestebe.com> (http://microblog.anthonyestebe.com/)",
+  "author": "Anthony Estebe <anthony@mesg.tech>",
   "license": "ISC",
   "dependencies": {
-    "amqplib": "^0.5.2",
-    "js-yaml": "^3.10.0"
+    "grpc": "^1.12.2",
+    "js-yaml": "^3.12.0"
   }
 }
