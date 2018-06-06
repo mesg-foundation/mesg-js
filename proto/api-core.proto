@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package api;
+option go_package = "core";
+
+import "./service.proto";
+
+service Core {
+  rpc ListenEvent (ListenEventRequest) returns (stream EventData) {}
+  rpc ExecuteTask (ExecuteTaskRequest) returns (ExecuteTaskReply) {}  
+  rpc ListenResult (ListenResultRequest) returns (stream ResultData) {}
+  rpc StartService (StartServiceRequest) returns (StartServiceReply) {}
+  rpc StopService (StopServiceRequest) returns (StopServiceReply) {}
+  rpc DeployService (DeployServiceRequest) returns (DeployServiceReply) {}
+  rpc DeleteService (DeleteServiceRequest) returns (DeleteServiceReply) {}
+}
+
+message ListenEventRequest {
+  string serviceID = 1;
+  string eventFilter = 2;
+}
+
+message ExecuteTaskRequest {
+  string serviceID = 1;
+  string taskKey = 2;
+  string taskData = 3;
+}
+
+message ListenResultRequest {
+  string serviceID = 1;
+  string taskFilter = 2;
+  string outputFilter = 3;
+}
+
+message StartServiceRequest {
+  string serviceID = 1;
+}
+
+message StopServiceRequest {
+  string serviceID = 1;
+}
+
+message EventData {
+  string error = 1;
+  string eventKey = 2;
+  string eventData = 3;
+}
+
+message ExecuteTaskReply {
+  string executionID = 1;
+  string error = 2;
+}
+
+message ResultData {
+  string error = 1;
+  string executionID = 2;
+  string taskKey = 3;
+  string outputKey = 4;
+  string outputData = 5;
+}
+
+message StartServiceReply {
+  string error = 1;
+}
+
+message StopServiceReply {
+  string error = 1;
+}
+
+message DeployServiceRequest {
+  service.Service service = 1;
+}
+
+message DeployServiceReply {
+  string serviceID = 1;
+}
+
+message DeleteServiceRequest {
+  string serviceID = 1;
+}
+
+message DeleteServiceReply {
+}
