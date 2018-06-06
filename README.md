@@ -27,7 +27,7 @@ tasks:
 #### Listen for tasks
 
 ```javascript
-const MESG = require('mesg-js').service
+const MESG = require('mesg-js').service()
 
 //               Inputs          Outputs
 const start = ({ isValid }, { valid, error }) => isValid
@@ -40,7 +40,7 @@ MESG.listenTask({ start })
 #### Emit event
 
 ```javascript
-const MESG = require('mesg-js').service
+const MESG = require('mesg-js').service()
 
 MESG.emitEvent("eventX", {
   foo: "bar"
