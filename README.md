@@ -1,5 +1,11 @@
 # MESG.js
 
+## Installation
+
+```bash
+npm i mesg-js
+```
+
 ## Services
 
 Let's take this really simple service example
