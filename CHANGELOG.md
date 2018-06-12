@@ -1,3 +1,7 @@
+## v1.1.2
+
+Use better communication system between service and MESG Core
+
 ## v1.1.1
 
 Fix issue with input conversion for tasks
