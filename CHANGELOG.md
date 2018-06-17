@@ -1,3 +1,7 @@
+## v1.2.0
+
+Export `api` for application to be able to access any api from the core
+
 ## v1.1.2
 
 Use better communication system between service and MESG Core
