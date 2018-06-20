@@ -1,3 +1,7 @@
+## v1.2.1
+
+Update latest API changes that removes error field
+
 ## v1.2.0
 
 Export `api` for application to be able to access any api from the core
