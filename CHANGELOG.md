@@ -1,3 +1,7 @@
+## v1.2.2
+
+Update new API that normalize the inputs for tasks
+
 ## v1.2.1
 
 Update latest API changes that removes error field
