@@ -14,6 +14,10 @@ This library can be used from an Application but also from a Service.
 
 - [Installation](#installation)
 - [Application](#application)
+  - [Example](#example)
+  - [Manually execute a task](#manually-execute-a-task)
+  - [Manually listen to an event](#manually-listen-to-an-event)
+  - [Manually listen to a task's result](#manually-listen-to-a-tasks-result)
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
@@ -25,6 +29,135 @@ This library can be used from an Application but also from a Service.
 ```bash
 npm i mesg-js
 ```
+
+# Application
+
+Require MESG.js as an application:
+
+```javascript
+const MESG = require('mesg-js').application()
+```
+
+## MESG Core endpoint
+
+By default, the library connect to the Core on the endpoint `localhost:50052`.
+
+If you wish to set another endpoint, you have to set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
+
+## Listen for events
+
+To listen for events, the application can use the `MESG.whenEvent(event, task)` function.
+
+## Listen for task results
+
+To listen for task results, the application can use the `MESG.whenResult(result, task)` function.
+
+## Object definition
+
+The previous functions expect the following object definition.
+
+### `event`
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `serviceID` | `String` | **REQUIRED** | The event's service ID |
+| `filter` | `String` | `*` | Only listen for this event's key. Leave empty or set `*` to listen for any event from this service |
+
+### `result`
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `serviceID` | `String` | **REQUIRED** | The result's service ID |
+| `task` | `String` | `*` | Only listen for this task key. Leave empty or set `*` to listen for any task's result from this service |
+| `output` | `String` | `*` | Only listen for this output key. If set, the `task` is required. Leave empty or set `*` to listen for any task's output from this service |
+
+### `task`
+
+| Key | Type | Default | Description |
+| --- | --- | --- | --- |
+| `serviceID` | `String` | **REQUIRED** | The task's service ID |
+| `taskKey` | `String` | **REQUIRED** | The task key to execute |
+| `inputs` | `Object` or `Function` | `{}` | The input to pass to the task |
+
+## Example
+
+```javascript
+const MESG = require('mesg-js').application()
+
+// When eventX occurs, then execute start
+MESG.whenEvent({
+  serviceID: __EVENT_SERVICE_ID__,
+  filter: 'eventX'
+}, {
+  serviceID: __TASK_SERVICE_ID__,
+  taskKey: 'start',
+  inputs: { foo: 'bar' }
+})
+
+// When result valid of task occurs, then execute taskX
+MESG.whenResult({
+  serviceID: __RESULT_SERVICE_ID__,
+  task: 'start',
+  output: 'valid'
+}, {
+  serviceID: __TASK_SERVICE_ID__,
+  taskKey: 'taskX',
+  inputs: function(eventKey, eventData) { return { foo: 'bar' }}
+})
+```
+
+## Manually execute a task
+
+```javascript
+const MESG = require('mesg-js').application()
+
+MESG.api.ExecuteTask({
+  serviceID: __TASK_SERVICE_ID__,
+  taskKey: __TASK_KEY__,
+  inputData: JSON.stringify(__INPUT_DATA__)
+})
+```
+
+[Documentation](https://docs.mesg.com/application/execute-a-task)
+
+## Manually listen to an event
+
+```javascript
+const MESG = require('mesg-js').application()
+
+MESG.api.ListenEvent({
+  serviceID: __TASK_SERVICE_ID__,
+  eventFilter: __EVENT_KEY__
+})
+.on('error', function(error) {
+  // An error has occurred and the stream has been closed.
+})
+.on('data', function(data) {
+  ...
+})
+```
+
+[Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
+
+## Manually listen to a task's result
+
+```javascript
+const MESG = require('mesg-js').application()
+
+MESG.api.ListenResult({
+  serviceID: __TASK_SERVICE_ID__,
+  taskFilter: __TASK_KEY__,
+  outputFilter: __OUTPUT_KEY__
+})
+.on('error', function(error) {
+  // An error has occurred and the stream has been closed.
+})
+.on('data', function(data) {
+  ...
+})
+```
+
+[Documentation](https://docs.mesg.com/application/listen-for-events#listen-for-task-execution-outputs)
 
 # Service
 
@@ -186,21 +319,6 @@ function emitEvent () {
 setInterval(emitEvent, 60 * 1000)
 ```
 
+# Community
 
-# Application
-
-```javascript
-const MESG = require('mesg-js').application()
-
-const SERVICE_ID = 'id_of_the_service_deployed'
-
-MESG.whenEvent(
-  { serviceID: SERVICE_ID, filter: 'eventX' },
-  { serviceID: SERVICE_ID, taskKey: 'start' },
-)
-
-MESG.whenResult(
-  { serviceID: SERVICE_ID, task: 'start', output: 'valid' },
-  { serviceID: SERVICE_ID, taskKey: 'taskX' },
-)
-```
+# Contribute
