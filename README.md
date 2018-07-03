@@ -9,6 +9,8 @@ MESG.js is the official JavaScript library to interact with [MESG Core](https://
 
 This library can be used from an Application but also from a Service.
 
+# Installation
+
 ```bash
 npm i mesg-js
 ```
