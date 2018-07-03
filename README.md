@@ -15,51 +15,144 @@ This library can be used from an Application but also from a Service.
 npm i mesg-js
 ```
 
-## Services
+# Guide for Service
 
-Let's take this really simple service example
+First, require MESG.js as a service
+
+```javascript
+const MESG = require('mesg-js').service()
+```
+
+## Task
+
+Let's take a really simple example, a multiplication service. Its `service.yml` is:
 ```yml
-name: example
-events:
-  eventX:
-    data: {}
+name: "service multiplication"
 tasks:
-  start:
+  multiply:
     inputs:
-      isValid:
-        type: Boolean
+      a:
+        type: Number
+      b:
+        type: Number
     outputs:
-      valid:
-        data: {}
+      success:
+        data:
+          result:
+            type: Number
       error:
-        data: {}
-  taskX:
-    outputs:
-      outX:
-        data: {}
+        data:
+          message:
+            type: String
 ```
 
-#### Listen for tasks
+If you want more information about this file, check out the [documentation about service file](https://docs.mesg.com/service/service-file).
 
+### Task function
+
+Task functions should always accept as parameters `inputs` and `outputs`.
+
+```javascript
+function multiply(inputs, outputs)
+```
+
+### Inputs
+
+The parameter `inputs` is an object that contains the two task's inputs: `a` and `b`.
+
+### Outputs
+
+The parameter `outputs` is an object that contains the two task's outputs: `success` and `error`.
+
+`success` and `error` are functions that accept as only parameter an object defined by its `data` structure.
+
+> ONLY **one** output function should be call per execution of the task.
+
+`success` is defined like:
+```javascript
+outputs.success({
+  result: __MULTIPLICATION_RESULT__
+})
+```
+
+And `error` is defined like:
+```javascript
+outputs.error({
+  message: __ERROR_MESSAGE__
+})
+```
+
+### Register the task
+
+Last step is to register the task function to MESG.
+
+The service should call `MESG.listenTask` with an object containing as key the key of the task, and as value, the task function:
+
+```javascript
+MESG.listenTask({
+  __TASK_1_KEY__: __TASK_1_FUNCTION__,
+  __TASK_2_KEY__: __TASK_2_FUNCTION__
+})
+```
+
+### Example
+
+```javascript
+// Require MESG.js as a service
+const MESG = require('mesg-js').service()
+
+function taskMultiply (inputs, outputs) {
+  if (inputs.a === undefined || inputs.b === undefined) {
+    // There is an error. Return the error output with the message.
+    return outputs.error({
+      message: 'a and/or b are undefined'
+    })
+  }
+  const multiplication = inputs.a * inputs.b
+  // Return the success output with the result of the multiplication
+  return outputs.success({
+    result: multiplication
+  })
+}
+
+// Register the task multiply to MESG
+MESG.listenTask({
+  multiply: taskMultiply
+})
+```
+
+## Event
+
+## Emit event
+
+To emit an event, the service should call the `MESG.emitEvent` function with the event's key and data as parameters:
+
+```javascript
+MESG.emitEvent(__EVENT_KEY__, __EVENT_DATA__)
+```
+
+## Example
+
+Let's take a new simple example, a timer service, that will emit a `minute` event every minute. Its `service.yml` is:
+```yml
+name: "service timer"
+events:
+  minute:
+    timestamp:
+      date:
+        type: Number
+```
+
+And the JavaScript code:
 ```javascript
 const MESG = require('mesg-js').service()
 
-//               Inputs          Outputs
-const start = ({ isValid }, { valid, error }) => isValid
-  ? valid({}) // every output is a promise so you can chain them if needed
-  : error({})
-
-MESG.listenTask({ start })
-```
-
-#### Emit event
-
-```javascript
-const MESG = require('mesg-js').service()
-
-MESG.emitEvent("eventX", {
-  foo: "bar"
-}) // every emit is a promise so you can chain them if needed
+function emitEvent () {
+  return MESG.emitEvent('minute', {
+    timestamp: Date.now()
+  })
+}
+setInterval(emitEvent, 60 * 1000)
 ```
 
 
