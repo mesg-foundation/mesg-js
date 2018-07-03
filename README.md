@@ -1,6 +1,13 @@
-# MESG.js
+<p align="center">
+  <img src="https://cdn.rawgit.com/mesg-foundation/mesg-js/2d3bc325/logo.svg" alt="MESG.js" height="120">
+  <br/><br/>
+</p>
 
-## Installation
+[Website](https://mesg.com/) - [Docs](https://docs.mesg.com/) - [Chat](https://discordapp.com/invite/SaZ5HcE) - [Blog](https://medium.com/mesg)
+
+MESG.js is the official JavaScript library to interact with [MESG Core](https://github.com/mesg-foundation/core).
+
+This library can be used from an Application but also from a Service.
 
 ```bash
 npm i mesg-js
