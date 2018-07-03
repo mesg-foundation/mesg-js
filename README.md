@@ -115,6 +115,8 @@ MESG.api.ExecuteTask({
   serviceID: __TASK_SERVICE_ID__,
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
+}, function (err, reply) {
+  ...
 })
 ```
 
