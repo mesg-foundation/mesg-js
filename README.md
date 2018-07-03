@@ -9,6 +9,17 @@ MESG.js is the official JavaScript library to interact with [MESG Core](https://
 
 This library can be used from an Application but also from a Service.
 
+
+# Contents
+
+- [Installation](#installation)
+- [Application](#application)
+- [Service](#service)
+  - [Task](#task)
+  - [Event](#event)
+- [Community](#community)
+- [Contribute](#contribute)
+
 # Installation
 
 ```bash
@@ -143,7 +154,7 @@ MESG.listenTask({
 })
 ```
 
-## Emit event
+## Event
 
 To emit an event, the service should call `MESG.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
 
