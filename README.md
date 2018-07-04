@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://cdn.rawgit.com/mesg-foundation/mesg-js/2d3bc325/logo.svg" alt="MESG.js" height="120">
+  <img src="https://cdn.rawgit.com/mesg-foundation/mesg-js/873333a6/logo.svg" alt="MESG.js" height="120">
   <br/><br/>
 </p>
 
@@ -45,7 +45,7 @@ If you wish to set another endpoint, you must set the environmental variable `ME
 
 ## React to events
 
-To react to events and trigger tasks, the application can use the `MESG.whenEvent` function:
+To react to events and trigger tasks, the application can use the `MESG.whenEvent` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
 
 ```javascript
 MESG.whenEvent(event, task)
@@ -58,7 +58,7 @@ MESG.whenEvent(event, task)
 
 ## React to results
 
-To react to a task's results and trigger other tasks, the application can use the `MESG.whenResult` function:
+To react to a task's results and trigger other tasks, the application can use the `MESG.whenResult` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
 
 ```javascript
 MESG.whenResult(result, task)
@@ -203,9 +203,7 @@ const MESG = require('mesg-js').service()
 
 ## Task
 
-The service should call `MESG.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values:
-
-TODO: Say it return a `EventEmitter` with `data`, `error` https://nodejs.org/api/events.html#events_class_eventemitter
+The service should call `MESG.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
 
 ```javascript
 MESG.listenTask({
