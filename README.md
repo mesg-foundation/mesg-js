@@ -41,7 +41,7 @@ const MESG = require('mesg-js').application()
 
 By default, the library connects to Core from the endpoint `localhost:50052`.
 
-If you wish to set another endpoint, you have to set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
+If you wish to set another endpoint, you must set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
 
 ## React to events
 
@@ -85,8 +85,8 @@ The previous functions expect the following object definition:
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The result's service ID |
-| `task` | `String` | `*` | Only listen for this task key. Leave empty or set `*` to listen for any task's result from this service |
-| `output` | `String` | `*` | Only listen for this output key. If set, the `task` is required. Leave empty or set `*` to listen for any task's output from this service |
+| `task` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
+| `output` | `String` | `*` | Only listen for the output key. If set, the `task` is required. Leave it empty or set `*` to listen for any task's output from this service |
 
 ### `task`
 
