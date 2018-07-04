@@ -1,3 +1,7 @@
+## v1.2.3
+
+Fix `whenResult` callback execution
+
 ## v1.2.2
 
 Update new API that normalize the inputs for tasks
