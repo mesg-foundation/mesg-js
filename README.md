@@ -7,7 +7,7 @@
 
 MESG.js is the official JavaScript library to interact with [MESG Core](https://github.com/mesg-foundation/core).
 
-This library can be used from an Application but also from a Service.
+This library can be used from an Application or a Service.
 
 
 # Contents
@@ -39,7 +39,7 @@ const MESG = require('mesg-js').application()
 
 ## MESG Core endpoint
 
-By default, the library connect to the Core on the endpoint `localhost:50052`.
+By default, the library connects to Core from the endpoint `localhost:50052`.
 
 If you wish to set another endpoint, you have to set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
 
@@ -58,7 +58,7 @@ MESG.whenEvent(event, task)
 
 ## React to results
 
-To react to task's results and trigger other tasks, the application can use the `MESG.whenResult` function:
+To react to a task's results and trigger other tasks, the application can use the `MESG.whenResult` function:
 
 ```javascript
 MESG.whenResult(result, task)
@@ -71,7 +71,7 @@ MESG.whenResult(result, task)
 
 ## Object definition
 
-The previous functions expect the following object definition.
+The previous functions expect the following object definition:
 
 ### `event`
 
@@ -131,11 +131,11 @@ MESG.whenResult({
 
 ## Advanced utilization
 
-The application can use directly the gRPC API for advanced utilization.
+The application can use gRPC APIs directly for advanced utilization.
 
-See the [full list of available gRPC API](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
+See the [full list of available gRPC APIs](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
 
-Here some examples for the most useful gRPC API that your application can use:
+Here some examples for the most useful gRPC APIs that your application can use:
 
 ### Execute a task
 
@@ -203,7 +203,7 @@ const MESG = require('mesg-js').service()
 
 ## Task
 
-The service should call `MESG.listenTask` to register its available tasks to MESG Core. The only parameter of this function is an object containing the tasks' key and as values the tasks' function:
+The service should call `MESG.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values:
 
 TODO: Say it return a `EventEmitter` with `data`, `error` https://nodejs.org/api/events.html#events_class_eventemitter
 
@@ -227,11 +227,11 @@ MESG.listenTask({
 `inputs` is containing the task's inputs as defined in its `service.yml`.
 
 `outputs` is containing the task's outputs as function as defined in its `service.yml`.
-The `outputs` function return a `Promise` and should **ONLY BE CALLED ONCE** per task's execution with the desired data as parameter.
+The `outputs` function returns a `Promise` and should **ONLY BE CALLED ONCE** per executed task with the desired data as parameters.
 
 ### Example
 
-Let's take a multiplication service as example. Its `service.yml` is:
+Let's use a multiplication service as an example. Its `service.yml` is:
 ```yml
 name: "service multiplication"
 tasks:
@@ -252,11 +252,11 @@ tasks:
             type: String
 ```
 
-If you want more information about this file, check out the [documentation about service file](https://docs.mesg.com/service/service-file).
+If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/service/service-file).
 
 #### Task function
 
-Task functions should always accept as parameters `inputs` and `outputs`.
+Task functions should always accept `inputs` and `outputs` as parameters.
 
 ```javascript
 function taskMultiply(inputs, outputs)
@@ -268,11 +268,11 @@ The parameter `inputs` is an object that contains the two task's inputs: `a` and
 
 #### Outputs
 
-The parameter `outputs` is an object that contains the two task's outputs: `success` and `error`.
+The parameter `outputs` is an object that contains the two tasks' outputs: `success` and `error`.
 
-`success` and `error` are functions that accept as only parameter an object defined by its `data` structure. Those functions return a `Promise`.
+`success` and `error` are functions that accept an object defined by its `data` structure as its only parameter. Those functions return a `Promise`.
 
-> **ONLY ONE** output function should be call per task's execution.
+> **ONLY ONE** output function should be called per task execution.
 
 `success` is defined like:
 ```javascript
@@ -302,9 +302,9 @@ outputs.error({
 
 #### Register the task
 
-Last step is to register the task function to MESG.
+The last step is to register the task function with MESG.
 
-The service should call `MESG.listenTask` with an object containing as key the key of the task, and as value, the task function. In this example, the key is `multiply` and the function is `taskMultiply`
+The service should call `MESG.listenTask` with a containing object as the key of the task, and the task's function as a value. In this example, the key is `multiply` and the function is `taskMultiply`
 
 ```javascript
 MESG.listenTask({
@@ -352,7 +352,7 @@ MESG.listenTask({
 
 ## Event
 
-To emit an event, the service should call `MESG.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
+To emit an event, the service should call the `MESG.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
 
 ```javascript
 MESG.emitEvent(__EVENT_KEY__, __EVENT_DATA__)
@@ -366,7 +366,7 @@ MESG.emitEvent(__EVENT_KEY__, __EVENT_DATA__)
 
 ### Example
 
-Let's take a timer service as example. It will emit a `minute` event every minute. Its `service.yml` is:
+Let's use a timer service as another example. It will emit a `minute` event every minute. Its `service.yml` is:
 ```yml
 name: "service timer"
 events:
