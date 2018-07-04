@@ -14,10 +14,9 @@ This library can be used from an Application but also from a Service.
 
 - [Installation](#installation)
 - [Application](#application)
-  - [Example](#example)
-  - [Manually execute a task](#manually-execute-a-task)
-  - [Manually listen to an event](#manually-listen-to-an-event)
-  - [Manually listen to a task's result](#manually-listen-to-a-tasks-result)
+  - [React to events](#react-to-events)
+  - [React to results](#react-to-results)
+  - [Advanced utilization](#advanced-utilization)
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
@@ -44,13 +43,31 @@ By default, the library connect to the Core on the endpoint `localhost:50052`.
 
 If you wish to set another endpoint, you have to set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
 
-## Listen for events
+## React to events
 
-To listen for events, the application can use the `MESG.whenEvent(event, task)` function.
+To react to events and trigger tasks, the application can use the `MESG.whenEvent` function:
 
-## Listen for task results
+```javascript
+MESG.whenEvent(event, task)
+.on('error', function(error) {
+  // An error has occurred
+})
+```
 
-To listen for task results, the application can use the `MESG.whenResult(result, task)` function.
+[`event` definition](#event). [`task` definition](#task).
+
+## React to results
+
+To react to task's results and trigger other tasks, the application can use the `MESG.whenResult` function:
+
+```javascript
+MESG.whenResult(result, task)
+.on('error', function(error) {
+  // An error has occurred
+})
+```
+
+[`result` definition](#result). [`task` definition](#task).
 
 ## Object definition
 
@@ -93,6 +110,9 @@ MESG.whenEvent({
   taskKey: 'start',
   inputs: { foo: 'bar' }
 })
+.on('error', function(error) {
+  // An error has occurred
+})
 
 // When result valid of task occurs, then execute taskX
 MESG.whenResult({
@@ -104,9 +124,20 @@ MESG.whenResult({
   taskKey: 'taskX',
   inputs: function(eventKey, eventData) { return { foo: 'bar' }}
 })
+.on('error', function(error) {
+  // An error has occurred
+})
 ```
 
-## Manually execute a task
+## Advanced utilization
+
+The application can use directly the gRPC API for advanced utilization.
+
+See the [full list of available gRPC API](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
+
+Here some examples for the most useful gRPC API that your application can use:
+
+### Execute a task
 
 ```javascript
 const MESG = require('mesg-js').application()
@@ -115,14 +146,15 @@ MESG.api.ExecuteTask({
   serviceID: __TASK_SERVICE_ID__,
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
-}, function (err, reply) {
+}, function (error, reply) {
+  console.log('task in progress with execution id:', reply.executionID)
   ...
 })
 ```
 
 [Documentation](https://docs.mesg.com/application/execute-a-task)
 
-## Manually listen to an event
+### Listen to an event
 
 ```javascript
 const MESG = require('mesg-js').application()
@@ -141,7 +173,7 @@ MESG.api.ListenEvent({
 
 [Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
 
-## Manually listen to a task's result
+### Listen to a task's result
 
 ```javascript
 const MESG = require('mesg-js').application()
@@ -173,6 +205,8 @@ const MESG = require('mesg-js').service()
 
 The service should call `MESG.listenTask` to register its available tasks to MESG Core. The only parameter of this function is an object containing the tasks' key and as values the tasks' function:
 
+TODO: Say it return a `EventEmitter` with `data`, `error` https://nodejs.org/api/events.html#events_class_eventemitter
+
 ```javascript
 MESG.listenTask({
   __TASK_1_KEY__: function (inputs, outputs) {
@@ -184,6 +218,9 @@ MESG.listenTask({
     ...
   },
   ...
+})
+.on('error', function (error) {
+  // Handle error
 })
 ```
 
@@ -242,12 +279,24 @@ The parameter `outputs` is an object that contains the two task's outputs: `succ
 outputs.success({
   result: __MULTIPLICATION_RESULT__
 })
+.then(function () {
+  ...
+})
+.catch(function (error) {
+  // handle error
+})
 ```
 
 And `error` is defined like:
 ```javascript
 outputs.error({
   message: __ERROR_MESSAGE__
+})
+.then(function () {
+  ...
+})
+.catch(function (error) {
+  // handle error
 })
 ```
 
@@ -260,6 +309,9 @@ The service should call `MESG.listenTask` with an object containing as key the k
 ```javascript
 MESG.listenTask({
   multiply: taskMultiply
+})
+.on('error', function (error) {
+  // Handle error
 })
 ```
 
@@ -275,10 +327,16 @@ function taskMultiply (inputs, outputs) {
     outputs.error({
       message: 'a and/or b are undefined'
     })
+    .catch(function (error) {
+      console.error(error)
+    })
   } else {
     // Return the success output with the result of the multiplication
     outputs.success({
       result: inputs.a * inputs.b
+    })
+    .catch(function (error) {
+      console.error(error)
     })
   }
 }
@@ -286,6 +344,9 @@ function taskMultiply (inputs, outputs) {
 // Register the task multiply to MESG
 MESG.listenTask({
   multiply: taskMultiply
+})
+.on('error', function (error) {
+  console.error(error)
 })
 ```
 
@@ -295,6 +356,12 @@ To emit an event, the service should call `MESG.emitEvent` function with the eve
 
 ```javascript
 MESG.emitEvent(__EVENT_KEY__, __EVENT_DATA__)
+.then(function () {
+  ...
+})
+.catch(function (error) {
+  // handle error
+})
 ```
 
 ### Example
@@ -316,6 +383,9 @@ const MESG = require('mesg-js').service()
 function emitEvent () {
   MESG.emitEvent('minute', {
     timestamp: Date.now()
+  })
+  .catch(function (error) {
+    console.error(error)
   })
 }
 setInterval(emitEvent, 60 * 1000)
