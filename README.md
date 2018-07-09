@@ -58,7 +58,7 @@ MESG.whenEvent(event, task)
 
 ## React to results
 
-To react to a task's results and trigger other tasks, the application can use the `MESG.whenResult` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
+To react to a task's results and trigger other tasks, the application uses the `MESG.whenResult` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
 
 ```javascript
 MESG.whenResult(result, task)
@@ -71,7 +71,7 @@ MESG.whenResult(result, task)
 
 ## Object definition
 
-The previous functions expect the following object definition:
+The previous functions expect the following object definitions:
 
 ### `event`
 
@@ -94,7 +94,7 @@ The previous functions expect the following object definition:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The task's service ID |
 | `taskKey` | `String` | **REQUIRED** | The task key to execute |
-| `inputs` | `Object` or `Function` | `{}` | The input to pass to the task |
+| `inputs` | `Object` or `Function` | `{}` | The input to pass on to the task |
 
 ## Example
 
@@ -114,7 +114,7 @@ MESG.whenEvent({
   // An error has occurred
 })
 
-// When result valid of task occurs, then execute taskX
+// When a valid result of a task occurs, then execute taskX
 MESG.whenResult({
   serviceID: __RESULT_SERVICE_ID__,
   task: 'start',
@@ -154,7 +154,7 @@ MESG.api.ExecuteTask({
 
 [Documentation](https://docs.mesg.com/application/execute-a-task)
 
-### Listen to an event
+### Listen for an event
 
 ```javascript
 const MESG = require('mesg-js').application()
