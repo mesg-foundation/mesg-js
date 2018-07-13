@@ -9,7 +9,6 @@ import {
 } from '../client/core-client';
 
 type Options = {
-    token: string
     client: CoreClient
 }
 

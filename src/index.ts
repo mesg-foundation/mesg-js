@@ -23,7 +23,6 @@ const service = () => {
 
 const application = () => {
   return new Application({
-    token: token,
     client: new ClientBuilder({
       endpoint: endpoint,
     }).core(),
