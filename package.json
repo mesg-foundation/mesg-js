@@ -2,10 +2,10 @@
   "name": "mesg-js",
   "version": "1.2.3",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && ncp ./lib/client/proto/ ./dist/client/proto/",
-    "deploy": "./scripts/deploy.sh",
+    "build": "rimraf ./lib && tsc && ncp ./src/client/proto/ ./lib/client/proto/",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anthony Estebe <anthony@mesg.tech>",
@@ -18,7 +18,12 @@
   "devDependencies": {
     "@types/node": "^10.5.2",
     "ncp": "^2.0.0",
+    "rimraf": "^2.6.2",
     "tsc": "^1.20150623.0",
     "typescript": "^2.9.2"
+  },
+  "typings": "lib/index.d.ts",
+  "typescript": {
+    "definition": "lib/index.d.ts"
   }
 }

@@ -17,7 +17,6 @@ class Application {
     // api gives access to low level gRPC calls
     api: CoreClient
 
-    private token: string
     private client: CoreClient
 
     constructor(options: Options){

@@ -1,6 +1,5 @@
 import * as grpc from 'grpc'
 import * as protoLoader from '@grpc/proto-loader'
- 
 import * as path from 'path'
 import ServiceClient from './service-client'
 import CoreClient from './core-client'
