@@ -9,24 +9,35 @@ const ymlPath = './mesg.yml';
 const endpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
 const endpointTCP = process.env.MESG_ENDPOINT_TCP;
 
-const service = () => {
-  const mesgConfig = YAML.safeLoad(fs.readFileSync(ymlPath));
+var defaultService: Service
+var defaultApplication: Application
 
-  return new Service({
-    token: token,
-    mesgConfig: mesgConfig,
-    client: new ClientBuilder({
-      endpoint: endpointTCP,
-    }).service(),
-  });
+const service = () => {
+  if (!defaultService) {
+    const mesgConfig = YAML.safeLoad(fs.readFileSync(ymlPath));
+
+    defaultService = new Service({
+      token: token,
+      mesgConfig: mesgConfig,
+      client: new ClientBuilder({
+        endpoint: endpointTCP,
+      }).service(),
+    });
+  }
+
+  return defaultService;
 }
 
 const application = () => {
-  return new Application({
-    client: new ClientBuilder({
-      endpoint: endpoint,
-    }).core(),
-  });
+  if(!defaultApplication){
+    defaultApplication = new Application({
+      client: new ClientBuilder({
+        endpoint: endpoint,
+      }).core(),
+    });
+  }
+
+  return defaultApplication;
 }
 
 export {
