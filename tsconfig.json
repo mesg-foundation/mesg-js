@@ -15,5 +15,9 @@
     "rootDir": "./src",
     "outDir": "./lib"
   },
-  "exclude": ["node_modules", "lib"]
+  "exclude": [
+    "node_modules",
+    "lib",
+    "**/*_test.ts"
+  ]
 }

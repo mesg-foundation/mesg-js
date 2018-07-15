@@ -36,10 +36,6 @@ interface StartServiceRequest {
     serviceID: string
 }
 
-interface StartServiceRequest {
-    serviceID: string
-}
-
 interface StopServiceRequest {
     serviceID: string
 }

@@ -53,13 +53,15 @@ class Application {
     }
 
     private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
-        return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {  
+        return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
+            const inputData = typeof task.inputs === 'function'
+                ? task.inputs(key, JSON.parse(data))
+                : task.inputs || {};
+
             this.client.executeTask({
                 serviceID: task.serviceID,
                 taskKey: task.taskKey,
-                inputData: JSON.stringify(typeof task.inputs === 'function'
-                    ? task.inputs(key, JSON.parse(data))
-                    : task.inputs || {})
+                inputData: JSON.stringify(inputData)
             }, handleAPIResponse(resolve, reject));
         });
     }
