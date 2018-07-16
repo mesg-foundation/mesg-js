@@ -16,7 +16,7 @@ class ClientBuilder {
     }
 
     service(): ServiceClient {
-        const packageDefinition = protoLoader.loadSync(path.join(__dirname, './proto/api-service.proto'));
+        const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'proto', 'api-service.proto'));
         const packageObject = grpc.loadPackageDefinition(packageDefinition);
       
         const clientConstructor = packageObject.api.Service;
@@ -27,7 +27,7 @@ class ClientBuilder {
     }
 
     core(): CoreClient {
-        const packageDefinition = protoLoader.loadSync(path.join(__dirname, './proto/api-core.proto'));
+        const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'proto', 'api-core.proto'));
         const packageObject = grpc.loadPackageDefinition(packageDefinition);
         
         const clientConstructor = packageObject.api.Core;

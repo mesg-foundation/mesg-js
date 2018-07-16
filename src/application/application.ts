@@ -31,8 +31,8 @@ class Application {
             serviceID: event.serviceID,
             eventFilter: event.filter || '*'
         })
-        stream.on('data', ({ eventKey, eventData }) => {
-            this.executeTask(task, eventKey, eventData);
+        stream.on('data', async ({ eventKey, eventData }) => {
+            await this.executeTask(task, eventKey, eventData);
         });
         return stream;
     }
