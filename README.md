@@ -122,7 +122,7 @@ MESG.whenResult({
 }, {
   serviceID: __TASK_SERVICE_ID__,
   taskKey: 'taskX',
-  inputs: function(eventKey, eventData) { return { foo: 'bar' }}
+  inputs: function(outputKey, outputData) { return { foo: 'bar' }}
 })
 .on('error', function(error) {
   // An error has occurred
