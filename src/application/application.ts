@@ -27,12 +27,16 @@ class Application {
         await this.startService(event.serviceID);
         await this.startService(task.serviceID);
 
+        event.dataFilter = event.dataFilter || ((key, data) => true);
+
         const stream = this.client.listenEvent({
             serviceID: event.serviceID,
             eventFilter: event.filter || '*'
         })
         stream.on('data', async ({ eventKey, eventData }) => {
-            await this.executeTask(task, eventKey, eventData);
+            if (event.dataFilter(eventKey, eventData)) {
+                await this.executeTask(task, eventKey, eventData);
+            }
         });
         return stream;
     }
@@ -41,13 +45,17 @@ class Application {
         await this.startService(result.serviceID);
         await this.startService(task.serviceID);
 
+        result.dataFilter = result.dataFilter || ((key, data) => true);
+
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
             taskFilter: result.task || '*',
             outputFilter: result.output || '*'
         });
         stream.on('data', async ({ outputKey, outputData }) => {
-            await this.executeTask(task, outputKey, outputData);
+            if (result.dataFilter(outputKey, outputData)) {
+                await this.executeTask(task, outputKey, outputData);
+            }
         });
         return stream;
     }
@@ -80,18 +88,20 @@ class Application {
 type Event = {
     serviceID: string
     filter?: string
+    dataFilter?: (type: string, data: Object) => boolean
 }
 
 type Result = {
     serviceID: string
     task?: string
     output?: string
+    dataFilter?: (type: string, data: Object) => boolean
 }
 
 type Task = {
     serviceID: string
     taskKey: string
-    inputs?: any // TODO(ilgooz): define types
+    inputs?: Object | ((inputType: string, inputData: Object) => Object)
 }
 
 export default Application;

@@ -44,8 +44,8 @@ test('Application should expose gRPC api', (t) => {
     t.ok(<CoreClient>application.api);
 });
 
-const event: Event = { serviceID: 'id', filter: '*' };
-const result: Result = { serviceID: 'id', task: '*', output: '*' };
+const event: Event = { serviceID: 'id', filter: '*', dataFilter: (key, data) => data['foo'] === 'bar' };
+const result: Result = { serviceID: 'id', task: '*', output: '*', dataFilter: (key, data) => data['foo'] === 'bar' };
 const task: Task = { serviceID: 'id1', taskKey: 'key', inputs: { data: 'object' } };
 
 test('startService() should throw an error', async function(t) {
@@ -103,7 +103,7 @@ test('whenEvent() should execute task', async function(t) {
     const args = spy.getCall(0).args[0];
     t.equal(args.serviceID, event.serviceID);
     t.equal(args.eventFilter, event.filter);
-    stream.emit('data', {});
+    stream.emit('data', { eventKey: 'key', eventData: { foo: "bar" } });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
@@ -123,7 +123,7 @@ test('whenResult() should execute task', async function(t) {
     t.equal(args.serviceID, result.serviceID);
     t.equal(args.taskFilter, result.task);
     t.equal(args.outputFilter, result.output);
-    stream.emit('data', {});
+    stream.emit('data', { outputKey: 'key', outputData: { foo: "bar" } });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
