@@ -101,7 +101,7 @@ type Event = {
     // filter callback func is used to filter events by event key and
     // event data before continuing to execute the task.
     // task execution only will be made when filter returned with a true.
-    // TODO: deprecate string | in feature.
+    // TODO: deprecate string | in future.
     filter?: string | ((eventKey: string, eventData: Object) => boolean)
 }
 
