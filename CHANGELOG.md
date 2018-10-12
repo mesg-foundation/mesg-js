@@ -1,3 +1,5 @@
+## v1.3.0
+
 - Add `filter: (key: string, data: Object) => boolean` on `whenEvent` and `whenResult`.
 This way it's now possible to filter by event key, event data on events and
 output key, output data on results.
