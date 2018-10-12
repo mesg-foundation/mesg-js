@@ -128,6 +128,9 @@ test('whenEvent() should execute task', async function(t) {
 test('whenEvent() with different data filters', async function(t) {
     const tests = [{
         data: { eventKey: 'key', eventData: { foo: 'bar' } },
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: { foo: 'bar' } },
         dataFilter: (_, eventData) => eventData['foo'] == 'bar',
         assertion: true,
     },{
@@ -184,6 +187,9 @@ test('whenResult() should execute task', async function(t) {
 
 test('whenResult() with different data filters', async function(t) {
     const tests = [{
+        data: { outputKey: 'key', outputData: { foo: 'bar' } },
+        assertion: true,
+    },{
         data: { outputKey: 'key', outputData: { foo: 'bar' } },
         dataFilter: (_, outputData) => outputData['foo'] == 'bar',
         assertion: true,
