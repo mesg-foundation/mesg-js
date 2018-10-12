@@ -47,13 +47,13 @@ test('Application should expose gRPC api', (t) => {
 const event: Event = {
     serviceID: 'id',
     filter: '*',
-    dataFilter: (eventKey, eventData) => eventData['foo'] === 'bar'
+    dataFilter: (_, eventData) => eventData['foo'] == 'bar'
 };
 const result: Result = {
     serviceID: 'id',
     task: '*',
     output: '*',
-    dataFilter: (outputKey, outputData) => outputData['foo'] === 'bar'
+    dataFilter: (_, outputData) => outputData['foo'] == 'bar'
 };
 const task: Task = {
     serviceID: 'id1',
@@ -116,13 +116,50 @@ test('whenEvent() should execute task', async function(t) {
     const args = spy.getCall(0).args[0];
     t.equal(args.serviceID, event.serviceID);
     t.equal(args.eventFilter, event.filter);
-    stream.emit('data', { eventKey: 'key', eventData: { foo: "bar" } });
+    stream.emit('data', { eventKey: 'key', eventData: { foo: 'bar' } });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
+});
+
+test('whenEvent() with different data filters', async function(t) {
+    const tests = [{
+        data: { eventKey: 'key', eventData: { foo: 'bar' } },
+        dataFilter: (_, eventData) => eventData['foo'] == 'bar',
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: { foo: 'bar' } },
+        dataFilter: (_, eventData) => eventData['foo'] == 'baz',
+        assertion: false,
+    },{
+        data: { eventKey: 'key', eventData: { foo: 'bar' } },
+        dataFilter: (eventKey, _) => eventKey == 'key',
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: { foo: 'bar' } },
+        dataFilter: (eventKey, _) => eventKey == 'baz',
+        assertion: false,
+    }]
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const event: Event = {
+            serviceID: 'id',
+            filter: '*',
+            dataFilter: el.dataFilter,
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const stream = <EventEmitter>await application.whenEvent(event, task);
+        stream.emit('data', el.data);
+        t.ok(spy.calledOnce == el.assertion)
+        spy.restore();
+    });
 });
 
 test('whenResult() should execute task', async function(t) {
@@ -136,11 +173,49 @@ test('whenResult() should execute task', async function(t) {
     t.equal(args.serviceID, result.serviceID);
     t.equal(args.taskFilter, result.task);
     t.equal(args.outputFilter, result.output);
-    stream.emit('data', { outputKey: 'key', outputData: { foo: "bar" } });
+    stream.emit('data', { outputKey: 'key', outputData: { foo: 'bar' } });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
+});
+
+test('whenResult() with different data filters', async function(t) {
+    const tests = [{
+        data: { outputKey: 'key', outputData: { foo: 'bar' } },
+        dataFilter: (_, outputData) => outputData['foo'] == 'bar',
+        assertion: true,
+    },{
+        data: { outputKey: 'key', outputData: { foo: 'bar' } },
+        dataFilter: (_, outputData) => outputData['foo'] == 'baz',
+        assertion: false,
+    },{
+        data: { outputKey: 'key', outputData: { foo: 'bar' } },
+        dataFilter: (outputKey, _) => outputKey == 'key',
+        assertion: true,
+    },{
+        data: { outputKey: 'key', outputData: { foo: 'bar' } },
+        dataFilter: (outputKey, _) => outputKey == 'baz',
+        assertion: false,
+    }]
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const result: Result = {
+            serviceID: 'id',
+            task: '*',
+            output: '*',
+            dataFilter: el.dataFilter,
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const stream = <EventEmitter>await application.whenResult(result, task);
+        stream.emit('data', el.data);
+        t.ok(spy.calledOnce == el.assertion)
+        spy.restore();
+    });
 });

@@ -62,7 +62,7 @@ class Application {
 
     private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
-            const inputData = typeof task.inputs === 'function'
+            const inputData = typeof task.inputs == 'function'
                 ? task.inputs(key, JSON.parse(data))
                 : task.inputs || {};
 
