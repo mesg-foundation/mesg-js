@@ -27,7 +27,7 @@ class Application {
         await this.startService(event.serviceID);
         await this.startService(task.serviceID);
 
-        event.dataFilter = event.dataFilter || ((key, data) => true);
+        event.dataFilter = event.dataFilter || ((eventKey, eventData) => true);
 
         const stream = this.client.listenEvent({
             serviceID: event.serviceID,
@@ -45,7 +45,7 @@ class Application {
         await this.startService(result.serviceID);
         await this.startService(task.serviceID);
 
-        result.dataFilter = result.dataFilter || ((key, data) => true);
+        result.dataFilter = result.dataFilter || ((outputKey, outputData) => true);
 
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
@@ -86,22 +86,47 @@ class Application {
 }
 
 type Event = {
+    // serviceID is service's ID.
     serviceID: string
+
+    // filter is event key filter.
     filter?: string
-    dataFilter?: (type: string, data: Object) => boolean
+
+    // dataFilter callback func is used to filter event by event key and
+    // event data before continuing to execute the task.
+    // task execution only will be made when filter returned with a true.
+    dataFilter?: (eventKey: string, eventData: Object) => boolean
 }
 
 type Result = {
+    // serviceID is service's ID.
     serviceID: string
+
+    // task is task key filter.
     task?: string
+
+    // output is output key filter.
     output?: string
-    dataFilter?: (type: string, data: Object) => boolean
+
+    // dataFilter callback func is used to filter task result by output key and
+    // output data before continuing to execute the task.
+    // task execution only will be made when filter returned with a true.
+    dataFilter?: (outputKey: string, outputData: Object) => boolean
 }
 
 type Task = {
+    // serviceID is service's ID.
     serviceID: string
+
+    // taskKey is task's key.
     taskKey: string
-    inputs?: Object | ((inputType: string, inputData: Object) => Object)
+
+    // inputs is the task's input data.
+    // it can directly get an object as value or a callback func to dynamically
+    // set the inputs depending on relevant event data or task result.
+    // key can be event key or output key.
+    // data can be event data or output data.
+    inputs?: Object | ((key: string, data: Object) => Object)
 }
 
 export default Application;

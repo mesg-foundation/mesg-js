@@ -44,9 +44,22 @@ test('Application should expose gRPC api', (t) => {
     t.ok(<CoreClient>application.api);
 });
 
-const event: Event = { serviceID: 'id', filter: '*', dataFilter: (key, data) => data['foo'] === 'bar' };
-const result: Result = { serviceID: 'id', task: '*', output: '*', dataFilter: (key, data) => data['foo'] === 'bar' };
-const task: Task = { serviceID: 'id1', taskKey: 'key', inputs: { data: 'object' } };
+const event: Event = {
+    serviceID: 'id',
+    filter: '*',
+    dataFilter: (eventKey, eventData) => eventData['foo'] === 'bar'
+};
+const result: Result = {
+    serviceID: 'id',
+    task: '*',
+    output: '*',
+    dataFilter: (outputKey, outputData) => outputData['foo'] === 'bar'
+};
+const task: Task = {
+    serviceID: 'id1',
+    taskKey: 'key',
+    inputs: { data: 'object' }
+};
 
 test('startService() should throw an error', async function(t) {
     t.plan(1);
