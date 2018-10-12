@@ -1,3 +1,10 @@
+Add `filter: (key: string, data: Object) => boolean` on the data for the `whenEvent` and `whenResult`
+Normalize the api, use:
+- `taskKey` instead of `task`
+- `outputKey` instead of `output`
+- `eventKey` instead of `event`
+Update documentation
+
 ## v1.2.3
 
 Fix `whenResult` callback execution
