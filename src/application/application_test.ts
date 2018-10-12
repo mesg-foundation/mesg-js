@@ -47,13 +47,13 @@ test('Application should expose gRPC api', (t) => {
 const event: Event = {
     serviceID: 'id',
     eventKey: '*',
-    filter: (_, eventData) => eventData['foo'] === 'bar'
+    filter: (_, eventData) => eventData['foo'] == 'bar'
 };
 const result: Result = {
     serviceID: 'id',
     taskKey: '*',
     outputKey: '*',
-    filter: (_, outputData) => outputData['foo'] === 'bar'
+    filter: (_, outputData) => outputData['foo'] == 'bar'
 };
 const task: Task = {
     serviceID: 'id1',
