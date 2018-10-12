@@ -92,7 +92,7 @@ type Event = {
     // filter is event key filter.
     filter?: string
 
-    // dataFilter callback func is used to filter event by event key and
+    // dataFilter callback func is used to filter events by event key and
     // event data before continuing to execute the task.
     // task execution only will be made when filter returned with a true.
     dataFilter?: (eventKey: string, eventData: Object) => boolean
@@ -108,7 +108,7 @@ type Result = {
     // output is output key filter.
     output?: string
 
-    // dataFilter callback func is used to filter task result by output key and
+    // dataFilter callback func is used to filter task results by output key and
     // output data before continuing to execute the task.
     // task execution only will be made when filter returned with a true.
     dataFilter?: (outputKey: string, outputData: Object) => boolean
