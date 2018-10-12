@@ -44,9 +44,22 @@ test('Application should expose gRPC api', (t) => {
     t.ok(<CoreClient>application.api);
 });
 
-const event: Event = { serviceID: 'id', filter: '*' };
-const result: Result = { serviceID: 'id', task: '*', output: '*' };
-const task: Task = { serviceID: 'id1', taskKey: 'key', inputs: { data: 'object' } };
+const event: Event = {
+    serviceID: 'id',
+    eventKey: '*',
+    filter: (_, eventData) => eventData['foo'] == 'bar'
+};
+const result: Result = {
+    serviceID: 'id',
+    taskKey: '*',
+    outputKey: '*',
+    filter: (_, outputData) => outputData['foo'] == 'bar'
+};
+const task: Task = {
+    serviceID: 'id1',
+    taskKey: 'key',
+    inputs: { data: 'object' }
+};
 
 test('startService() should throw an error', async function(t) {
     t.plan(1);
@@ -102,14 +115,54 @@ test('whenEvent() should execute task', async function(t) {
     const stream = <EventEmitter>await application.whenEvent(event, task);
     const args = spy.getCall(0).args[0];
     t.equal(args.serviceID, event.serviceID);
-    t.equal(args.eventFilter, event.filter);
-    stream.emit('data', {});
+    t.equal(args.eventFilter, event.eventKey);
+    stream.emit('data', { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
+});
+
+test('whenEvent() with different data filters', async function(t) {
+    const tests = [{
+        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
+        filter: (_, eventData) => eventData['foo'] == 'bar',
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
+        filter: (_, eventData) => eventData['foo'] == 'baz',
+        assertion: false,
+    },{
+        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
+        filter: (eventKey, _) => eventKey == 'key',
+        assertion: true,
+    },{
+        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
+        filter: (eventKey, _) => eventKey == 'baz',
+        assertion: false,
+    }]
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const event: Event = {
+            serviceID: 'id',
+            eventKey: '*',
+            filter: el.filter,
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const stream = <EventEmitter>await application.whenEvent(event, task);
+        stream.emit('data', el.data);
+        t.ok(spy.calledOnce == el.assertion)
+        spy.restore();
+    });
 });
 
 test('whenResult() should execute task', async function(t) {
@@ -121,13 +174,54 @@ test('whenResult() should execute task', async function(t) {
     const stream = <EventEmitter>await application.whenResult(result, task);
     const args = spy.getCall(0).args[0];
     t.equal(args.serviceID, result.serviceID);
-    t.equal(args.taskFilter, result.task);
-    t.equal(args.outputFilter, result.output);
-    stream.emit('data', {});
+    t.equal(args.taskFilter, result.taskKey);
+    t.equal(args.outputFilter, result.outputKey);
+    stream.emit('data', { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
+});
+
+test('whenResult() with different data filters', async function(t) {
+    const tests = [{
+        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
+        assertion: true,
+    },{
+        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
+        filter: (_, outputData) => outputData['foo'] == 'bar',
+        assertion: true,
+    },{
+        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
+        filter: (_, outputData) => outputData['foo'] == 'baz',
+        assertion: false,
+    },{
+        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
+        filter: (outputKey, _) => outputKey == 'key',
+        assertion: true,
+    },{
+        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
+        filter: (outputKey, _) => outputKey == 'baz',
+        assertion: false,
+    }]
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const result: Result = {
+            serviceID: 'id',
+            task: '*',
+            output: '*',
+            filter: el.filter,
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const stream = <EventEmitter>await application.whenResult(result, task);
+        stream.emit('data', el.data);
+        t.ok(spy.calledOnce == el.assertion)
+        spy.restore();
+    });
 });
