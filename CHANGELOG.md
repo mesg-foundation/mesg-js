@@ -1,5 +1,5 @@
 - Add `filter: (key: string, data: Object) => boolean` on `whenEvent` and `whenResult`.
-This way it's now possible to filter on event key, event data on events and
+This way it's now possible to filter by event key, event data on events and
 output key, output data on results.
 - Normalize the api, use:
   - `taskKey` instead of `task`.
