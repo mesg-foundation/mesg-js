@@ -39,7 +39,7 @@ class Application {
             eventFilter: event.eventKey || '*'
         })
         stream.on('data', async ({ eventKey, eventData }) => {
-            const filter = event.filter as (type: string, data: Object) => boolean;
+            const filter = event.filter as (eventKey: string, eventData: Object) => boolean;
             if (filter(eventKey, JSON.parse(eventData))) {
                 await this.executeTask(task, eventKey, eventData);
             }
@@ -101,6 +101,7 @@ type Event = {
     // filter callback func is used to filter events by event key and
     // event data before continuing to execute the task.
     // task execution only will be made when filter returned with a true.
+    // TODO: deprecate string | in feature.
     filter?: string | ((eventKey: string, eventData: Object) => boolean)
 }
 

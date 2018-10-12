@@ -79,7 +79,7 @@ The previous functions expect the following object definitions:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The event's service ID |
 | `eventKey` | `String` | `*` | Only listen for this event's key. Leave empty or set `*` to listen for any event from this service |
-| `filter` | `func(eventKey: string, eventData: Object) => boolean` | `(key, data) => true` | Function to filter based on the data of the event | 
+| `filter` | `func(eventKey: string, eventData: Object) => boolean` | `(key, data) => true` | Function to filter based on the key and/or data of event | 
 
 ### `result`
 
@@ -87,8 +87,8 @@ The previous functions expect the following object definitions:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The result's service ID |
 | `taskKey` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
-| `outputKey` | `String` | `*` | Only listen for the output key. If set, the `task` is required. Leave it empty or set `*` to listen for any task's output from this service |
-| `filter` | `func(resultKey: string, resultData: Object) => boolean` | `(key, data) => true` | Function to filter based on the data of the result | 
+| `outputKey` | `String` | `*` | Only listen for the output key. If set, `taskKey` is required. Leave it empty or set `*` to listen for any task's output from this service |
+| `filter` | `func(resultKey: string, resultData: Object) => boolean` | `(key, data) => true` | Function to filter based on the output key and/or output data of the result | 
 
 ### `task`
 
@@ -96,7 +96,7 @@ The previous functions expect the following object definitions:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The task's service ID |
 | `taskKey` | `String` | **REQUIRED** | The task key to execute |
-| `inputs` | `Object` or `func(eventKey: string, eventData: Object) => Object` | `{}` | The input to pass on to the task |
+| `inputs` | `Object` or `func(eventKey: string, eventData: Object) => Object` | `{}` | Input to pass on to the task |
 
 ## Example
 
