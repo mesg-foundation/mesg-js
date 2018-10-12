@@ -32,7 +32,7 @@ class Application {
             event.eventKey = event.filter;
             event.filter = null;
         }
-        event.filter = event.filter || ((key, data) => true);
+        event.filter = event.filter || ((eventKey, eventData) => true);
 
         const stream = this.client.listenEvent({
             serviceID: event.serviceID,
@@ -51,8 +51,8 @@ class Application {
         await this.startService(result.serviceID);
         await this.startService(task.serviceID);
 
-        result.filter = result.filter || ((key, data) => true);
-
+        result.filter = result.filter || ((outputKey, outputData) => true);
+        
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
             taskFilter: result.taskKey || result.task || '*',
@@ -68,7 +68,7 @@ class Application {
 
     private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
-            const inputData = typeof task.inputs === 'function'
+            const inputData = typeof task.inputs == 'function'
                 ? task.inputs(key, JSON.parse(data))
                 : task.inputs || {};
 
@@ -92,24 +92,53 @@ class Application {
 }
 
 type Event = {
+    // serviceID is service's ID.
     serviceID: string
-    filter?: string | ((type: string, data: Object) => boolean)
+    
+    // eventKey is event key filter.
     eventKey?: string
+
+    // filter callback func is used to filter events by event key and
+    // event data before continuing to execute the task.
+    // task execution only will be made when filter returned with a true.
+    filter?: string | ((eventKey: string, eventData: Object) => boolean)
 }
 
 type Result = {
+    // serviceID is service's ID.
     serviceID: string
+
+    // DEPRECATED: Please use taskKey instead
     task?: string
+
+    // taskKey is task key filter.
     taskKey?: string
+
+    // DEPRECATED: Please use outputKey instead
     output?: string
+
+    // outputKey is output key filter.
     outputKey?: string
-    filter?: (type: string, data: Object) => boolean
+
+    // filter callback func is used to filter task results by output key and
+    // output data before continuing to execute the task.
+    // task execution only will be made when filter returned with a true.
+    filter?: (outputKey: string, outputData: Object) => boolean
 }
 
 type Task = {
+    // serviceID is service's ID.
     serviceID: string
+
+    // taskKey is task's key.
     taskKey: string
-    inputs?: Object | ((inputType: string, inputData: Object) => Object)
+
+    // inputs is the task's input data.
+    // it can directly get an object as value or a callback func to dynamically
+    // set the inputs depending on relevant event data or task result.
+    // key can be event key or output key.
+    // data can be event data or output data.
+    inputs?: Object | ((key: string, data: Object) => Object)
 }
 
 export default Application;
