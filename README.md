@@ -78,15 +78,17 @@ The previous functions expect the following object definitions:
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The event's service ID |
-| `filter` | `String` | `*` | Only listen for this event's key. Leave empty or set `*` to listen for any event from this service |
+| `eventKey` | `String` | `*` | Only listen for this event's key. Leave empty or set `*` to listen for any event from this service |
+| `filter` | `func(eventKey: string, eventData: Object) => boolean` | `(key, data) => true` | Function to filter based on the data of the event | 
 
 ### `result`
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The result's service ID |
-| `task` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
-| `output` | `String` | `*` | Only listen for the output key. If set, the `task` is required. Leave it empty or set `*` to listen for any task's output from this service |
+| `taskKey` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
+| `outputKey` | `String` | `*` | Only listen for the output key. If set, the `task` is required. Leave it empty or set `*` to listen for any task's output from this service |
+| `filter` | `func(resultKey: string, resultData: Object) => boolean` | `(key, data) => true` | Function to filter based on the data of the result | 
 
 ### `task`
 
@@ -94,7 +96,7 @@ The previous functions expect the following object definitions:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The task's service ID |
 | `taskKey` | `String` | **REQUIRED** | The task key to execute |
-| `inputs` | `Object` or `Function` | `{}` | The input to pass on to the task |
+| `inputs` | `Object` or `func(eventKey: string, eventData: Object) => Object` | `{}` | The input to pass on to the task |
 
 ## Example
 
@@ -104,7 +106,7 @@ const MESG = require('mesg-js').application()
 // When eventX occurs, then execute start
 MESG.whenEvent({
   serviceID: __EVENT_SERVICE_ID__,
-  filter: 'eventX'
+  eventKey: 'eventX'
 }, {
   serviceID: __TASK_SERVICE_ID__,
   taskKey: 'start',
@@ -117,8 +119,8 @@ MESG.whenEvent({
 // When a valid result of a task occurs, then execute taskX
 MESG.whenResult({
   serviceID: __RESULT_SERVICE_ID__,
-  task: 'start',
-  output: 'valid'
+  taskKey: 'start',
+  outputKey: 'valid'
 }, {
   serviceID: __TASK_SERVICE_ID__,
   taskKey: 'taskX',

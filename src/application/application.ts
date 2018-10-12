@@ -27,14 +27,20 @@ class Application {
         await this.startService(event.serviceID);
         await this.startService(task.serviceID);
 
-        event.dataFilter = event.dataFilter || ((key, data) => true);
+        if (typeof event.filter === 'string') {
+            console.warn("Please use eventKey in order to filter on a specific event");
+            event.eventKey = event.filter;
+            event.filter = null;
+        }
+        event.filter = event.filter || ((key, data) => true);
 
         const stream = this.client.listenEvent({
             serviceID: event.serviceID,
-            eventFilter: event.filter || '*'
+            eventFilter: event.eventKey || '*'
         })
         stream.on('data', async ({ eventKey, eventData }) => {
-            if (event.dataFilter(eventKey, eventData)) {
+            const filter = event.filter as (type: string, data: Object) => boolean;
+            if (filter(eventKey, JSON.parse(eventData))) {
                 await this.executeTask(task, eventKey, eventData);
             }
         });
@@ -45,15 +51,15 @@ class Application {
         await this.startService(result.serviceID);
         await this.startService(task.serviceID);
 
-        result.dataFilter = result.dataFilter || ((key, data) => true);
+        result.filter = result.filter || ((key, data) => true);
 
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
-            taskFilter: result.task || '*',
-            outputFilter: result.output || '*'
+            taskFilter: result.taskKey || result.task || '*',
+            outputFilter: result.outputKey || result.output || '*'
         });
         stream.on('data', async ({ outputKey, outputData }) => {
-            if (result.dataFilter(outputKey, outputData)) {
+            if (result.filter(outputKey, JSON.parse(outputData))) {
                 await this.executeTask(task, outputKey, outputData);
             }
         });
@@ -87,15 +93,17 @@ class Application {
 
 type Event = {
     serviceID: string
-    filter?: string
-    dataFilter?: (type: string, data: Object) => boolean
+    filter?: string | ((type: string, data: Object) => boolean)
+    eventKey?: string
 }
 
 type Result = {
     serviceID: string
     task?: string
+    taskKey?: string
     output?: string
-    dataFilter?: (type: string, data: Object) => boolean
+    outputKey?: string
+    filter?: (type: string, data: Object) => boolean
 }
 
 type Task = {
