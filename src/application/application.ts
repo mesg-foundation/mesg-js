@@ -1,12 +1,7 @@
-import { CoreClient } from '../client';
-import { Stream } from '../client/stream';
 import { handleAPIResponse } from '../util/api';
-import { 
-    EventData,
-    ResultData, 
-    ExecuteTaskReply, 
-    StartServiceReply
-} from '../client/core-client';
+import { CoreClient } from '../client/api-core_pb_service';
+import { ListenEventRequest, ListenResultRequest, EventData, ResultData, ExecuteTaskReply, ExecuteTaskRequest, StartServiceReply, StartServiceRequest } from '../client/api-core_pb';
+import { ResponseStream } from '../client/api-service_pb_service';
 
 type Options = {
     client: CoreClient
@@ -23,7 +18,7 @@ class Application {
         this.api = this.client;
     }
 
-    async whenEvent(event: Event, task: Task): Promise<Stream<EventData>> {
+    async whenEvent(event: Event, task: Task): Promise<ResponseStream<EventData>> {
         await this.startService(event.serviceID);
         await this.startService(task.serviceID);
 
@@ -34,11 +29,13 @@ class Application {
         }
         event.filter = event.filter || ((eventKey, eventData) => true);
 
-        const stream = this.client.listenEvent({
-            serviceID: event.serviceID,
-            eventFilter: event.eventKey || '*'
-        })
-        stream.on('data', async ({ eventKey, eventData }) => {
+        const req = new ListenEventRequest();
+        req.setServiceid(event.serviceID);
+        req.setEventfilter(event.eventKey || '*');
+        const stream = this.client.listenEvent(req);
+        stream.on('data', async message => {
+            const eventKey = message.getEventkey();
+            const eventData = message.getEventdata();
             const filter = event.filter as (eventKey: string, eventData: Object) => boolean;
             if (filter(eventKey, JSON.parse(eventData))) {
                 await this.executeTask(task, eventKey, eventData);
@@ -47,18 +44,20 @@ class Application {
         return stream;
     }
 
-    async whenResult(result: Result, task: Task): Promise<Stream<ResultData>> {
+    async whenResult(result: Result, task: Task): Promise<ResponseStream<ResultData>> {
         await this.startService(result.serviceID);
         await this.startService(task.serviceID);
 
         result.filter = result.filter || ((outputKey, outputData) => true);
         
-        const stream = this.client.listenResult({
-            serviceID: result.serviceID,
-            taskFilter: result.taskKey || result.task || '*',
-            outputFilter: result.outputKey || result.output || '*'
-        });
-        stream.on('data', async ({ outputKey, outputData }) => {
+        const req = new ListenResultRequest();
+        req.setServiceid(result.serviceID);
+        req.setTaskfilter(result.taskKey || result.task || '*');
+        req.setOutputfilter(result.outputKey || result.output || '*');
+        const stream = this.client.listenResult(req);
+        stream.on('data', async message => {
+            const outputKey = message.getOutputkey();
+            const outputData = message.getOutputdata();
             if (result.filter(outputKey, JSON.parse(outputData))) {
                 await this.executeTask(task, outputKey, outputData);
             }
@@ -66,24 +65,26 @@ class Application {
         return stream;
     }
 
-    private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
+    private executeTask(task: Task, key: string, data: string): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
             const inputData = typeof task.inputs == 'function'
                 ? task.inputs(key, JSON.parse(data))
                 : task.inputs || {};
 
-            this.client.executeTask({
-                serviceID: task.serviceID,
-                taskKey: task.taskKey,
-                inputData: JSON.stringify(inputData)
-            }, handleAPIResponse(resolve, reject));
+            const req = new ExecuteTaskRequest();
+            req.setServiceid(task.serviceID);
+            req.setTaskkey(task.taskKey);
+            req.setInputdata(JSON.stringify(inputData));
+            this.client.executeTask(req, handleAPIResponse(resolve, reject));
         });
     }
 
     private async startService(id: string) {
         try {
             await new Promise<StartServiceReply | Error>((resolve, reject) => {
-                this.client.startService({ serviceID: id }, handleAPIResponse(resolve, reject));
+                const req = new StartServiceRequest()
+                req.setServiceid(id)
+                this.client.startService(req, handleAPIResponse(resolve, reject));
             });
         } catch (e) {
             throw new Error(`Error while starting service ${e}`)

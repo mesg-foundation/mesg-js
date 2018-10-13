@@ -1,4 +1,5 @@
-import ClientBuilder from './client'
+import { ServiceClient } from './client/api-service_pb_service'
+import { CoreClient } from './client/api-core_pb_service';
 import Service from './service'
 import Application from './application'
 import * as fs from 'fs'
@@ -19,9 +20,7 @@ const service = () => {
     defaultService = new Service({
       token: token,
       mesgConfig: mesgConfig,
-      client: new ClientBuilder({
-        endpoint: endpointTCP,
-      }).service(),
+      client: new ServiceClient(endpointTCP),
     });
   }
 
@@ -31,9 +30,7 @@ const service = () => {
 const application = () => {
   if(!defaultApplication){
     defaultApplication = new Application({
-      client: new ClientBuilder({
-        endpoint: endpoint,
-      }).core(),
+      client: new CoreClient(endpoint)
     });
   }
 
