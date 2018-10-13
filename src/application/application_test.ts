@@ -1,8 +1,9 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
-import { CoreClient } from '../client'
-import Application, { Event, Task, Result } from '.';
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
+import Application, { Result, Event, Task } from "./application";
+import { CoreClient } from "../client/api-core_pb_service";
+import { StartServiceRequest, ExecuteTaskRequest, ListenEventRequest, EventData, ListenResultRequest, ResultData } from '../client/api-core_pb';
 
 class testClient {
     startServiceError: Error
@@ -84,8 +85,12 @@ test('whenEvent() should start two services', async function(t) {
     } catch(e){
         t.fail("should not throw");
     }
-    t.equal(spy.getCall(0).args[0].serviceID, event.serviceID);
-    t.equal(spy.getCall(1).args[0].serviceID, task.serviceID);
+    const eventServiceID = new StartServiceRequest()
+    const taskServiceID = new StartServiceRequest()
+    eventServiceID.setServiceid(event.serviceID)
+    taskServiceID.setServiceid(task.serviceID)
+    t.deepEqual(spy.getCall(0).args[0], eventServiceID);
+    t.deepEqual(spy.getCall(1).args[0], taskServiceID);
     spy.restore();
 });
 
@@ -101,8 +106,12 @@ test('whenResult() should start two services', async function(t) {
     } catch(e){
         t.fail("should not throw");
     }
-    t.equal(spy.getCall(0).args[0].serviceID, result.serviceID);
-    t.equal(spy.getCall(1).args[0].serviceID, task.serviceID);
+    const resultServiceID = new StartServiceRequest()
+    const taskServiceID = new StartServiceRequest()
+    resultServiceID.setServiceid(result.serviceID)
+    taskServiceID.setServiceid(task.serviceID)
+    t.deepEqual(spy.getCall(0).args[0], resultServiceID);
+    t.deepEqual(spy.getCall(1).args[0], taskServiceID);
     spy.restore();
 });
 
@@ -112,15 +121,18 @@ test('whenEvent() should execute task', async function(t) {
     const application = newApplication(client);
     const spy = sinon.spy(client, 'listenEvent');
     const spy1 = sinon.spy(client, 'executeTask');
-    const stream = <EventEmitter>await application.whenEvent(event, task);
-    const args = spy.getCall(0).args[0];
-    t.equal(args.serviceID, event.serviceID);
-    t.equal(args.eventFilter, event.eventKey);
-    stream.emit('data', { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" });
-    const args1 = spy1.getCall(0).args[0];
-    t.equal(args1.serviceID, task.serviceID);
-    t.equal(args1.taskKey, task.taskKey);
-    t.equal(args1.inputData, JSON.stringify(task.inputs));
+    const stream = <any>await application.whenEvent(event, task);
+    const args = <ListenEventRequest>spy.getCall(0).args[0];
+    t.equal(args.getServiceid(), event.serviceID);
+    t.equal(args.getEventfilter(), event.eventKey);
+    const data = new EventData()
+    data.setEventkey('key');
+    data.setEventdata("{\"foo\":\"bar\"}");
+    stream.emit('data', data);
+    const args1 = <ExecuteTaskRequest>spy1.getCall(0).args[0];
+    t.equal(args1.getServiceid(), task.serviceID);
+    t.equal(args1.getTaskkey(), task.taskKey);
+    t.equal(args1.getInputdata(), JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
 });
@@ -158,8 +170,11 @@ test('whenEvent() with different data filters', async function(t) {
             filter: el.filter,
         };
         const spy = sinon.spy(client, 'executeTask');
-        const stream = <EventEmitter>await application.whenEvent(event, task);
-        stream.emit('data', el.data);
+        const stream = <any>await application.whenEvent(event, task);
+        const data = new EventData();
+        data.setEventkey(el.data.eventKey);
+        data.setEventdata(el.data.eventData);
+        stream.emit('data', data);
         t.ok(spy.calledOnce == el.assertion)
         spy.restore();
     });
@@ -171,16 +186,19 @@ test('whenResult() should execute task', async function(t) {
     const application = newApplication(client);
     const spy = sinon.spy(client, 'listenResult');
     const spy1 = sinon.spy(client, 'executeTask');
-    const stream = <EventEmitter>await application.whenResult(result, task);
-    const args = spy.getCall(0).args[0];
-    t.equal(args.serviceID, result.serviceID);
-    t.equal(args.taskFilter, result.taskKey);
-    t.equal(args.outputFilter, result.outputKey);
-    stream.emit('data', { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" });
-    const args1 = spy1.getCall(0).args[0];
-    t.equal(args1.serviceID, task.serviceID);
-    t.equal(args1.taskKey, task.taskKey);
-    t.equal(args1.inputData, JSON.stringify(task.inputs));
+    const stream = <any>await application.whenResult(result, task);
+    const args = <ListenResultRequest>spy.getCall(0).args[0];
+    t.equal(args.getServiceid(), result.serviceID);
+    t.equal(args.getTaskfilter(), result.taskKey);
+    t.equal(args.getOutputfilter(), result.outputKey);
+    const data = new ResultData();
+    data.setOutputkey('key');
+    data.setOutputdata("{\"foo\":\"bar\"}");
+    stream.emit('data', data);
+    const args1 = <ExecuteTaskRequest>spy1.getCall(0).args[0];
+    t.equal(args1.getServiceid(), task.serviceID);
+    t.equal(args1.getTaskkey(), task.taskKey);
+    t.equal(args1.getInputdata(), JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
 });
@@ -219,8 +237,11 @@ test('whenResult() with different data filters', async function(t) {
             filter: el.filter,
         };
         const spy = sinon.spy(client, 'executeTask');
-        const stream = <EventEmitter>await application.whenResult(result, task);
-        stream.emit('data', el.data);
+        const stream = <any>await application.whenResult(result, task);
+        const data = new ResultData();
+        data.setOutputkey(el.data.outputKey);
+        data.setOutputdata(el.data.outputData);
+        stream.emit('data', data);
         t.ok(spy.calledOnce == el.assertion)
         spy.restore();
     });
