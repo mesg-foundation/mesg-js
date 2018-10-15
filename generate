@@ -1,21 +1,24 @@
 #!/bin/sh
 
-# Path to this plugin, Note this must be an abolsute path on Windows (see #15)
 PROTOC_GEN_TS_PATH="$(pwd)/node_modules/.bin/protoc-gen-ts"
-
-# Directory to write generated code to (.js and .d.ts files) 
+DEF_REPO="mesg-foundation/core"
+DEF_BRANCH="master"
 DIR="./"
+
+rm -rf src/client/*
+mkdir -p src/client
 
 cd src/client
 
-protoc \
-    --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
-    --js_out="import_style=commonjs,binary:${DIR}" \
-    --ts_out="service=true:${DIR}" \
-    api-core.proto
+apis="core service"
+for api in $apis; do
+    curl -o api-$api.proto "https://raw.githubusercontent.com/$DEF_REPO/$DEF_BRANCH/protobuf/${api}api/api.proto"
 
-protoc \
-    --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
-    --js_out="import_style=commonjs,binary:${DIR}" \
-    --ts_out="service=true:${DIR}" \
-    api-service.proto
+    protoc \
+        --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
+        --js_out="import_style=commonjs,binary:${DIR}" \
+        --ts_out="service=true:${DIR}" \
+        api-$api.proto
+
+    rm api-$api.proto
+done
