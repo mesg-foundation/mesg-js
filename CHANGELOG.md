@@ -1,3 +1,5 @@
+- Use proto-gen to generate the proto client and get rid off the .proto files.
+
 ## v1.3.0
 
 - Add `filter: (key: string, data: Object) => boolean` on `whenEvent` and `whenResult`.
