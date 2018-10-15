@@ -53,11 +53,13 @@ const result: Result = {
     serviceID: 'id',
     taskKey: '*',
     outputKey: '*',
+    tagFilters: ['tag1', 'tag2'],
     filter: (_, outputData) => outputData['foo'] == 'bar'
 };
 const task: Task = {
     serviceID: 'id1',
     taskKey: 'key',
+    tags: ['tag1', 'tag2'],
     inputs: { data: 'object' }
 };
 
@@ -126,26 +128,13 @@ test('whenEvent() should execute task', async function(t) {
 });
 
 test('whenEvent() with different data filters', async function(t) {
-    const tests = [{
-        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
-        assertion: true,
-    },{
-        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
-        filter: (_, eventData) => eventData['foo'] == 'bar',
-        assertion: true,
-    },{
-        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
-        filter: (_, eventData) => eventData['foo'] == 'baz',
-        assertion: false,
-    },{
-        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
-        filter: (eventKey, _) => eventKey == 'key',
-        assertion: true,
-    },{
-        data: { eventKey: 'key', eventData: "{\"foo\":\"bar\"}" },
-        filter: (eventKey, _) => eventKey == 'baz',
-        assertion: false,
-    }]
+    const tests = [
+        { assertion: true },
+        { assertion: true,  filter: (eventKey, eventData) => eventData['foo'] == 'bar' },
+        { assertion: false, filter: (eventKey, eventData) => eventData['foo'] != 'bar' },
+        { assertion: true,  filter: (eventKey, eventData) => eventKey == 'key' },
+        { assertion: false, filter: (eventKey, eventData) => eventKey != 'key' }
+    ]
 
     t.plan(tests.length);
     
@@ -159,7 +148,10 @@ test('whenEvent() with different data filters', async function(t) {
         };
         const spy = sinon.spy(client, 'executeTask');
         const stream = <EventEmitter>await application.whenEvent(event, task);
-        stream.emit('data', el.data);
+        stream.emit('data', {
+            eventKey: 'key',
+            eventData: "{\"foo\":\"bar\"}"
+        });
         t.ok(spy.calledOnce == el.assertion)
         spy.restore();
     });
@@ -186,26 +178,17 @@ test('whenResult() should execute task', async function(t) {
 });
 
 test('whenResult() with different data filters', async function(t) {
-    const tests = [{
-        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
-        assertion: true,
-    },{
-        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
-        filter: (_, outputData) => outputData['foo'] == 'bar',
-        assertion: true,
-    },{
-        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
-        filter: (_, outputData) => outputData['foo'] == 'baz',
-        assertion: false,
-    },{
-        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
-        filter: (outputKey, _) => outputKey == 'key',
-        assertion: true,
-    },{
-        data: { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" },
-        filter: (outputKey, _) => outputKey == 'baz',
-        assertion: false,
-    }]
+    const tests = [
+        { assertion: true },
+        { assertion: true,  filter: (outputKey) => outputKey == 'key' },
+        { assertion: false, filter: (outputKey) => outputKey != 'key' },
+        { assertion: true,  filter: (outputKey, outputData) => outputData['foo'] == 'bar' },
+        { assertion: false, filter: (outputKey, outputData) => outputData['foo'] != 'bar' },
+        { assertion: true,  filter: (outputKey, outputData, taskKey) => taskKey == 'taskX' },
+        { assertion: false, filter: (outputKey, outputData, taskKey) => taskKey != 'taskX' },
+        { assertion: true,  filter: (outputKey, outputData, taskKey, tags) => tags[0] == 'tag1' },
+        { assertion: false, filter: (outputKey, outputData, taskKey, tags) => tags[0] != 'tag1' }
+    ]
 
     t.plan(tests.length);
     
@@ -216,11 +199,17 @@ test('whenResult() with different data filters', async function(t) {
             serviceID: 'id',
             task: '*',
             output: '*',
+            tagFilters: ['tag1', 'tag2'],
             filter: el.filter,
         };
         const spy = sinon.spy(client, 'executeTask');
         const stream = <EventEmitter>await application.whenResult(result, task);
-        stream.emit('data', el.data);
+        stream.emit('data', {
+            outputKey: 'key',
+            outputData: "{\"foo\":\"bar\"}",
+            taskKey: 'taskX',
+            executionTags: ['tag1', 'tag2']
+        });
         t.ok(spy.calledOnce == el.assertion)
         spy.restore();
     });

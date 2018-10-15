@@ -1,3 +1,6 @@
+- Possibility to set specific tag executions
+- Add more precise client side filter and add executionTags filter
+
 ## v1.3.0
 
 - Add `filter: (key: string, data: Object) => boolean` on `whenEvent` and `whenResult`.

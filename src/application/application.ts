@@ -41,7 +41,13 @@ class Application {
         stream.on('data', async ({ eventKey, eventData }) => {
             const filter = event.filter as (eventKey: string, eventData: Object) => boolean;
             if (filter(eventKey, JSON.parse(eventData))) {
-                await this.executeTask(task, eventKey, eventData);
+                const inputData = typeof task.inputs != 'function'
+                    ? task.inputs || {}
+                    : (<(eventKey: string, eventData: Object) => Object>task.inputs)(
+                        eventKey,
+                        JSON.parse(eventData),
+                    );
+                await this.executeTask(task, inputData);
             }
         });
         return stream;
@@ -56,26 +62,32 @@ class Application {
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
             taskFilter: result.taskKey || result.task || '*',
-            outputFilter: result.outputKey || result.output || '*'
+            outputFilter: result.outputKey || result.output || '*',
+            tagFilters: result.tagFilters || []
         });
-        stream.on('data', async ({ outputKey, outputData }) => {
-            if (result.filter(outputKey, JSON.parse(outputData))) {
-                await this.executeTask(task, outputKey, outputData);
+        stream.on('data', async ({ outputKey, outputData, taskKey, executionTags }) => {
+            if (result.filter(outputKey, JSON.parse(outputData), taskKey, executionTags)) {
+                const inputData = typeof task.inputs != 'function'
+                    ? task.inputs || {}
+                    : (<(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object>task.inputs)(
+                        outputKey,
+                        JSON.parse(outputData),
+                        taskKey,
+                        executionTags
+                    )
+                await this.executeTask(task, inputData);
             }
         });
         return stream;
     }
 
-    private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
+    private executeTask(task: Task, inputs: Object): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
-            const inputData = typeof task.inputs == 'function'
-                ? task.inputs(key, JSON.parse(data))
-                : task.inputs || {};
-
             this.client.executeTask({
                 serviceID: task.serviceID,
                 taskKey: task.taskKey,
-                inputData: JSON.stringify(inputData)
+                inputData: JSON.stringify(inputs),
+                executionTags: task.tags || []
             }, handleAPIResponse(resolve, reject));
         });
     }
@@ -121,10 +133,13 @@ type Result = {
     // outputKey is output key filter.
     outputKey?: string
 
+    // tagFilters is a list of tagExecutions to filter.
+    tagFilters?: string[]
+
     // filter callback func is used to filter task results by output key and
     // output data before continuing to execute the task.
     // task execution only will be made when filter returned with a true.
-    filter?: (outputKey: string, outputData: Object) => boolean
+    filter?: (outputKey: string, outputData: Object, taskKey?: string, tags?: string[]) => boolean
 }
 
 type Task = {
@@ -134,12 +149,17 @@ type Task = {
     // taskKey is task's key.
     taskKey: string
 
+    // tags is a list of tags associated to an execution
+    tags?: string[]
+
     // inputs is the task's input data.
     // it can directly get an object as value or a callback func to dynamically
     // set the inputs depending on relevant event data or task result.
     // key can be event key or output key.
     // data can be event data or output data.
-    inputs?: Object | ((key: string, data: Object) => Object)
+    inputs?: Object | 
+        ((eventKey: string, eventData: Object) => Object) | 
+        ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object)
 }
 
 export default Application;
