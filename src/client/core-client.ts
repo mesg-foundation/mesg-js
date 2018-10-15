@@ -13,6 +13,7 @@ interface CoreClient extends grpc.Client {
     deleteService(request: DeleteServiceRequest, cb: (err: Error, data: DeleteServiceReply) => void) 
     listServices(request: ListServicesRequest, cb: (err: Error, data: ListServicesReply) => void) 
     getService(request: GetServiceRequest, cb: (err: Error, data: GetServiceReply) => void) 
+    serviceLogs (request: ServiceLogsRequest): Stream<LogData>
 }
 
 interface ListenEventRequest {
@@ -24,12 +25,14 @@ interface ExecuteTaskRequest {
     serviceID: string
     taskKey: string
     inputData: string
+    executionTags: string[]
 }
 
 interface ListenResultRequest {
     serviceID: string
     taskFilter: string
     outputFilter: string
+    tagFilters: string[]
 }
 
 interface StartServiceRequest {
@@ -54,6 +57,7 @@ interface ResultData {
     taskKey: string
     outputKey: string
     outputData: string
+    executionTags: string[]
 }
 
 interface StartServiceReply {
@@ -63,11 +67,14 @@ interface StopServiceReply {
 }
 
 interface DeployServiceRequest {
-    service: Service
+    url: string
+    chunk: any
 }
 
 interface DeployServiceReply {
     serviceID: string
+    validationError: string
+    status: any
 }
 
 interface DeleteServiceRequest {
@@ -92,6 +99,17 @@ interface GetServiceReply {
     service: Service
 }
 
+interface ServiceLogsRequest {
+    serviceID: string
+    dependencies: string[]
+}
+
+interface LogData {
+    dependency: string
+    type: any
+    data: any
+}
+
 export default CoreClient;
 export {
     ListenEventRequest,
@@ -102,6 +120,7 @@ export {
     DeployServiceRequest,
     DeleteServiceRequest,
     ListServicesRequest,
+    ServiceLogsRequest,
     GetServiceRequest,
     ExecuteTaskReply,
     StartServiceReply,
@@ -112,4 +131,5 @@ export {
     GetServiceReply,
     ResultData,
     EventData,
+    LogData,
 }
