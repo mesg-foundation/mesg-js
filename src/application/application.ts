@@ -136,8 +136,7 @@ type Result = {
     // tagFilters is a list of tagExecutions to filter.
     tagFilters?: string[]
 
-    // filter callback func is used to filter task results by output key and
-    // output data before continuing to execute the task.
+    // filter callback func is used to filter task results by output key, output data, task key and/or tags.
     // task execution only will be made when filter returned with a true.
     filter?: (outputKey: string, outputData: Object, taskKey?: string, tags?: string[]) => boolean
 }
@@ -154,9 +153,9 @@ type Task = {
 
     // inputs is the task's input data.
     // it can directly get an object as value or a callback func to dynamically
-    // set the inputs depending on relevant event data or task result.
-    // key can be event key or output key.
-    // data can be event data or output data.
+    // functions are depending of your incoming data
+    // events: The function will have the eventKey and the eventData
+    // results: The function will have the outputKey, the outputData, the taskKey and the list of tags for this execution
     inputs?: Object | 
         ((eventKey: string, eventData: Object) => Object) | 
         ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object)
