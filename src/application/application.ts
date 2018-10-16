@@ -47,7 +47,13 @@ class Application {
                         eventKey,
                         JSON.parse(eventData),
                     );
-                await this.executeTask(task, inputData);
+                const tags = typeof task.tags != 'function'
+                    ? task.tags || []
+                    : (<(eventKey: string, eventData: Object) => string[]>task.tags)(
+                        eventKey,
+                        JSON.parse(eventData),
+                    )
+                await this.executeTask(task, inputData, tags);
             }
         });
         return stream;
@@ -75,19 +81,27 @@ class Application {
                         taskKey,
                         executionTags
                     )
-                await this.executeTask(task, inputData);
+                const tags = typeof task.tags != 'function'
+                    ? task.tags || []
+                    : (<(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[]>task.tags)(
+                        outputKey,
+                        JSON.parse(outputData),
+                        taskKey,
+                        executionTags
+                    )
+                await this.executeTask(task, inputData, tags);
             }
         });
         return stream;
     }
 
-    private executeTask(task: Task, inputs: Object): Promise<ExecuteTaskReply | Error> {
+    private executeTask(task: Task, inputs: Object, tags: string[]): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
             this.client.executeTask({
                 serviceID: task.serviceID,
                 taskKey: task.taskKey,
                 inputData: JSON.stringify(inputs),
-                executionTags: task.tags || []
+                executionTags: tags
             }, handleAPIResponse(resolve, reject));
         });
     }
@@ -149,7 +163,13 @@ type Task = {
     taskKey: string
 
     // tags is a list of tags associated to an execution
-    tags?: string[]
+    // tags can be either a list of static strings or a function that returns the list of strings 
+    // functions are depending of your incoming data
+    // events: The function will have the eventKey and the eventData
+    // results: The function will have the outputKey, the outputData, the taskKey and the list of tags for this execution
+    tags?: string[] |
+        ((eventKey: string, eventData: Object) => string[]) | 
+        ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[])
 
     // inputs is the task's input data.
     // it can directly get an object as value or a callback func to dynamically
