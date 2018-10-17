@@ -1,5 +1,6 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
+import * as clone from 'clone'
 import { CoreClient } from '../client'
 import Application, { Event, Task, Result } from '.';
 import { EventEmitter } from 'events';
@@ -59,7 +60,7 @@ const result: Result = {
 const task: Task = {
     serviceID: 'id1',
     taskKey: 'key',
-    tags: ['tag1', 'tag2'],
+    tags: ['tag3', 'tag4'],
     inputs: { data: 'object' }
 };
 
@@ -109,7 +110,7 @@ test('whenResult() should start two services', async function(t) {
 });
 
 test('whenEvent() should execute task', async function(t) {
-    t.plan(5);
+    t.plan(6);
     const client = new testClient();
     const application = newApplication(client);
     const spy = sinon.spy(client, 'listenEvent');
@@ -122,6 +123,7 @@ test('whenEvent() should execute task', async function(t) {
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
+    t.equal(args1.executionTags, task.tags);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
@@ -134,7 +136,7 @@ test('whenEvent() with different data filters', async function(t) {
         { assertion: false, filter: (eventKey, eventData) => eventData['foo'] != 'bar' },
         { assertion: true,  filter: (eventKey, eventData) => eventKey == 'key' },
         { assertion: false, filter: (eventKey, eventData) => eventKey != 'key' }
-    ]
+    ];
 
     t.plan(tests.length);
     
@@ -158,7 +160,7 @@ test('whenEvent() with different data filters', async function(t) {
 });
 
 test('whenResult() should execute task', async function(t) {
-    t.plan(6);
+    t.plan(7);
     const client = new testClient();
     const application = newApplication(client);
     const spy = sinon.spy(client, 'listenResult');
@@ -172,6 +174,7 @@ test('whenResult() should execute task', async function(t) {
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
     t.equal(args1.taskKey, task.taskKey);
+    t.equal(args1.executionTags, task.tags);
     t.equal(args1.inputData, JSON.stringify(task.inputs));
     spy.restore();
     spy1.restore();
@@ -188,7 +191,7 @@ test('whenResult() with different data filters', async function(t) {
         { assertion: false, filter: (outputKey, outputData, taskKey) => taskKey != 'taskX' },
         { assertion: true,  filter: (outputKey, outputData, taskKey, tags) => tags[0] == 'tag1' },
         { assertion: false, filter: (outputKey, outputData, taskKey, tags) => tags[0] != 'tag1' }
-    ]
+    ];
 
     t.plan(tests.length);
     
