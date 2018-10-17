@@ -217,3 +217,76 @@ test('whenResult() with different data filters', async function(t) {
         spy.restore();
     });
 });
+
+test('whenEvent() with different task inputs', async function(t) {
+    const tests = [
+        { inputsSent: {} },
+        { inputs: {}, inputsSent: {} },
+        { inputs: { a: '1', b: '2' }, inputsSent: { a: '1', b: '2' } },
+        { inputs: (eventKey, eventData) => {
+            return { a: '1', b: '2' }
+        }, inputsSent: { a: '1', b: '2' } },
+        { inputs: (eventKey, eventData) => {
+            return { eventKey, eventData }
+        }, inputsSent: { eventKey: 'key', eventData: { foo: 'bar' } } },
+    ];
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const event: Event = {
+            serviceID: 'id',
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const task0: Task = clone(task);
+        task0.inputs = el.inputs;
+        const stream = <EventEmitter>await application.whenEvent(event, task0);
+        stream.emit('data', {
+            eventKey: 'key',
+            eventData: "{\"foo\":\"bar\"}"
+        });
+        const args = spy.getCall(0).args[0];
+        t.equal(args.inputData, JSON.stringify(el.inputsSent));
+        spy.restore();
+    });
+});
+
+test('whenResult() with different task inputs', async function(t) {
+    const tests = [
+        { inputsSent: {} },
+        { inputs: {}, inputsSent: {} },
+        { inputs: { a: '1', b: '2' }, inputsSent: { a: '1', b: '2' } },
+        { inputs: (outputKey, outputData, taskKey, executionTags) => {
+            return { a: '1', b: '2' }
+        }, inputsSent: { a: '1', b: '2' } },
+        { inputs: (outputKey, outputData, taskKey, executionTags) => {
+            return { outputKey, outputData, taskKey, executionTags }
+        }, inputsSent: { outputKey: 'key', outputData: { foo: 'bar' },
+            taskKey: 'taskX', executionTags: ['tag1', 'tag2'] } },
+    ];
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const result: Result = {
+            serviceID: 'id',
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const task0: Task = clone(task);
+        task0.inputs = el.inputs;
+        const stream = <EventEmitter>await application.whenResult(result, task0);
+        stream.emit('data', {
+            outputKey: 'key',
+            outputData: "{\"foo\":\"bar\"}",
+            taskKey: 'taskX',
+            executionTags: ['tag1', 'tag2']
+        });
+        const args = spy.getCall(0).args[0];
+        t.equal(args.inputData, JSON.stringify(el.inputsSent));
+        spy.restore();
+    });
+});
