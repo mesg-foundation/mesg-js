@@ -40,18 +40,19 @@ class Application {
         })
         stream.on('data', async ({ eventKey, eventData }) => {
             const filter = event.filter as (eventKey: string, eventData: Object) => boolean;
-            if (filter(eventKey, JSON.parse(eventData))) {
+            const data = JSON.parse(eventData);
+            if (filter(eventKey, data)) {
                 const inputData = typeof task.inputs != 'function'
                     ? task.inputs || {}
                     : (<(eventKey: string, eventData: Object) => Object>task.inputs)(
                         eventKey,
-                        JSON.parse(eventData),
+                        data,
                     );
                 const tags = typeof task.tags != 'function'
                     ? task.tags || []
                     : (<(eventKey: string, eventData: Object) => string[]>task.tags)(
                         eventKey,
-                        JSON.parse(eventData),
+                        data,
                     )
                 await this.executeTask(task, inputData, tags);
             }
@@ -72,20 +73,23 @@ class Application {
             tagFilters: result.tagFilters || []
         });
         stream.on('data', async ({ outputKey, outputData, taskKey, executionTags }) => {
-            if (result.filter(outputKey, JSON.parse(outputData), taskKey, executionTags)) {
+            const data = JSON.parse(outputData);
+            if (result.filter(outputKey, data, taskKey, executionTags)) {
                 const inputData = typeof task.inputs != 'function'
                     ? task.inputs || {}
-                    : (<(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object>task.inputs)(
+                    : (<(outputKey: string, outputData: Object,
+                        taskKey: string, tags: string[]) => Object>task.inputs)(
                         outputKey,
-                        JSON.parse(outputData),
+                        data,
                         taskKey,
                         executionTags
                     )
                 const tags = typeof task.tags != 'function'
                     ? task.tags || []
-                    : (<(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[]>task.tags)(
+                    : (<(outputKey: string, outputData: Object,
+                        taskKey: string, tags: string[]) => string[]>task.tags)(
                         outputKey,
-                        JSON.parse(outputData),
+                        data,
                         taskKey,
                         executionTags
                     )
