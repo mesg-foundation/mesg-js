@@ -54,7 +54,7 @@ class Application {
                         eventKey,
                         data,
                     )
-                await this.executeTask(task, inputData, tags);
+                await this.executeTask(task.serviceID, task.taskKey, inputData, tags);
             }
         });
         return stream;
@@ -93,17 +93,18 @@ class Application {
                         taskKey,
                         executionTags
                     )
-                await this.executeTask(task, inputData, tags);
+                await this.executeTask(task.serviceID, task.taskKey, inputData, tags);
             }
         });
         return stream;
     }
 
-    private executeTask(task: Task, inputs: Object, tags: string[]): Promise<ExecuteTaskReply | Error> {
+    private executeTask(serviceID: string, taskKey: string, 
+        inputs: Object, tags: string[]): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
             this.client.executeTask({
-                serviceID: task.serviceID,
-                taskKey: task.taskKey,
+                serviceID: serviceID,
+                taskKey: taskKey,
                 inputData: JSON.stringify(inputs),
                 executionTags: tags
             }, handleAPIResponse(resolve, reject));
