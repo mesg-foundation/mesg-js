@@ -160,7 +160,7 @@ test('whenEvent() with different data filters', async function(t) {
 });
 
 test('whenResult() should execute task', async function(t) {
-    t.plan(7);
+    t.plan(8);
     const client = new testClient();
     const application = newApplication(client);
     const spy = sinon.spy(client, 'listenResult');
@@ -170,6 +170,7 @@ test('whenResult() should execute task', async function(t) {
     t.equal(args.serviceID, result.serviceID);
     t.equal(args.taskFilter, result.taskKey);
     t.equal(args.outputFilter, result.outputKey);
+    t.equal(args.tagFilters, result.tagFilters);
     stream.emit('data', { outputKey: 'key', outputData: "{\"foo\":\"bar\"}" });
     const args1 = spy1.getCall(0).args[0];
     t.equal(args1.serviceID, task.serviceID);
