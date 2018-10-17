@@ -1,5 +1,5 @@
-- Possibility to set specific tag executions
-- Add more precise client side filter and add executionTags filter
+- Possibility to associate tags for executions.
+- Update client side filter to be more precise and support executionTags filter.
 
 ## v1.3.0
 

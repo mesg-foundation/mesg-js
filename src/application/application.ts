@@ -167,10 +167,10 @@ type Task = {
     taskKey: string
 
     // tags is a list of tags associated to an execution
-    // tags can be either a list of static strings or a function that returns the list of strings 
-    // functions are depending of your incoming data
-    // events: The function will have the eventKey and the eventData
-    // results: The function will have the outputKey, the outputData, the taskKey and the list of tags for this execution
+    // tags can be either a list of static strings or a function that returns a list of strings 
+    // function parameters depends the received event type which can be an event or a result.
+    // for events: the function will have eventKey and eventData.
+    // for results: the function will have outputKey, outputData, taskKey and the list of tags associated with execution.
     tags?: string[] |
         ((eventKey: string, eventData: Object) => string[]) | 
         ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[])
