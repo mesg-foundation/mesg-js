@@ -152,7 +152,7 @@ type Result = {
     // outputKey is output key filter.
     outputKey?: string
 
-    // tagFilters is a list of tagExecutions to filter.
+    // tagFilters is a list of tags to filter results by execution tags in the core's side.
     tagFilters?: string[]
 
     // filter callback func is used to filter task results by output key, output data, task key and/or tags.
@@ -167,20 +167,20 @@ type Task = {
     // taskKey is task's key.
     taskKey: string
 
-    // tags is a list of tags associated to an execution
-    // tags can be either a list of static strings or a function that returns a list of strings 
+    // tags is a list of tags associated to an execution.
+    // tags can be either a list of static strings or a function that returns a list of strings.
     // function parameters depends the received event type which can be an event or a result.
     // for events: the function will have eventKey and eventData.
-    // for results: the function will have outputKey, outputData, taskKey and the list of tags associated with execution.
+    // for results: the function will have outputKey, outputData, taskKey and a list of tags associated with the execution.
     tags?: string[] |
         ((eventKey: string, eventData: Object) => string[]) | 
         ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[])
 
     // inputs is the task's input data.
-    // it can directly get an object as value or a callback func to dynamically
-    // functions are depending of your incoming data
-    // events: The function will have the eventKey and the eventData
-    // results: The function will have the outputKey, the outputData, the taskKey and the list of tags for this execution
+    // it can be statically set to have an object literal or a function that returns an object literal.
+    // function parameters depends the received event type which can be an event or a result.
+    // for events: the function will have eventKey and eventData.
+    // for results: the function will have outputKey, outputData, taskKey and a list of tags associated with the execution.
     inputs?: Object | 
         ((eventKey: string, eventData: Object) => Object) | 
         ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object)
