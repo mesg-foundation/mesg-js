@@ -290,3 +290,75 @@ test('whenResult() with different task inputs', async function(t) {
         spy.restore();
     });
 });
+
+test('whenEvent() with different task tags', async function(t) {
+    const tests = [
+        { tagsSent: [] },
+        { tags: [], tagsSent: [] },
+        { tags: ['1', '2'], tagsSent: ['1', '2'] },
+        { tags: (eventKey, eventData) => {
+            return ['1', '2']
+        }, tagsSent: ['1', '2'] },
+        { tags: (eventKey, eventData) => {
+            return [ eventKey, eventData ]
+        }, tagsSent: [ 'key', { foo: 'bar' } ] },
+    ];
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client);
+        const event: Event = {
+            serviceID: 'id',
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const task0: Task = clone(task);
+        task0.tags = el.tags;
+        const stream = <EventEmitter>await application.whenEvent(event, task0);
+        stream.emit('data', {
+            eventKey: 'key',
+            eventData: "{\"foo\":\"bar\"}"
+        });
+        const args = spy.getCall(0).args[0];
+        t.same(args.executionTags, el.tagsSent);
+        spy.restore();
+    });
+});
+
+test('whenResult() with different task tags', async function(t) {
+    const tests = [
+        { tagsSent: [] },
+        { tags: [], tagsSent: [] },
+        { tags: ['1', '2'], tagsSent: ['1', '2'] },
+        { tags: (outputKey, outputData, taskKey, executionTags) => {
+            return ['1', '2']
+        }, tagsSent: ['1', '2'] },
+        { tags: (outputKey, outputData, taskKey, executionTags) => {
+            return [ outputKey, outputData, taskKey, executionTags ]
+        }, tagsSent: [ 'key', { foo: 'bar' }, 'taskX', ['tag1', 'tag2'] ] },
+    ];
+
+    t.plan(tests.length);
+    
+    tests.forEach(async (el) => {
+        const client = new testClient();
+        const application = newApplication(client); 
+        const result: Result = {
+            serviceID: 'id',
+        };
+        const spy = sinon.spy(client, 'executeTask');
+        const task0: Task = clone(task);
+        task0.tags = el.tags;
+        const stream = <EventEmitter>await application.whenResult(result, task0);
+        stream.emit('data', {
+            outputKey: 'key',
+            outputData: "{\"foo\":\"bar\"}",
+            taskKey: 'taskX',
+            executionTags: ['tag1', 'tag2']
+        });
+        const args = spy.getCall(0).args[0];
+        t.same(args.executionTags, el.tagsSent);
+        spy.restore();
+    });
+});
