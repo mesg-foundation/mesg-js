@@ -300,8 +300,8 @@ test('whenEvent() with different task tags', async function(t) {
             return ['1', '2']
         }, tagsSent: ['1', '2'] },
         { tags: (eventKey, eventData) => {
-            return [ eventKey, eventData ]
-        }, tagsSent: [ 'key', { foo: 'bar' } ] },
+            return [ eventKey, eventData.foo ]
+        }, tagsSent: [ 'key', 'bar' ] },
     ];
 
     t.plan(tests.length);
@@ -335,8 +335,8 @@ test('whenResult() with different task tags', async function(t) {
             return ['1', '2']
         }, tagsSent: ['1', '2'] },
         { tags: (outputKey, outputData, taskKey, executionTags) => {
-            return [ outputKey, outputData, taskKey, executionTags ]
-        }, tagsSent: [ 'key', { foo: 'bar' }, 'taskX', ['tag1', 'tag2'] ] },
+            return [ outputKey, outputData.foo, taskKey, executionTags[0] ]
+        }, tagsSent: [ 'key', 'bar', 'taskX', 'tag1' ] },
     ];
 
     t.plan(tests.length);
