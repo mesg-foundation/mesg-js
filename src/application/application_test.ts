@@ -145,7 +145,6 @@ test('whenEvent() with different data filters', async function(t) {
         const application = newApplication(client);
         const event: Event = {
             serviceID: 'id',
-            eventKey: '*',
             filter: el.filter,
         };
         const spy = sinon.spy(client, 'executeTask');
@@ -201,9 +200,6 @@ test('whenResult() with different data filters', async function(t) {
         const application = newApplication(client);
         const result: Result = {
             serviceID: 'id',
-            task: '*',
-            output: '*',
-            tagFilters: ['tag1', 'tag2'],
             filter: el.filter,
         };
         const spy = sinon.spy(client, 'executeTask');
