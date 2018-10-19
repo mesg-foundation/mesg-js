@@ -359,3 +359,14 @@ test('whenResult() with different task tags', async function(t) {
         spy.restore();
     });
 });
+
+test('startService() should start same services only once', async function(t) {
+    t.plan(1);
+    const client = new testClient();
+    const application = newApplication(client);
+    const spy = sinon.spy(client, 'startService');
+    await application.whenEvent(event, task);
+    await application.whenEvent(event, task);
+    t.ok(spy.calledTwice);
+    spy.restore();
+});

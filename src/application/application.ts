@@ -17,6 +17,7 @@ class Application {
     api: CoreClient
 
     private client: CoreClient
+    private serviceIDs: string[] = []
 
     constructor(options: Options){
         this.client = options.client;
@@ -112,6 +113,12 @@ class Application {
     }
 
     private async startService(id: string) {
+        // service is already starting.
+        if (this.serviceIDs.indexOf(id) >= 0) {
+            return
+        }
+        this.serviceIDs = [...this.serviceIDs, id];
+
         try {
             await new Promise<StartServiceReply | Error>((resolve, reject) => {
                 this.client.startService({ serviceID: id }, handleAPIResponse(resolve, reject));
