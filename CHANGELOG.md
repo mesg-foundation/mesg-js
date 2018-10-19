@@ -1,3 +1,4 @@
+## v1.4.0
 
 - Possibility to associate tags for executions.
 - Update client side filter to be more precise and support executionTags filter.
