@@ -41,8 +41,21 @@ class Application {
         })
         stream.on('data', async ({ eventKey, eventData }) => {
             const filter = event.filter as (eventKey: string, eventData: Object) => boolean;
-            if (filter(eventKey, JSON.parse(eventData))) {
-                await this.executeTask(task, eventKey, eventData);
+            const data = JSON.parse(eventData);
+            if (filter(eventKey, data)) {
+                const inputData = typeof task.inputs != 'function'
+                    ? task.inputs || {}
+                    : (<(eventKey: string, eventData: Object) => Object>task.inputs)(
+                        eventKey,
+                        data,
+                    );
+                const tags = typeof task.tags != 'function'
+                    ? task.tags || []
+                    : (<(eventKey: string, eventData: Object) => string[]>task.tags)(
+                        eventKey,
+                        data,
+                    )
+                await this.executeTask(task.serviceID, task.taskKey, inputData, tags);
             }
         });
         return stream;
@@ -57,26 +70,44 @@ class Application {
         const stream = this.client.listenResult({
             serviceID: result.serviceID,
             taskFilter: result.taskKey || result.task || '*',
-            outputFilter: result.outputKey || result.output || '*'
+            outputFilter: result.outputKey || result.output || '*',
+            tagFilters: result.tagFilters || []
         });
-        stream.on('data', async ({ outputKey, outputData }) => {
-            if (result.filter(outputKey, JSON.parse(outputData))) {
-                await this.executeTask(task, outputKey, outputData);
+        stream.on('data', async ({ outputKey, outputData, taskKey, executionTags }) => {
+            const data = JSON.parse(outputData);
+            if (result.filter(outputKey, data, taskKey, executionTags)) {
+                const inputData = typeof task.inputs != 'function'
+                    ? task.inputs || {}
+                    : (<(outputKey: string, outputData: Object,
+                        taskKey: string, tags: string[]) => Object>task.inputs)(
+                        outputKey,
+                        data,
+                        taskKey,
+                        executionTags
+                    )
+                const tags = typeof task.tags != 'function'
+                    ? task.tags || []
+                    : (<(outputKey: string, outputData: Object,
+                        taskKey: string, tags: string[]) => string[]>task.tags)(
+                        outputKey,
+                        data,
+                        taskKey,
+                        executionTags
+                    )
+                await this.executeTask(task.serviceID, task.taskKey, inputData, tags);
             }
         });
         return stream;
     }
 
-    private executeTask(task: Task, key: string, data: any): Promise<ExecuteTaskReply | Error> {
+    private executeTask(serviceID: string, taskKey: string, 
+        inputs: Object, tags: string[]): Promise<ExecuteTaskReply | Error> {
         return new Promise<ExecuteTaskReply | Error>((resolve, reject) => {
-            const inputData = typeof task.inputs == 'function'
-                ? task.inputs(key, JSON.parse(data))
-                : task.inputs || {};
-
             this.client.executeTask({
-                serviceID: task.serviceID,
-                taskKey: task.taskKey,
-                inputData: JSON.stringify(inputData)
+                serviceID: serviceID,
+                taskKey: taskKey,
+                inputData: JSON.stringify(inputs),
+                executionTags: tags
             }, handleAPIResponse(resolve, reject));
         });
     }
@@ -128,10 +159,12 @@ type Result = {
     // outputKey is output key filter.
     outputKey?: string
 
-    // filter callback func is used to filter task results by output key and
-    // output data before continuing to execute the task.
+    // tagFilters is a list of tags to filter results by execution tags in the core's side.
+    tagFilters?: string[]
+
+    // filter callback func is used to filter task results by output key, output data, task key and/or tags.
     // task execution only will be made when filter returned with a true.
-    filter?: (outputKey: string, outputData: Object) => boolean
+    filter?: (outputKey: string, outputData: Object, taskKey?: string, tags?: string[]) => boolean
 }
 
 type Task = {
@@ -141,12 +174,23 @@ type Task = {
     // taskKey is task's key.
     taskKey: string
 
+    // tags is a list of tags associated to an execution.
+    // tags can be either a list of static strings or a function that returns a list of strings.
+    // function parameters depends the received event type which can be an event or a result.
+    // for events: the function will have eventKey and eventData.
+    // for results: the function will have outputKey, outputData, taskKey and a list of tags associated with the execution.
+    tags?: string[] |
+        ((eventKey: string, eventData: Object) => string[]) | 
+        ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[])
+
     // inputs is the task's input data.
-    // it can directly get an object as value or a callback func to dynamically
-    // set the inputs depending on relevant event data or task result.
-    // key can be event key or output key.
-    // data can be event data or output data.
-    inputs?: Object | ((key: string, data: Object) => Object)
+    // it can be statically set to have an object literal or a function that returns an object literal.
+    // function parameters depends the received event type which can be an event or a result.
+    // for events: the function will have eventKey and eventData.
+    // for results: the function will have outputKey, outputData, taskKey and a list of tags associated with the execution.
+    inputs?: Object | 
+        ((eventKey: string, eventData: Object) => Object) | 
+        ((outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object)
 }
 
 export default Application;

@@ -88,7 +88,8 @@ The previous functions expect the following object definitions:
 | `serviceID` | `String` | **REQUIRED** | The result's service ID |
 | `taskKey` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
 | `outputKey` | `String` | `*` | Only listen for the output key. If set, `taskKey` is required. Leave it empty or set `*` to listen for any task's output from this service |
-| `filter` | `func(resultKey: string, resultData: Object) => boolean` | `(key, data) => true` | Function to filter based on the output key and/or output data of the result | 
+| `tagFilters` | `String[]` | `[]` | List of tags required to process this result. All inclusive filter |
+| `filter` | `func(outputKey: string, outputData: Object, taskKey?: string, tags?: string[]) => boolean` | `() => true` | Function to filter based on the output key, output data, task key and tags of the task result | 
 
 ### `task`
 
@@ -96,7 +97,8 @@ The previous functions expect the following object definitions:
 | --- | --- | --- | --- |
 | `serviceID` | `String` | **REQUIRED** | The task's service ID |
 | `taskKey` | `String` | **REQUIRED** | The task key to execute |
-| `inputs` | `Object` or `func(eventKey: string, eventData: Object) => Object` | `{}` | Input to pass on to the task |
+| `tags` | `String[]` or `(eventKey: string, eventData: Object) => string[]` or `(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => string[]` | `[]` | List of tags to associate with the execution. These tags can be statically set or can be generated based on event or result |
+| `inputs` | `Object` or `(eventKey: string, eventData: Object) => Object` or `(outputKey: string, outputData: Object, taskKey: string, tags: string[]) => Object` | `{}` | Input data to pass as task inputs. Inputs can be statically set or can be generated based on event or result |
 
 ## Example
 
