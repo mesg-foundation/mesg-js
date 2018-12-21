@@ -14,7 +14,6 @@ This library can be used from an Application or a Service.
 
 - [Installation](#installation)
 - [Application](#application)
-  - [Advanced utilization](#advanced-utilization)
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
@@ -41,9 +40,7 @@ By default, the library connects to Core from the endpoint `localhost:50052`.
 
 If you wish to set another endpoint, you must set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
 
-## Advanced utilization
 
-The application can use gRPC APIs directly for advanced utilization.
 
 See the [full list of available gRPC APIs](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
 
