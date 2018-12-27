@@ -48,7 +48,7 @@ ServiceClient.prototype.emitEvent = function emitEvent(requestMessage, metadata,
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Service.EmitEvent, {
+  var client = grpc.unary(Service.EmitEvent, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -57,13 +57,22 @@ ServiceClient.prototype.emitEvent = function emitEvent(requestMessage, metadata,
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 ServiceClient.prototype.listenTask = function listenTask(requestMessage, metadata) {
@@ -109,7 +118,7 @@ ServiceClient.prototype.submitResult = function submitResult(requestMessage, met
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Service.SubmitResult, {
+  var client = grpc.unary(Service.SubmitResult, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -118,13 +127,22 @@ ServiceClient.prototype.submitResult = function submitResult(requestMessage, met
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 exports.ServiceClient = ServiceClient;

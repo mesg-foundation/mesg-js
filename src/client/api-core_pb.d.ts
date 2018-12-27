@@ -3,6 +3,104 @@
 
 import * as jspb from "google-protobuf";
 
+export class CreateWorkflowRequest extends jspb.Message {
+  hasDefinition(): boolean;
+  clearDefinition(): void;
+  getDefinition(): CreateWorkflowRequest.WorkflowDefinition | undefined;
+  setDefinition(value?: CreateWorkflowRequest.WorkflowDefinition): void;
+
+  getName(): string;
+  setName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateWorkflowRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateWorkflowRequest): CreateWorkflowRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CreateWorkflowRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateWorkflowRequest;
+  static deserializeBinaryFromReader(message: CreateWorkflowRequest, reader: jspb.BinaryReader): CreateWorkflowRequest;
+}
+
+export namespace CreateWorkflowRequest {
+  export type AsObject = {
+    definition?: CreateWorkflowRequest.WorkflowDefinition.AsObject,
+    name: string,
+  }
+
+  export class WorkflowDefinition extends jspb.Message {
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): WorkflowDefinition.AsObject;
+    static toObject(includeInstance: boolean, msg: WorkflowDefinition): WorkflowDefinition.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: WorkflowDefinition, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): WorkflowDefinition;
+    static deserializeBinaryFromReader(message: WorkflowDefinition, reader: jspb.BinaryReader): WorkflowDefinition;
+  }
+
+  export namespace WorkflowDefinition {
+    export type AsObject = {
+    }
+  }
+}
+
+export class CreateWorkflowReply extends jspb.Message {
+  getId(): string;
+  setId(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateWorkflowReply.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateWorkflowReply): CreateWorkflowReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CreateWorkflowReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateWorkflowReply;
+  static deserializeBinaryFromReader(message: CreateWorkflowReply, reader: jspb.BinaryReader): CreateWorkflowReply;
+}
+
+export namespace CreateWorkflowReply {
+  export type AsObject = {
+    id: string,
+  }
+}
+
+export class DeleteWorkflowRequest extends jspb.Message {
+  getId(): string;
+  setId(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteWorkflowRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteWorkflowRequest): DeleteWorkflowRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DeleteWorkflowRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteWorkflowRequest;
+  static deserializeBinaryFromReader(message: DeleteWorkflowRequest, reader: jspb.BinaryReader): DeleteWorkflowRequest;
+}
+
+export namespace DeleteWorkflowRequest {
+  export type AsObject = {
+    id: string,
+  }
+}
+
+export class DeleteWorkflowReply extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteWorkflowReply.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteWorkflowReply): DeleteWorkflowReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: DeleteWorkflowReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteWorkflowReply;
+  static deserializeBinaryFromReader(message: DeleteWorkflowReply, reader: jspb.BinaryReader): DeleteWorkflowReply;
+}
+
+export namespace DeleteWorkflowReply {
+  export type AsObject = {
+  }
+}
+
 export class ListenEventRequest extends jspb.Message {
   getServiceid(): string;
   setServiceid(value: string): void;
@@ -362,6 +460,9 @@ export class DeleteServiceRequest extends jspb.Message {
   getServiceid(): string;
   setServiceid(value: string): void;
 
+  getDeletedata(): boolean;
+  setDeletedata(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteServiceRequest.AsObject;
   static toObject(includeInstance: boolean, msg: DeleteServiceRequest): DeleteServiceRequest.AsObject;
@@ -375,6 +476,7 @@ export class DeleteServiceRequest extends jspb.Message {
 export namespace DeleteServiceRequest {
   export type AsObject = {
     serviceid: string,
+    deletedata: boolean,
   }
 }
 
@@ -536,8 +638,11 @@ export namespace LogData {
 }
 
 export class Service extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
+  getHash(): string;
+  setHash(value: string): void;
+
+  getSid(): string;
+  setSid(value: string): void;
 
   getName(): string;
   setName(value: string): void;
@@ -583,7 +688,8 @@ export class Service extends jspb.Message {
 
 export namespace Service {
   export type AsObject = {
-    id: string,
+    hash: string,
+    sid: string,
     name: string,
     description: string,
     tasksList: Array<Task.AsObject>,

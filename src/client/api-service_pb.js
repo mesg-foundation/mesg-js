@@ -179,7 +179,7 @@ proto.api.EmitEventRequest.prototype.getToken = function() {
 
 /** @param {string} value */
 proto.api.EmitEventRequest.prototype.setToken = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -194,7 +194,7 @@ proto.api.EmitEventRequest.prototype.getEventkey = function() {
 
 /** @param {string} value */
 proto.api.EmitEventRequest.prototype.setEventkey = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -209,7 +209,7 @@ proto.api.EmitEventRequest.prototype.getEventdata = function() {
 
 /** @param {string} value */
 proto.api.EmitEventRequest.prototype.setEventdata = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -467,7 +467,7 @@ proto.api.ListenTaskRequest.prototype.getToken = function() {
 
 /** @param {string} value */
 proto.api.ListenTaskRequest.prototype.setToken = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -633,7 +633,7 @@ proto.api.TaskData.prototype.getExecutionid = function() {
 
 /** @param {string} value */
 proto.api.TaskData.prototype.setExecutionid = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -648,7 +648,7 @@ proto.api.TaskData.prototype.getTaskkey = function() {
 
 /** @param {string} value */
 proto.api.TaskData.prototype.setTaskkey = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -663,7 +663,7 @@ proto.api.TaskData.prototype.getInputdata = function() {
 
 /** @param {string} value */
 proto.api.TaskData.prototype.setInputdata = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 
@@ -829,7 +829,7 @@ proto.api.SubmitResultRequest.prototype.getExecutionid = function() {
 
 /** @param {string} value */
 proto.api.SubmitResultRequest.prototype.setExecutionid = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  jspb.Message.setField(this, 1, value);
 };
 
 
@@ -844,7 +844,7 @@ proto.api.SubmitResultRequest.prototype.getOutputkey = function() {
 
 /** @param {string} value */
 proto.api.SubmitResultRequest.prototype.setOutputkey = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -859,7 +859,7 @@ proto.api.SubmitResultRequest.prototype.getOutputdata = function() {
 
 /** @param {string} value */
 proto.api.SubmitResultRequest.prototype.setOutputdata = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  jspb.Message.setField(this, 3, value);
 };
 
 

@@ -14,9 +14,6 @@ This library can be used from an Application or a Service.
 
 - [Installation](#installation)
 - [Application](#application)
-  - [React to events](#react-to-events)
-  - [React to results](#react-to-results)
-  - [Advanced utilization](#advanced-utilization)
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
@@ -43,97 +40,7 @@ By default, the library connects to Core from the endpoint `localhost:50052`.
 
 If you wish to set another endpoint, you must set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
 
-## React to events
 
-To react to events and trigger tasks, the application can use the `MESG.whenEvent` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
-
-```javascript
-MESG.whenEvent(event, task)
-.on('error', function(error) {
-  // An error has occurred
-})
-```
-
-[`event` definition](#event). [`task` definition](#task).
-
-## React to results
-
-To react to a task's results and trigger other tasks, the application uses the `MESG.whenResult` function. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with a possible event `error`.
-
-```javascript
-MESG.whenResult(result, task)
-.on('error', function(error) {
-  // An error has occurred
-})
-```
-
-[`result` definition](#result). [`task` definition](#task).
-
-## Object definition
-
-The previous functions expect the following object definitions:
-
-### `event`
-
-| Key | Type | Default | Description |
-| --- | --- | --- | --- |
-| `serviceID` | `String` | **REQUIRED** | The event's service ID |
-| `eventKey` | `String` | `*` | Only listen for this event's key. Leave empty or set `*` to listen for any event from this service |
-| `filter` | `func(eventKey: string, eventData: Object) => boolean` | `(key, data) => true` | Function to filter based on the key and/or data of event | 
-
-### `result`
-
-| Key | Type | Default | Description |
-| --- | --- | --- | --- |
-| `serviceID` | `String` | **REQUIRED** | The result's service ID |
-| `taskKey` | `String` | `*` | Only listen for this task's key. Leave empty or set `*` to listen for any task's result from this service |
-| `outputKey` | `String` | `*` | Only listen for the output key. If set, `taskKey` is required. Leave it empty or set `*` to listen for any task's output from this service |
-| `filter` | `func(resultKey: string, resultData: Object) => boolean` | `(key, data) => true` | Function to filter based on the output key and/or output data of the result | 
-
-### `task`
-
-| Key | Type | Default | Description |
-| --- | --- | --- | --- |
-| `serviceID` | `String` | **REQUIRED** | The task's service ID |
-| `taskKey` | `String` | **REQUIRED** | The task key to execute |
-| `inputs` | `Object` or `func(eventKey: string, eventData: Object) => Object` | `{}` | Input to pass on to the task |
-
-## Example
-
-```javascript
-const MESG = require('mesg-js').application()
-
-// When eventX occurs, then execute start
-MESG.whenEvent({
-  serviceID: __EVENT_SERVICE_ID__,
-  eventKey: 'eventX'
-}, {
-  serviceID: __TASK_SERVICE_ID__,
-  taskKey: 'start',
-  inputs: { foo: 'bar' }
-})
-.on('error', function(error) {
-  // An error has occurred
-})
-
-// When a valid result of a task occurs, then execute taskX
-MESG.whenResult({
-  serviceID: __RESULT_SERVICE_ID__,
-  taskKey: 'start',
-  outputKey: 'valid'
-}, {
-  serviceID: __TASK_SERVICE_ID__,
-  taskKey: 'taskX',
-  inputs: function(outputKey, outputData) { return { foo: 'bar' }}
-})
-.on('error', function(error) {
-  // An error has occurred
-})
-```
-
-## Advanced utilization
-
-The application can use gRPC APIs directly for advanced utilization.
 
 See the [full list of available gRPC APIs](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
 
@@ -142,14 +49,16 @@ Here some examples for the most useful gRPC APIs that your application can use:
 ### Execute a task
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ExecuteTask({
-  serviceID: __TASK_SERVICE_ID__,
-  taskKey: __TASK_KEY__,
-  inputData: JSON.stringify(__INPUT_DATA__)
-}, function (error, reply) {
-  console.log('task in progress with execution id:', reply.executionID)
+var req = new CoreTypes.ExecuteTaskRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setTaskkey(__TASK_KEY__)
+req.setInputdata(JSON.stringify(__INPUT_DATA__))
+
+api.executeTask(req, function (err, reply) {
+  console.log('task in progress with execution id:', reply.getExecutionid())
   ...
 })
 ```
@@ -159,18 +68,20 @@ MESG.api.ExecuteTask({
 ### Listen for an event
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ListenEvent({
-  serviceID: __TASK_SERVICE_ID__,
-  eventFilter: __EVENT_KEY__
-})
-.on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
-  ...
-})
+var req = new CoreTypes.ListenEventRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setEventfilter(__EVENT_KEY__)
+
+api.listenEvent(req)
+  .on('error', function(error) {
+    // An error has occurred and the stream has been closed.
+  })
+  .on('data', function(data) {
+    ...
+  })
 ```
 
 [Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
@@ -178,18 +89,59 @@ MESG.api.ListenEvent({
 ### Listen to a task's result
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ListenResult({
-  serviceID: __TASK_SERVICE_ID__,
-  taskFilter: __TASK_KEY__,
-  outputFilter: __OUTPUT_KEY__
-})
-.on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
-  ...
+var req = new CoreTypes.ListenResultRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setTaskFilter(__TASK_KEY__)
+req.setOutputfilter(__OUTPUT_KEY__)
+
+api.listenResult(req)
+  .on('error', function(error) {
+    // An error has occurred and the stream has been closed.
+  })
+  .on('data', function(data) {
+    ...
+  })
+```
+
+### Execute a task & listen for its result
+
+```javascript
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
+const uuidv4 = require('uuid/v4');
+
+// https://github.com/ilgooz/service-location
+const serviceID = "2bd8f053748884d5b743d4368aebb916469372e2"
+
+const id = uuidv4()
+
+var execReq = new CoreTypes.ExecuteTaskRequest()
+execReq.setServiceid(serviceID)
+execReq.setTaskkey("locate")
+execReq.setInputdata(JSON.stringify({ip: "104.198.14.52"}))
+execReq.addExecutiontags(id)
+
+var listenReq = new CoreTypes.ListenResultRequest()
+listenReq.setServiceid(serviceID)
+listenReq.addTagfilters(id)
+
+var stream = api.listenResult(listenReq)
+  .on('error', function(err) {
+    if (err.code == 1) return // cancelled
+    console.log("Stream error: ", err.details)
+  })
+  .on('data', function(data) {
+    var location = JSON.parse(data.getOutputdata())
+    console.log('City: ', location.city)
+    stream.cancel()
+  })
+
+api.executeTask(execReq, function(err){ 
+  if (!err) return
+  console.log("Execution error: ", err)
 })
 ```
 

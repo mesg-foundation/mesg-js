@@ -100,6 +100,24 @@ Core.ServiceLogs = {
   responseType: api_core_pb.LogData
 };
 
+Core.CreateWorkflow = {
+  methodName: "CreateWorkflow",
+  service: Core,
+  requestStream: false,
+  responseStream: false,
+  requestType: api_core_pb.CreateWorkflowRequest,
+  responseType: api_core_pb.CreateWorkflowReply
+};
+
+Core.DeleteWorkflow = {
+  methodName: "DeleteWorkflow",
+  service: Core,
+  requestStream: false,
+  responseStream: false,
+  requestType: api_core_pb.DeleteWorkflowRequest,
+  responseType: api_core_pb.DeleteWorkflowReply
+};
+
 exports.Core = Core;
 
 function CoreClient(serviceHost, options) {
@@ -189,7 +207,7 @@ CoreClient.prototype.executeTask = function executeTask(requestMessage, metadata
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.ExecuteTask, {
+  var client = grpc.unary(Core.ExecuteTask, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -198,20 +216,29 @@ CoreClient.prototype.executeTask = function executeTask(requestMessage, metadata
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 CoreClient.prototype.startService = function startService(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.StartService, {
+  var client = grpc.unary(Core.StartService, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -220,20 +247,29 @@ CoreClient.prototype.startService = function startService(requestMessage, metada
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 CoreClient.prototype.stopService = function stopService(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.StopService, {
+  var client = grpc.unary(Core.StopService, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -242,24 +278,74 @@ CoreClient.prototype.stopService = function stopService(requestMessage, metadata
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
-Core.prototype.deployService = function deployService() {
-  throw new Error("Client streaming is not currently supported");
-}
+CoreClient.prototype.deployService = function deployService(metadata) {
+  var listeners = {
+    data: [],
+    end: [],
+    status: []
+  };
+  var client = grpc.client(Core.DeployService, {
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport
+  });
+  client.onEnd(function (status, statusMessage, trailers) {
+    listeners.end.forEach(function (handler) {
+      handler();
+    });
+    listeners.status.forEach(function (handler) {
+      handler({ code: status, details: statusMessage, metadata: trailers });
+    });
+    listeners = null;
+  });
+  client.onMessage(function (message) {
+    listeners.data.forEach(function (handler) {
+      handler(message);
+    })
+  });
+  client.start(metadata);
+  return {
+    on: function (type, handler) {
+      listeners[type].push(handler);
+      return this;
+    },
+    write: function (requestMessage) {
+      client.send(requestMessage);
+      return this;
+    },
+    end: function () {
+      client.finishSend();
+    },
+    cancel: function () {
+      listeners = null;
+      client.close();
+    }
+  };
+};
 
 CoreClient.prototype.deleteService = function deleteService(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.DeleteService, {
+  var client = grpc.unary(Core.DeleteService, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -268,20 +354,29 @@ CoreClient.prototype.deleteService = function deleteService(requestMessage, meta
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 CoreClient.prototype.listServices = function listServices(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.ListServices, {
+  var client = grpc.unary(Core.ListServices, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -290,20 +385,29 @@ CoreClient.prototype.listServices = function listServices(requestMessage, metada
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 CoreClient.prototype.getService = function getService(requestMessage, metadata, callback) {
   if (arguments.length === 2) {
     callback = arguments[1];
   }
-  grpc.unary(Core.GetService, {
+  var client = grpc.unary(Core.GetService, {
     request: requestMessage,
     host: this.serviceHost,
     metadata: metadata,
@@ -312,13 +416,22 @@ CoreClient.prototype.getService = function getService(requestMessage, metadata, 
     onEnd: function (response) {
       if (callback) {
         if (response.status !== grpc.Code.OK) {
-          callback(Object.assign(new Error(response.statusMessage), { code: response.status, metadata: response.trailers }), null);
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
         } else {
           callback(null, response.message);
         }
       }
     }
   });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
 };
 
 CoreClient.prototype.serviceLogs = function serviceLogs(requestMessage, metadata) {
@@ -355,6 +468,68 @@ CoreClient.prototype.serviceLogs = function serviceLogs(requestMessage, metadata
     },
     cancel: function () {
       listeners = null;
+      client.close();
+    }
+  };
+};
+
+CoreClient.prototype.createWorkflow = function createWorkflow(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(Core.CreateWorkflow, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
+      client.close();
+    }
+  };
+};
+
+CoreClient.prototype.deleteWorkflow = function deleteWorkflow(requestMessage, metadata, callback) {
+  if (arguments.length === 2) {
+    callback = arguments[1];
+  }
+  var client = grpc.unary(Core.DeleteWorkflow, {
+    request: requestMessage,
+    host: this.serviceHost,
+    metadata: metadata,
+    transport: this.options.transport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (callback) {
+        if (response.status !== grpc.Code.OK) {
+          var err = new Error(response.statusMessage);
+          err.code = response.status;
+          err.metadata = response.trailers;
+          callback(err, null);
+        } else {
+          callback(null, response.message);
+        }
+      }
+    }
+  });
+  return {
+    cancel: function () {
+      callback = null;
       client.close();
     }
   };
