@@ -1,7 +1,7 @@
 import { ServiceClient } from '../client/api-service_pb_service';
 import { handleAPIResponse } from '../util/api';
 import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest, TaskData, EmitEventReply, SubmitResultReply } from '../client/api-service_pb';
-import { ResponseStream } from '../client/api-core_pb_service';
+import { ResponseStream } from '../client/api-service_pb_service';
 
 type Options = {
     token: string

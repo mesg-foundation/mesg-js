@@ -201,6 +201,9 @@ export class ResultData extends jspb.Message {
   setExecutiontagsList(value: Array<string>): void;
   addExecutiontags(value: string, index?: number): string;
 
+  getError(): string;
+  setError(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ResultData.AsObject;
   static toObject(includeInstance: boolean, msg: ResultData): ResultData.AsObject;
@@ -218,6 +221,7 @@ export namespace ResultData {
     outputkey: string,
     outputdata: string,
     executiontagsList: Array<string>,
+    error: string,
   }
 }
 
@@ -360,6 +364,8 @@ export class DeployServiceRequest extends jspb.Message {
   getChunk_asB64(): string;
   setChunk(value: Uint8Array | string): void;
 
+  getEnvMap(): jspb.Map<string, string>;
+  clearEnvMap(): void;
   getValueCase(): DeployServiceRequest.ValueCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeployServiceRequest.AsObject;
@@ -375,6 +381,7 @@ export namespace DeployServiceRequest {
   export type AsObject = {
     url: string,
     chunk: Uint8Array | string,
+    envMap: Array<[string, string]>,
   }
 
   export enum ValueCase {

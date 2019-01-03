@@ -1388,7 +1388,8 @@ proto.api.ResultData.toObject = function(includeInstance, msg) {
     taskkey: jspb.Message.getFieldWithDefault(msg, 2, ""),
     outputkey: jspb.Message.getFieldWithDefault(msg, 3, ""),
     outputdata: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    executiontagsList: jspb.Message.getRepeatedField(msg, 5)
+    executiontagsList: jspb.Message.getRepeatedField(msg, 5),
+    error: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -1444,6 +1445,10 @@ proto.api.ResultData.deserializeBinaryFromReader = function(msg, reader) {
     case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.addExecutiontags(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setError(value);
       break;
     default:
       reader.skipField();
@@ -1506,6 +1511,13 @@ proto.api.ResultData.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeRepeatedString(
       5,
+      f
+    );
+  }
+  f = message.getError();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
       f
     );
   }
@@ -1598,6 +1610,21 @@ proto.api.ResultData.prototype.addExecutiontags = function(value, opt_index) {
 
 proto.api.ResultData.prototype.clearExecutiontagsList = function() {
   this.setExecutiontagsList([]);
+};
+
+
+/**
+ * optional string error = 6;
+ * @return {string}
+ */
+proto.api.ResultData.prototype.getError = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/** @param {string} value */
+proto.api.ResultData.prototype.setError = function(value) {
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -2577,7 +2604,8 @@ proto.api.DeployServiceRequest.prototype.toObject = function(opt_includeInstance
 proto.api.DeployServiceRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     url: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    chunk: msg.getChunk_asB64()
+    chunk: msg.getChunk_asB64(),
+    envMap: (f = msg.getEnvMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -2622,6 +2650,12 @@ proto.api.DeployServiceRequest.deserializeBinaryFromReader = function(msg, reade
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setChunk(value);
       break;
+    case 4:
+      var value = msg.getEnvMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString);
+         });
+      break;
     default:
       reader.skipField();
       break;
@@ -2664,6 +2698,10 @@ proto.api.DeployServiceRequest.serializeBinaryToWriter = function(message, write
       3,
       f
     );
+  }
+  f = message.getEnvMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(4, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -2747,6 +2785,24 @@ proto.api.DeployServiceRequest.prototype.clearChunk = function() {
  */
 proto.api.DeployServiceRequest.prototype.hasChunk = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * map<string, string> env = 4;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.api.DeployServiceRequest.prototype.getEnvMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 4, opt_noLazyCreate,
+      null));
+};
+
+
+proto.api.DeployServiceRequest.prototype.clearEnvMap = function() {
+  this.getEnvMap().clear();
 };
 
 
@@ -4766,7 +4822,7 @@ proto.api.Service.prototype.setHash = function(value) {
 
 
 /**
- * optional string SID = 12;
+ * optional string sid = 12;
  * @return {string}
  */
 proto.api.Service.prototype.getSid = function() {
