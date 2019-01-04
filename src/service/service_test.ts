@@ -3,8 +3,7 @@ import * as sinon from 'sinon'
 import Service from './service'
 import { EventEmitter } from 'events';
 import { ServiceClient } from '../client/api-service_pb_service';
-import { ListenTaskRequest, EmitEventRequest } from '../client/api-service_pb';
-import { ResultData } from '../client/api-core_pb';
+import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest } from '../client/api-service_pb';
 
 class testClient {
     listenTask(): EventEmitter {
@@ -92,7 +91,7 @@ test('listenTask() should listen for tasks', function (t) {
 });
 
 test('listenTask() should handle tasks and submit result', function (t) {
-    t.plan(5);
+    t.plan(3);
     const executionID = 'id';
     const inputData = {input: 'data'};
     const outputData = {output: 'data'};
@@ -107,12 +106,18 @@ test('listenTask() should handle tasks and submit result', function (t) {
         outputs.success(outputData);
     } });
     const spy = sinon.spy(client, 'submitResult');
-    stream.emit('data', { executionID, taskKey: 'task1', inputData: JSON.stringify(inputData) });
-    const args = <ResultData>spy.getCall(0).args[0];
+    stream.emit('data', {
+        getExecutionid() { return executionID },
+        getTaskkey() { return 'task1' },
+        getInputdata() { return JSON.stringify(inputData) }
+    });
+    const args = <SubmitResultRequest>spy.getCall(0).args[0];
     spy.restore();
-    t.equal(args.getExecutionid(), executionID);
-    t.equal(args.getOutputkey(), 'success');
-    t.equal(args.getOutputdata(), JSON.stringify(outputData));
+    const req = new SubmitResultRequest();
+    req.setExecutionid(executionID)
+    req.setOutputkey('success')
+    req.setOutputdata(JSON.stringify(outputData))
+    t.deepEqual(args, req);
 });
 
 test('emitEvent() should emit an event', function (t) {
