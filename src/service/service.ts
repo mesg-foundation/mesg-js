@@ -55,9 +55,9 @@ class Service {
     }
 
     private handleTaskData(taskData: TaskData) {
-        var executionID = taskData.getExecutionid()
-        var taskKey = taskData.getTaskkey()
-        var inputData = taskData.getInputdata()
+        const executionID = taskData.getExecutionid()
+        const taskKey = taskData.getTaskkey()
+        const inputData = taskData.getInputdata()
 
         const callback = this.tasks[taskKey];
         if (!callback) {
