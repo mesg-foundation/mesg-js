@@ -49,14 +49,16 @@ Here some examples for the most useful gRPC APIs that your application can use:
 ### Execute a task
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ExecuteTask({
-  serviceID: __TASK_SERVICE_ID__,
-  taskKey: __TASK_KEY__,
-  inputData: JSON.stringify(__INPUT_DATA__)
-}, function (error, reply) {
-  console.log('task in progress with execution id:', reply.executionID)
+var req = new CoreTypes.ExecuteTaskRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setTaskkey(__TASK_KEY__)
+req.setInputdata(JSON.stringify(__INPUT_DATA__))
+
+api.executeTask(req, function (err, reply) {
+  console.log('task in progress with execution id:', reply.getExecutionid())
   ...
 })
 ```
@@ -66,18 +68,20 @@ MESG.api.ExecuteTask({
 ### Listen for an event
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ListenEvent({
-  serviceID: __TASK_SERVICE_ID__,
-  eventFilter: __EVENT_KEY__
-})
-.on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
-  ...
-})
+var req = new CoreTypes.ListenEventRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setEventfilter(__EVENT_KEY__)
+
+api.listenEvent(req)
+  .on('error', function(error) {
+    // An error has occurred and the stream has been closed.
+  })
+  .on('data', function(data) {
+    ...
+  })
 ```
 
 [Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
@@ -85,18 +89,59 @@ MESG.api.ListenEvent({
 ### Listen to a task's result
 
 ```javascript
-const MESG = require('mesg-js').application()
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
 
-MESG.api.ListenResult({
-  serviceID: __TASK_SERVICE_ID__,
-  taskFilter: __TASK_KEY__,
-  outputFilter: __OUTPUT_KEY__
-})
-.on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
-  ...
+var req = new CoreTypes.ListenResultRequest()
+req.setServiceid(__TASK_SERVICE_ID__)
+req.setTaskFilter(__TASK_KEY__)
+req.setOutputfilter(__OUTPUT_KEY__)
+
+api.listenResult(req)
+  .on('error', function(error) {
+    // An error has occurred and the stream has been closed.
+  })
+  .on('data', function(data) {
+    ...
+  })
+```
+
+### Execute a task & listen for its result
+
+```javascript
+import { application, CoreTypes } from 'mesg-js'
+const api = application().api
+const uuidv4 = require('uuid/v4');
+
+// https://github.com/ilgooz/service-location
+const serviceID = "2bd8f053748884d5b743d4368aebb916469372e2"
+
+const id = uuidv4()
+
+var listenReq = new CoreTypes.ListenResultRequest()
+listenReq.setServiceid(serviceID)
+listenReq.addTagfilters(id)
+
+var stream = api.listenResult(listenReq)
+  .on('error', function(err) {
+    if (err.code == 1) return // cancelled
+    console.log("Stream error: ", err.details)
+  })
+  .on('data', function(data) {
+    var location = JSON.parse(data.getOutputdata())
+    console.log('City: ', location.city)
+    stream.cancel()
+  })
+
+var execReq = new CoreTypes.ExecuteTaskRequest()
+execReq.setServiceid(serviceID)
+execReq.setTaskkey("locate")
+execReq.setInputdata(JSON.stringify({ip: "104.198.14.52"}))
+execReq.addExecutiontags(id)
+
+api.executeTask(execReq, function(err){ 
+  if (!err) return
+  console.log("Execution error: ", err)
 })
 ```
 

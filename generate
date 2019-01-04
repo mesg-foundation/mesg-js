@@ -1,0 +1,34 @@
+#!/bin/sh
+
+bin() {
+    echo "$(pwd)/node_modules/.bin/$1"
+}
+GRPC_TOOLS_PROTOC_PATH="$(bin grpc_tools_node_protoc)"
+PROTOC_GEN_NODE_PATH="$(bin grpc_tools_node_protoc_plugin)"
+PROTOC_GEN_TS_PATH="$(bin protoc-gen-ts)"
+DEF_REPO="mesg-foundation/core"
+DEF_BRANCH="master"
+DIR="./"
+
+rm -rf src/client/*
+mkdir -p src/client
+
+cd src/client
+
+apis="core service"
+for api in $apis; do
+    curl -o api-$api.proto "https://raw.githubusercontent.com/$DEF_REPO/$DEF_BRANCH/protobuf/${api}api/api.proto"
+
+    $GRPC_TOOLS_PROTOC_PATH \
+        --plugin="protoc-gen-grpc=${PROTOC_GEN_NODE_PATH}" \
+        --js_out="import_style=commonjs,binary:${DIR}" \
+        --grpc_out="${DIR}" \
+        api-$api.proto
+
+    protoc \
+        --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
+        --ts_out="service=true:${DIR}" \
+        api-$api.proto
+
+    rm api-$api.proto
+done

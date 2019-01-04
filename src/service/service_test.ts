@@ -1,11 +1,10 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
 import Service from './service'
-import { ServiceClient } from '../client'
-import { Stream } from '../client/stream'
 import { EventEmitter } from 'events';
-import { TaskData } from '../client/service-client';
-import { exec } from 'child_process';
+import { ServiceClient } from '../client/api-service_pb_service';
+import { ListenTaskRequest, EmitEventRequest } from '../client/api-service_pb';
+import { ResultData } from '../client/api-core_pb';
 
 class testClient {
     listenTask(): EventEmitter {
@@ -30,7 +29,6 @@ test('listenTask() should pass task validation', function (t) {
     const client = new testClient;
     const mesgConfig = { tasks: {"task1": {}, "task2": {}} };
     const service = newService(mesgConfig, client);
-    const spy = sinon.stub(service, 'listenTask');
     try {
         service.listenTask({ "task1": () => {},  "task2": () => {} });
         t.pass("tasks valid");
@@ -87,7 +85,9 @@ test('listenTask() should listen for tasks', function (t) {
     const service = newService(mesgConfig, client);
     service.listenTask({ 'task1': () => {}, 'task2': () => {} });
     t.ok(spy.calledOnce);
-    t.equal(spy.getCall(0).args[0].token, token);
+    const req = new ListenTaskRequest();
+    req.setToken(token);
+    t.deepEqual(spy.getCall(0).args[0], req);
     spy.restore();
 });
 
@@ -101,18 +101,18 @@ test('listenTask() should handle tasks and submit result', function (t) {
         outputs: { success: {} }
     }} };
     const service = newService(mesgConfig, client);
-    const stream = <EventEmitter>service.listenTask({ 'task1': (inputs, outputs) => {
+    const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
         t.equal(inputData, inputData);
         t.ok(outputs.success);
         outputs.success(outputData);
     } });
     const spy = sinon.spy(client, 'submitResult');
     stream.emit('data', { executionID, taskKey: 'task1', inputData: JSON.stringify(inputData) });
-    const args = spy.getCall(0).args[0];
+    const args = <ResultData>spy.getCall(0).args[0];
     spy.restore();
-    t.equal(args.executionID, executionID);
-    t.equal(args.outputKey, 'success');
-    t.equal(args.outputData, JSON.stringify(outputData));
+    t.equal(args.getExecutionid(), executionID);
+    t.equal(args.getOutputkey(), 'success');
+    t.equal(args.getOutputdata(), JSON.stringify(outputData));
 });
 
 test('emitEvent() should emit an event', function (t) {
@@ -124,9 +124,9 @@ test('emitEvent() should emit an event', function (t) {
     const service = newService(mesgConfig, client);
     const spy = sinon.spy(client, 'emitEvent');
     service.emitEvent(event, eventData);
-    const args = spy.getCall(0).args[0];
-    t.equal(args.token, token);
-    t.equal(args.eventKey, event);
-    t.equal(args.eventData, JSON.stringify(eventData));
+    const args = <EmitEventRequest>spy.getCall(0).args[0];
+    t.equal(args.getToken(), token);
+    t.equal(args.getEventkey(), event);
+    t.equal(args.getEventdata(), JSON.stringify(eventData));
     spy.restore();
 });

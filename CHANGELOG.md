@@ -1,3 +1,5 @@
+- Use proto-gen to generate the proto client and get rid off the .proto files.
+
 ## v1.4.0
 
 - Possibility to associate tags for executions.

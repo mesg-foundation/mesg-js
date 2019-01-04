@@ -1,12 +1,4 @@
-import { CoreClient } from '../client';
-import { Stream } from '../client/stream';
-import { handleAPIResponse } from '../util/api';
-import { 
-    EventData,
-    ResultData, 
-    ExecuteTaskReply, 
-    StartServiceReply
-} from '../client/core-client';
+import { CoreClient } from '../client/api-core_pb_service';
 
 type Options = {
     client: CoreClient

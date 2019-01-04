@@ -1,9 +1,6 @@
 import * as test from 'tape'
-import * as sinon from 'sinon'
-import * as clone from 'clone'
-import { CoreClient } from '../client'
+import { CoreClient } from '../client/api-core_pb_service'
 import Application from '.';
-import { EventEmitter } from 'events';
 
 class testClient { }
 

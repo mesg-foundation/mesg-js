@@ -1,11 +1,7 @@
-import { ServiceClient } from '../client';
-import { Stream } from '../client/stream';
+import { ServiceClient } from '../client/api-service_pb_service';
 import { handleAPIResponse } from '../util/api';
-import {
-    TaskData,
-    SubmitResultReply,
-    EmitEventReply
-} from '../client/service-client';
+import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest, TaskData, EmitEventReply, SubmitResultReply } from '../client/api-service_pb';
+import { ResponseStream } from '../client/api-service_pb_service';
 
 type Options = {
     token: string
@@ -25,24 +21,26 @@ class Service {
         this.token = options.token;
     }
 
-    listenTask({ ...tasks }: Tasks): Stream<TaskData> {
+    listenTask({ ...tasks }: Tasks): ResponseStream<TaskData> {
         if (this.tasks) {
             throw new Error(`listenTask should be called only once`);
         }
         this.tasks = tasks;
         this.validateTaskNames();
-        const stream = this.client.listenTask({ token: this.token });
+        const req = new ListenTaskRequest();
+        req.setToken(this.token);
+        const stream = this.client.listenTask(req);
         stream.on('data', this.handleTaskData.bind(this));
         return stream;
     }
 
     emitEvent(event: string, data: any): Promise<EmitEventReply | Error> {
         return new Promise<EmitEventReply | Error>((resolve, reject) => {
-            this.client.emitEvent({
-                token: this.token,
-                eventKey: event,
-                eventData: JSON.stringify(data)
-            }, handleAPIResponse(resolve, reject));
+            const req = new EmitEventRequest();
+            req.setToken(this.token);
+            req.setEventkey(event);
+            req.setEventdata(JSON.stringify(data))
+            this.client.emitEvent(req, handleAPIResponse(resolve, reject));
         })
     }
 
@@ -59,11 +57,11 @@ class Service {
         for (let outputKey in taskConfig.outputs){
             outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
                 return new Promise<SubmitResultReply | Error>((resolve, reject) => {
-                    this.client.submitResult({
-                        executionID,
-                        outputKey,
-                        outputData: JSON.stringify(data)
-                    }, handleAPIResponse(resolve, reject));
+                    const req = new SubmitResultRequest();
+                    req.setExecutionid(executionID);
+                    req.setOutputkey(outputKey);
+                    req.setOutputdata(JSON.stringify(data));
+                    this.client.submitResult(req, handleAPIResponse(resolve, reject));
                 })
             }
         }

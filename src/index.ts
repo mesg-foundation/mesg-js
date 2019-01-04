@@ -1,13 +1,16 @@
-import ClientBuilder from './client'
+import { ServiceClient } from './client/api-service_grpc_pb'
+import { CoreClient } from './client/api-core_grpc_pb'
+import * as CoreTypes from './client/api-core_pb'
 import Service from './service'
 import Application from './application'
+import * as grpc from 'grpc'
 import * as fs from 'fs'
 import * as YAML from 'js-yaml'
 
 const token = process.env.MESG_TOKEN;
 const ymlPath = './mesg.yml';
 const endpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
-const endpointTCP = process.env.MESG_ENDPOINT_TCP;
+const endpointTCP = process.env.MESG_ENDPOINT_TCP || '';
 
 var defaultService: Service
 var defaultApplication: Application
@@ -19,9 +22,7 @@ const service = () => {
     defaultService = new Service({
       token: token,
       mesgConfig: mesgConfig,
-      client: new ClientBuilder({
-        endpoint: endpointTCP,
-      }).service(),
+      client: new ServiceClient(endpointTCP, grpc.credentials.createInsecure()),
     });
   }
 
@@ -31,9 +32,7 @@ const service = () => {
 const application = () => {
   if(!defaultApplication){
     defaultApplication = new Application({
-      client: new ClientBuilder({
-        endpoint: endpoint,
-      }).core(),
+      client: new CoreClient(endpoint, grpc.credentials.createInsecure())
     });
   }
 
@@ -42,5 +41,6 @@ const application = () => {
 
 export {
   service,
-  application
+  application,
+  CoreTypes
 }
