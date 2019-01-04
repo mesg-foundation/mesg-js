@@ -1,7 +1,17 @@
-import { ServiceClient } from '../client/api-service_pb_service';
 import { handleAPIResponse } from '../util/api';
-import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest, TaskData, EmitEventReply, SubmitResultReply } from '../client/api-service_pb';
-import { ResponseStream } from '../client/api-service_pb_service';
+import {
+    ListenTaskRequest,
+    EmitEventRequest,
+    SubmitResultRequest,
+    TaskData,
+    EmitEventReply,
+    SubmitResultReply
+} from '../client/api-service_pb';
+import {
+    ServiceClient,
+    ResponseStream,
+    ServiceError
+} from '../client/api-service_pb_service';
 
 type Options = {
     token: string
@@ -27,15 +37,15 @@ class Service {
         }
         this.tasks = tasks;
         this.validateTaskNames();
-        const req = new ListenTaskRequest();
+        const req = new ListenTaskRequest()
         req.setToken(this.token);
         const stream = this.client.listenTask(req);
         stream.on('data', this.handleTaskData.bind(this));
         return stream;
     }
 
-    emitEvent(event: string, data: any): Promise<EmitEventReply | Error> {
-        return new Promise<EmitEventReply | Error>((resolve, reject) => {
+    emitEvent(event: string, data: any): Promise<EmitEventReply | ServiceError> {
+        return new Promise<EmitEventReply | ServiceError>((resolve, reject) => {
             const req = new EmitEventRequest();
             req.setToken(this.token);
             req.setEventkey(event);
@@ -44,7 +54,11 @@ class Service {
         })
     }
 
-    private handleTaskData({ executionID, taskKey, inputData }) {
+    private handleTaskData(taskData: TaskData) {
+        var executionID = taskData.getExecutionid()
+        var taskKey = taskData.getTaskkey()
+        var inputData = taskData.getInputdata()
+
         const callback = this.tasks[taskKey];
         if (!callback) {
           throw new Error(`Task ${taskKey} is not defined in your services`);
@@ -55,8 +69,8 @@ class Service {
         const taskConfig = this.mesgConfig.tasks[taskKey];
 
         for (let outputKey in taskConfig.outputs){
-            outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
-                return new Promise<SubmitResultReply | Error>((resolve, reject) => {
+            outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | ServiceError> => {
+                return new Promise<SubmitResultReply | ServiceError>((resolve, reject) => {
                     const req = new SubmitResultRequest();
                     req.setExecutionid(executionID);
                     req.setOutputkey(outputKey);
