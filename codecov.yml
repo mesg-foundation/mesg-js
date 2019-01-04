@@ -1,0 +1,6 @@
+comment: off
+ignore:
+  - "**/*_pb.js"  # ignore all protobuff generated files
+  - "**/*.md" # ignore all markdown files
+  - "**/*.yml" # ignore all yml files
+  - ".circleci/config.yml" 
