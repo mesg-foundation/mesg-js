@@ -33,7 +33,10 @@ npm i mesg-js
 Require MESG.js as an application:
 
 ```javascript
-const MESG = require('mesg-js').application()
+const options = {
+  endpoint: "localhost:50052" // default
+}
+const MESG = require('mesg-js').application(options)
 ```
 
 ## MESG Core endpoint

@@ -6,8 +6,8 @@ import * as YAML from 'js-yaml'
 
 const token = process.env.MESG_TOKEN;
 const ymlPath = './mesg.yml';
-const endpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
-const endpointTCP = process.env.MESG_ENDPOINT_TCP;
+const defaultEndpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
+const defaultEndpointTCP = process.env.MESG_ENDPOINT_TCP || '';
 
 var defaultService: Service
 var defaultApplication: Application
@@ -20,7 +20,7 @@ const service = () => {
       token: token,
       mesgConfig: mesgConfig,
       client: new ClientBuilder({
-        endpoint: endpointTCP,
+        endpoint: defaultEndpointTCP,
       }).service(),
     });
   }
@@ -28,8 +28,13 @@ const service = () => {
   return defaultService;
 }
 
-const application = () => {
-  if(!defaultApplication){
+type ApplicationOptions = {
+  endpoint?: string
+}
+
+const application = (options?: ApplicationOptions) => {
+  if (!defaultApplication){
+    const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
     defaultApplication = new Application({
       client: new ClientBuilder({
         endpoint: endpoint,
