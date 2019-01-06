@@ -1,4 +1,4 @@
-import { handleAPIResponse } from '../util/api';
+import * as grpc from 'grpc';
 import {
     ListenTaskRequest,
     EmitEventRequest,
@@ -7,11 +7,8 @@ import {
     EmitEventReply,
     SubmitResultReply
 } from '../client/api-service_pb';
-import {
-    ServiceClient,
-    ResponseStream,
-    ServiceError
-} from '../client/api-service_pb_service';
+import { ServiceClient } from '../client/api-service_grpc_pb';
+import { handleAPIResponse } from '../util/api';
 
 type Options = {
     token: string
@@ -31,7 +28,7 @@ class Service {
         this.token = options.token;
     }
 
-    listenTask({ ...tasks }: Tasks): ResponseStream<TaskData> {
+    listenTask({ ...tasks }: Tasks): grpc.ClientReadableStream<TaskData> {
         if (this.tasks) {
             throw new Error(`listenTask should be called only once`);
         }
@@ -44,8 +41,8 @@ class Service {
         return stream;
     }
 
-    emitEvent(event: string, data: any): Promise<EmitEventReply | ServiceError> {
-        return new Promise<EmitEventReply | ServiceError>((resolve, reject) => {
+    emitEvent(event: string, data: any): Promise<EmitEventReply | grpc.ServiceError> {
+        return new Promise<EmitEventReply | grpc.ServiceError>((resolve, reject) => {
             const req = new EmitEventRequest();
             req.setToken(this.token);
             req.setEventkey(event);
@@ -69,8 +66,8 @@ class Service {
         const taskConfig = this.mesgConfig.tasks[taskKey];
 
         for (let outputKey in taskConfig.outputs){
-            outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | ServiceError> => {
-                return new Promise<SubmitResultReply | ServiceError>((resolve, reject) => {
+            outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | grpc.ServiceError> => {
+                return new Promise<SubmitResultReply | grpc.ServiceError>((resolve, reject) => {
                     const req = new SubmitResultRequest();
                     req.setExecutionid(executionID);
                     req.setOutputkey(outputKey);
