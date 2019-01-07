@@ -10,7 +10,6 @@ import * as YAML from 'js-yaml'
 const token = process.env.MESG_TOKEN;
 const ymlPath = './mesg.yml';
 const defaultEndpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
-const defaultEndpointTCP = process.env.MESG_ENDPOINT_TCP || '';
 
 var defaultService: Service
 var defaultApplication: Application
@@ -22,7 +21,7 @@ const service = () => {
     defaultService = new Service({
       token: token,
       mesgConfig: mesgConfig,
-      client: new ServiceClient(defaultEndpointTCP, grpc.credentials.createInsecure()),
+      client: new ServiceClient(defaultEndpoint, grpc.credentials.createInsecure()),
     });
   }
 
