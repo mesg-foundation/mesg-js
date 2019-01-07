@@ -1,14 +1,14 @@
-import * as grpc from 'grpc';
+import * as grpc from 'grpc'
+import { handleAPIResponse } from '../util/api';
 import {
   ListenTaskRequest,
   EmitEventRequest,
   SubmitResultRequest,
-  TaskData,
   EmitEventReply,
   SubmitResultReply
 } from '../client/api-service_pb';
 import { ServiceClient } from '../client/api-service_grpc_pb';
-import { handleAPIResponse } from '../util/api';
+import { TaskStream } from './task'
 
 type Options = {
   token: string
@@ -28,7 +28,7 @@ class Service {
     this.token = options.token;
   }
 
-  listenTask({ ...tasks }: Tasks): grpc.ClientReadableStream<TaskData> {
+  listenTask({ ...tasks }: Tasks): TaskStream {
     if (this.tasks) {
       throw new Error(`listenTask should be called only once`);
     }
@@ -36,32 +36,27 @@ class Service {
     this.validateTaskNames();
     const req = new ListenTaskRequest()
     req.setToken(this.token);
-    const stream = this.client.listenTask(req);
-    stream.on('data', this.handleTaskData.bind(this));
+    const stream = new TaskStream(this.client.listenTask(req));
+    stream.on('task', this.handleTaskData.bind(this));
     return stream;
   }
 
-  emitEvent(event: string, data: any): Promise<EmitEventReply | grpc.ServiceError> {
-    return new Promise<EmitEventReply | grpc.ServiceError>((resolve, reject) => {
+  emitEvent(event: string, data: any): Promise<grpc.ServiceError|null> {
+    return new Promise<grpc.ServiceError|null>((resolve, reject) => {
       const req = new EmitEventRequest();
       req.setToken(this.token);
       req.setEventkey(event);
       req.setEventdata(JSON.stringify(data))
-      this.client.emitEvent(req, handleAPIResponse(resolve, reject));
+      this.client.emitEvent(req, (err) => { err ? reject(err) : resolve(null); });
     })
   }
 
-  private handleTaskData(taskData: TaskData) {
-    const executionID = taskData.getExecutionid()
-    const taskKey = taskData.getTaskkey()
-    const inputData = taskData.getInputdata()
-
+  private handleTaskData({ executionID, taskKey, inputData }) {
     const callback = this.tasks[taskKey];
     if (!callback) {
       throw new Error(`Task ${taskKey} is not defined in your services`);
     }
-
-    const data = JSON.parse(inputData);
+    
     const outputs = {};
     const taskConfig = this.mesgConfig.tasks[taskKey];
 
@@ -77,7 +72,7 @@ class Service {
       }
     }
 
-    callback(data, outputs);
+    callback(inputData, outputs);
   }
 
   private validateTaskNames(){

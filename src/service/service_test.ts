@@ -5,10 +5,15 @@ import { EventEmitter } from 'events';
 import { ServiceClient } from '../client/api-service_grpc_pb';
 import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest } from '../client/api-service_pb';
 
+class testStream extends EventEmitter {
+  cancel() {}
+}
+
 class testClient {
-  listenTask(): EventEmitter { return new EventEmitter; }
-  emitEvent(){}
-  submitResult(){}
+  taskStream = new testStream
+  listenTask() { return this.taskStream; }
+  emitEvent() {}
+  submitResult() {}
 }
 
 const token = "token"
@@ -89,33 +94,31 @@ test('listenTask() should listen for tasks', function (t) {
 });
 
 test('listenTask() should handle tasks and submit result', function (t) {
-  t.plan(3);
+  t.plan(5);
   const executionID = 'id';
   const inputData = {input: 'data'};
   const outputData = {output: 'data'};
   const client = new testClient;
   const mesgConfig = { tasks: {'task1': {
-      outputs: { success: {} }
+    outputs: { success: {} }
   }}};
   const service = newService(mesgConfig, client);
-  const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
+  const stream = service.listenTask({ 'task1': (inputs, outputs) => {
     t.equal(inputData, inputData);
     t.ok(outputs.success);
     outputs.success(outputData);
   }});
   const spy = sinon.spy(client, 'submitResult');
-  stream.emit('data', {
+  client.taskStream.emit('data', {
     getExecutionid() { return executionID },
     getTaskkey() { return 'task1' },
     getInputdata() { return JSON.stringify(inputData) }
   });
   const args = <SubmitResultRequest>spy.getCall(0).args[0];
   spy.restore();
-  const req = new SubmitResultRequest();
-  req.setExecutionid(executionID)
-  req.setOutputkey('success')
-  req.setOutputdata(JSON.stringify(outputData))
-  t.deepEqual(args, req);
+  t.equal(args.getExecutionid(), executionID);
+  t.equal(args.getOutputkey(), 'success');
+  t.equal(args.getOutputdata(), JSON.stringify(outputData));
 });
 
 test('emitEvent() should emit an event', function (t) {
@@ -133,3 +136,8 @@ test('emitEvent() should emit an event', function (t) {
   t.equal(args.getEventdata(), JSON.stringify(eventData));
   spy.restore();
 });
+
+export {
+  testClient,
+  newService
+}
