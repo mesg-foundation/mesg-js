@@ -1,9 +1,11 @@
 import * as grpc from 'grpc';
 import { ResultData } from '../client/api-core_pb'
 import { EventEmitter } from 'events'
+import { checkStreamReady } from '../util/api';
 
 declare interface ResultStream {
   cancel(): void;
+  on(type: 'ready', handler: () => void): this;
   on(type: 'result', handler: (message: Result) => void): this;
   on(type: 'end', handler: (err: Error|null) => void): this;
 }
@@ -32,6 +34,14 @@ class ResultStream {
         outputData: JSON.parse(data.getOutputdata()),
         tags: data.getExecutiontagsList(),
       })
+    })
+    .on('metadata', (metadata) => {
+      const err = checkStreamReady(metadata)
+      if (err) {
+        this.stream.destroy(err)
+        return
+      }
+      this.emitter.emit('ready')
     })
     .on('error', (err) => {
       this.emitter.emit('end', err)

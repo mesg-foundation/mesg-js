@@ -4,6 +4,15 @@ import { EventData } from '../client/api-core_pb'
 import { testClient, newApplication } from './application_test';
 import { Event } from './event';
 
+test('listenEvent() should emit `ready` event', function (t) {
+  t.plan(1);
+  const client = new testClient();
+  const application = newApplication(client);
+  const stream = application.listenEvent({ serviceID: '1' });
+  stream.on('ready', () => { t.pass() });
+  client.eventStream.emit('metadata', { get(){ return ['ready'] } });
+});
+
 test('listenEvent() should emit `event` event', function (t) {
   t.plan(2);
   const client = new testClient();
