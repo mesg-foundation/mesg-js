@@ -1,5 +1,5 @@
 import * as test from 'tape'
-import { CoreClient } from '../client/api-core_pb_service'
+import { CoreClient } from '../client/api-core_grpc_pb'
 import Application from '.';
 
 class testClient { }

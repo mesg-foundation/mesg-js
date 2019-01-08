@@ -2,7 +2,7 @@ import * as test from 'tape'
 import * as sinon from 'sinon'
 import Service from './service'
 import { EventEmitter } from 'events';
-import { ServiceClient } from '../client/api-service_pb_service';
+import { ServiceClient } from '../client/api-service_grpc_pb';
 import { ListenTaskRequest, EmitEventRequest, SubmitResultRequest } from '../client/api-service_pb';
 
 class testClient {

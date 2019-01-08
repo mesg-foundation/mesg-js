@@ -1,4 +1,4 @@
-import { CoreClient } from '../client/api-core_pb_service';
+import { CoreClient } from '../client/api-core_grpc_pb';
 
 type Options = {
     client: CoreClient
