@@ -3,8 +3,9 @@ import Application from './application'
 export default Application;
 export {
     Options,
-    EventFilters,
-    ResultFilters,
+    ListenEventRequest,
+    ListenResultRequest,
+    ExecuteTaskRequest
 } from './application'
 
 export { Event, EventStream } from './event'

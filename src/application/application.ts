@@ -1,9 +1,9 @@
 import { ServiceError } from 'grpc';
 import { CoreClient } from '../client/api-core_grpc_pb';
 import {
-  ListenEventRequest,
-  ListenResultRequest,
-  ExecuteTaskRequest
+  ListenEventRequest as ListenEventRequestPB,
+  ListenResultRequest as ListenResultRequestPB,
+  ExecuteTaskRequest as ExecuteTaskRequestPB
 } from '../client/api-core_pb'
 import { EventStream } from './event'
 import { ResultStream } from './result'
@@ -12,13 +12,22 @@ type Options = {
   client: CoreClient
 }
 
-type EventFilters = {
+type ListenEventRequest = {
+  serviceID: string
   eventKey?: string
 }
 
-type ResultFilters = {
+type ListenResultRequest = {
+  serviceID: string
   taskKey?: string
   outputKey?: string
+  tags?: string[]
+}
+
+type ExecuteTaskRequest = {
+  serviceID: string
+  taskKey: string
+  inputData: any
   tags?: string[]
 }
 
@@ -30,34 +39,30 @@ class Application {
     this.api = options.client;
   }
 
-  listenEvent(serviceID: string, filters?: EventFilters): EventStream {
-    const req = new ListenEventRequest()
-    req.setServiceid(serviceID)
-    if (filters) {
-      if (filters.eventKey) req.setEventfilter(filters.eventKey)
-    }
-    return new EventStream(this.api.listenEvent(req))
+  listenEvent(req: ListenEventRequest): EventStream {
+    const r = new ListenEventRequestPB()
+    r.setServiceid(req.serviceID)
+    if (req.eventKey) r.setEventfilter(req.eventKey)
+    return new EventStream(this.api.listenEvent(r))
   }
 
-  listenResult(serviceID: string, filters?: ResultFilters): ResultStream {
-    const req = new ListenResultRequest()
-    req.setServiceid(serviceID)
-    if (filters) {
-      if (filters.outputKey) req.setTaskfilter(filters.taskKey)
-      if (filters.taskKey) req.setOutputfilter(filters.outputKey)
-      if (filters.tags) req.setTagfiltersList(filters.tags)
-    }
-    return new ResultStream(this.api.listenResult(req))
+  listenResult(req: ListenResultRequest): ResultStream {
+    const r = new ListenResultRequestPB()
+    r.setServiceid(req.serviceID)
+    if (req.outputKey) r.setTaskfilter(req.taskKey)
+    if (req.taskKey) r.setOutputfilter(req.outputKey)
+    if (req.tags) r.setTagfiltersList(req.tags)
+    return new ResultStream(this.api.listenResult(r))
   }
 
-  executeTask(serviceID: string, taskKey: string, inputData: any, tags?: string[]): Promise<string|Error> {
+  executeTask(req: ExecuteTaskRequest): Promise<string|Error> {
     return new Promise<string | ServiceError>((resolve, reject) => {
-      const req = new ExecuteTaskRequest()
-      req.setServiceid(serviceID)
-      req.setTaskkey(taskKey)
-      req.setInputdata(JSON.stringify(inputData))
-      if (tags) req.setExecutiontagsList(tags)
-      this.api.executeTask(req, (err, reply) => {
+      const r = new ExecuteTaskRequestPB()
+      r.setServiceid(req.serviceID)
+      r.setTaskkey(req.taskKey)
+      r.setInputdata(JSON.stringify(req.inputData))
+      if (req.tags) r.setExecutiontagsList(req.tags)
+      this.api.executeTask(r, (err, reply) => {
         if (err) reject(err)
         else resolve(reply.getExecutionid())
       })
@@ -68,6 +73,7 @@ class Application {
 export default Application;
 export {
   Options,
-  EventFilters,
-  ResultFilters
+  ListenEventRequest,
+  ListenResultRequest,
+  ExecuteTaskRequest
 }
