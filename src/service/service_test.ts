@@ -97,7 +97,7 @@ test('listenTask() should handle tasks and submit result', function (t) {
         outputs: { success: {} }
     }} };
     const service = newService(mesgConfig, client);
-    const stream = <EventEmitter>service.listenTask({ 'task1': (inputs, outputs) => {
+    const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
         t.equal(inputData, inputData);
         t.ok(outputs.success);
         outputs.success(outputData);

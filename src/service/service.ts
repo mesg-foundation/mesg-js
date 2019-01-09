@@ -97,6 +97,9 @@ declare interface Stream<T> {
     on(event: 'end', listener: () => void): this;
     on(event: 'error', listener: (e) => void): this;
     on(event: 'status', listener: (status) => void): this;
+    on(event: 'metadata', listener: (metadata) => void): this;
+    cancel(): void
+    destroy(err?: Error): void
 }
 
 interface EmitEventReply {
