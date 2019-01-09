@@ -21,6 +21,14 @@ function newService(config: any, client: testClient): Service {
     })
 }
 
+test('Service should expose the service gRPC api', (t) => {
+    t.plan(1);
+    const client = new testClient;
+    const mesgConfig = { tasks: {"task1": {}} };
+    const service = newService(mesgConfig, client);
+    t.ok(service.api);
+});
+
 test('listenTask() should pass task validation', function (t) {
     t.plan(1);
     const client = new testClient;
