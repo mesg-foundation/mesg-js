@@ -19,22 +19,22 @@ service Core {
   // Subscribe to a stream that listens for task's result from a service.
   rpc ListenResult (ListenResultRequest) returns (stream ResultData) {}
 
-  // Execute a service's task through [Core](../guide/start-here/core.md).
+  // Execute a service's task through Core.
   rpc ExecuteTask (ExecuteTaskRequest) returns (ExecuteTaskReply) {}
 
-  // Start a service. The service must be already deployed to [Core](../guide/start-here/core.md).
+  // Start a service. The service must be already deployed to Core.
   rpc StartService (StartServiceRequest) returns (StartServiceReply) {}
 
-  // Stop a service. The service must be already deployed to [Core](../guide/start-here/core.md).
+  // Stop a service. The service must be already deployed to Core.
   rpc StopService (StopServiceRequest) returns (StopServiceReply) {}
 
-  // Deploy a service to [Core](../guide/start-here/core.md). This will give you an unique identifier which is used to interact with the service.
+  // Deploy a service to Core. This will give you an unique identifier which is used to interact with the service.
   rpc DeployService (stream DeployServiceRequest) returns (stream DeployServiceReply) {}
 
-  // Delete a service from Core. This function only deletes a deployed service in [Core](../guide/start-here/core.md). If the service's code is on your computer, the source code will not be deleted.
+  // Delete a service from Core. This function only deletes a deployed service in Core. If the service's code is on your computer, the source code will not be deleted.
   rpc DeleteService (DeleteServiceRequest) returns (DeleteServiceReply) {}
 
-  // List all services already deployed in [Core](../guide/start-here/core.md).
+  // List all services already deployed in Core.
   rpc ListServices (ListServicesRequest) returns (ListServicesReply) {}
 
   // Get the definition of an already-deployed service from its ID.
@@ -42,6 +42,56 @@ service Core {
 
   // ServiceLogs gives a stream for dependency logs of a service.
   rpc ServiceLogs (ServiceLogsRequest) returns (stream LogData) {}
+
+  // CreateWorkflow creates and runs a new workflow.
+  rpc CreateWorkflow (CreateWorkflowRequest) returns (CreateWorkflowReply) {}
+
+  // DeleteWorkflow stops and deletes a workflow.
+  rpc DeleteWorkflow (DeleteWorkflowRequest) returns (DeleteWorkflowReply) {}
+}
+
+// The request's data for the `CreateWorkflow` API.
+//
+// **Example**
+// ```json
+// {
+//   "file":   __FILE__,
+//   "name": "__UNIQUE_WORKFLOW_NAME__"
+// }
+// ```
+message CreateWorkflowRequest {
+  message WorkflowDefinition {
+  }
+  WorkflowDefinition definition = 1;  // Workflow definition.
+  string name = 2; // An optional unique name for workflow.
+}
+
+// The reply's data of the `CreateWorkflow` API.
+//
+// **Example**
+// ```json
+// {
+//   "id": "__WORKFLOW_ID__"
+// }
+// ```
+message CreateWorkflowReply {
+  string ID = 1; // Unique ID of workflow.
+}
+
+// The request's data for the `DeleteWorkflow` API.
+//
+// **Example**
+// ```json
+// {
+//   "id": "__WORKFLOW_ID__"
+// }
+// ```
+message DeleteWorkflowRequest {
+  string ID = 1;  // Unique name or ID of workflow.
+}
+
+// Reply of `DeleteWorkflow` API doesn't contain any data.
+message DeleteWorkflowReply {
 }
 
 // The request's data for the `ListenEvent` stream's API.
@@ -101,7 +151,8 @@ message ListenResultRequest {
 //   "taskKey":       "__TASK_KEY__",
 //   "outputKey":     "__OUTPUT_KEY__",
 //   "outputData":    "{\"foo\":\"bar\"}",
-//   "executionTags": ["executionX", "test"]
+//   "executionTags": ["executionX", "test"],
+//   "error":         "error from the execution if something went wrong",
 // }
 // ```
 message ResultData {
@@ -109,7 +160,8 @@ message ResultData {
   string taskKey = 2;                 // The key of the executed task.
   string outputKey = 3;               // The output's key from the returned task.
   string outputData = 4;              // The output's data from the returned task, encoded in JSON.
-  repeated string executionTags = 5;  // The list of tags associated with the execution
+  repeated string executionTags = 5;  // The list of tags associated with the execution.
+  string error = 6;                   // The execution's error if something went wrong.
 }
 
 // The request's data for the `ExecuteTask` API.
@@ -174,84 +226,74 @@ message StopServiceRequest {
 message StopServiceReply {
 }
 
-// The request's data for `DeployService` API.
+// The data sent to the request stream of the `DeployService` API.
+// Stream should be closed after url or all chunks sent to server.
 //
 // **Example**
 // ```json
 // {
-//   "service": {
-//     "name": "serviceX",
-//     "events": {
-//       "eventX": {
-//         "data": {
-//           "dataX": { "type": "String" }
-//         }
-//       }
-//     },
-//     "tasks": {
-//       "taskX": {
-//         "inputs": {
-//           "foo": { "type": "String" }
-//         },
-//         "outputs": {
-//           "outputX": {
-//             "data": {
-//               "resX": { "type": "String" }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
+//   "env": {
+//     "key": "value"
+//   },
+//   "url": "__SERVICE_GIT_URL__"
+// }
+// ```
+// or
+// ```json
+// {
+//   "env": {
+//     "key": "value"
+//   },
+//   "chunk": "__SERVICE_GZIPPED_TAR_FILE_CHUNK__"
 // }
 // ```
 message DeployServiceRequest {
   oneof value {
-    // Git repo url of service. If url provided, stream will be closed after first receive.
-    string url = 2;
-    
-    // Chunks of gzipped tar archive of service. If chunk provided, stream will be closed after all chunks sent.
-    bytes chunk = 3; 
+    string url = 2;   // Git repo url of service. When url provided, stream will be closed after the first receive.
+    bytes chunk = 3;  // Chunks of gzipped tar archive of service. If chunk provided, stream should be closed by client after all chunks sent.
   }
+  map<string, string> env = 4; // Env used to deploy service.
 }
 
-// The reply's data of `DeployService` API.
+// The data received from the reply stream of the `DeployService` API.
+// Stream will be closed by server after deployment is done.
 //
 // **Example**
+// ```json
+// {
+//   "status": {
+//     "message": "__STATUS_MESSAGE__",
+//     "type": "__STATUS_TYPE__",
+//   }
+// }
+// ```
+// or
 // ```json
 // {
 //   "serviceID": "__SERVICE_ID__"
 // }
 // ```
+// or
+// ```json
+// {
+//   "validationError": "__SERVICE_VALIDATION_ERROR__"
+// }
+// ```
 message DeployServiceReply {
   message Status {
     enum Type {
-      // RUNNING indicates that status message belongs to a continuous state.
-      RUNNING = 0;
-
-      // DONE_POSITIVE indicates that status message belongs to a positive noncontinuous state.
-      DONE_POSITIVE = 1;
-
-      // DONE_NEGATIVE indicates that status message belongs to a negative noncontinuous state.
-      DONE_NEGATIVE = 2;
+      RUNNING = 0;       // RUNNING indicates that status message belongs to a continuous state.
+      DONE_POSITIVE = 1; // DONE_POSITIVE indicates that status message belongs to a positive noncontinuous state.
+      DONE_NEGATIVE = 2; // DONE_NEGATIVE indicates that status message belongs to a negative noncontinuous state.
     }
-
-    // message is status message.
-    string message = 1;
-
-    // type is the type of status message.
-    Type type = 2;
+    string message = 1; // Status message.
+    Type type = 2;      // Type of status message.
   }
 
   oneof value {
-    // `status` will be sent after each status change.
-    Status status = 2;
-
-    // `serviceID` will be sent as the last message of stream when service deployed successfully.
-    string serviceID = 3;
-
-    // `validationError` will be sent as the last message of stream when there is a validation error.
-    string validationError = 4;
+    Status status = 2;          // `status` will be sent after each status change.
+    string serviceID = 3;       // `serviceID` will be sent as the last message of stream when service deployed successfully.
+    string validationError = 4; // `validationError` will be sent as the last message of stream when there is a validation error.
   }
 }
 
@@ -264,7 +306,8 @@ message DeployServiceReply {
 // }
 // ```
 message DeleteServiceRequest {
-  string serviceID = 1; // The Service ID. Generated when using the [`DeployService` API](#deployservice).
+  string serviceID = 1;  // The Service ID. Generated when using the [`DeployService` API](#deployservice).
+  bool deleteData = 2;   // When enabled, any persistent data (volumes) that belongs to service and its dependencies will be also deleted.
 }
 
 // Reply of `DeleteService` API doesn't contain any data.
@@ -279,32 +322,51 @@ message ListServicesRequest {
 //
 // **Example**
 // ```json
-// [{
-//   "service": {
+// {
+//   "services": [{
+//     "id": "idX",
+//     "sid": "sidX",
 //     "name": "serviceX",
-//     "events": {
-//       "eventX": {
-//         "data": {
-//           "dataX": { "type": "String" }
-//         }
-//       }
-//     },
-//     "tasks": {
-//       "taskX": {
-//         "inputs": {
-//           "foo": { "type": "String" }
-//         },
-//         "outputs": {
-//           "outputX": {
-//             "data": {
-//               "resX": { "type": "String" }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }]
+//     "description": "descriptionX",
+//     "status": "statusX",
+//     "events": [{
+//       "key": "eventX",
+//       "name": "nameX",
+//       "description": "descriptionX",
+//       "data": [{  
+//         "key": "dataX",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "type": "String",
+//         "optional": true
+//       }]
+//     }],
+//     "tasks": [{
+//       "key": "taskX",
+//       "name": "nameX",
+//       "description": "descriptionX",
+//       "inputs": [{
+//         "key": "foo",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "type": "String",
+//         "optional": true
+//       }],
+//       "outputs": [{
+//         "key": "outputX",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "data": [{  
+//           "key": "resX",
+//           "name": "nameX",
+//           "description": "descriptionX",
+//           "type": "String",
+//           "optional": false
+//         }]
+//       }]
+//     }]
+//   }]
+// }
 // ```
 message ListServicesReply {
   repeated Service services = 1; // The list of previously-deployed services' definitions.
@@ -328,28 +390,47 @@ message GetServiceRequest {
 // ```json
 // {
 //   "service": {
+//     "id": "idX",
+//     "sid": "sidX",
 //     "name": "serviceX",
-//     "events": {
-//       "eventX": {
-//         "data": {
-//           "dataX": { "type": "String" }
-//         }
-//       }
-//     },
-//     "tasks": {
-//       "taskX": {
-//         "inputs": {
-//           "foo": { "type": "String" }
-//         },
-//         "outputs": {
-//           "outputX": {
-//             "data": {
-//               "resX": { "type": "String" }
-//             }
-//           }
-//         }
-//       }
-//     }
+//     "description": "descriptionX",
+//     "status": "statusX",
+//     "events": [{  
+//       "key": "eventX",
+//       "name": "nameX",
+//       "description": "descriptionX",
+//       "data": [{  
+//         "key": "dataX",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "type": "String",
+//         "optional": true
+//       }]
+//     }],
+//     "tasks": [{
+//       "key": "taskX",
+//       "name": "nameX",
+//       "description": "descriptionX",
+//       "inputs": [{  
+//         "key": "foo",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "type": "String",
+//         "optional": true
+//       }],
+//       "outputs": [{
+//         "key": "outputX",
+//         "name": "nameX",
+//         "description": "descriptionX",
+//         "data": [{  
+//           "key": "resX",
+//           "name": "nameX",
+//           "description": "descriptionX",
+//           "type": "String",
+//           "optional": false
+//         }]
+//       }]
+//     }]
 //   }
 // }
 // ```
@@ -358,29 +439,39 @@ message GetServiceReply {
 }
 
 // The request's data for `ServiceLogs` API.
+//
+// **Example**
+// ```json
+// {
+//   "serviceID": "__SERVICE_ID__",
+//   "dependencies": ["__SERVICE_DEPENDENCY__"]
+// }
+// ```
 message ServiceLogsRequest {
   string serviceID = 1;             // The Service ID. Generated when using the [`DeployService` API](#deployservice).
   repeated string dependencies = 2; // __Optional.__ List of dependencies to filter service logs. All by default.
 }
 
-// LogData holds the log data chunk and log info of service dependencies.
+// The data received from the stream of the `ServiceLogs` API.
+// The data will be received over time as long as the stream is open.
+//
+// **Example**
+// ```json
+// {
+//   "dependency":  "__SERVICE_DEPENDENCY__",
+//   "type": "__LOG_TYPE__",
+//   "data":  "__LOG_CHUNK__",
+// }
+// ```
 message LogData {
   enum Type {
-    // Standard represents standard log output.
-    Standard = 0;
-
-    // Error represents error log output.
-    Error = 1;
+    Standard = 0;  // Standard represents standard log output.
+    Error = 1;     // Error represents error log output.
   }
 
-  // dependency is the dependency that data belongs.
-  string dependency = 1;
-
-  // type is the log type.
-  Type type = 2;
-
-  // data is a log data chunk.
-  bytes data = 3;
+  string dependency = 1; // Service dependency that data belongs.
+  Type type = 2;         // The log type.
+  bytes data = 3;        // Log data chunk.
 }
 
 // This is the definition of a MESG Service.
@@ -393,7 +484,8 @@ message Service {
     RUNNING = 4;
   }
   
-  string ID = 10;                           // Service's unique id service hash.
+  string hash = 10;                         // Service's hash.
+  string sid = 12;                          // Service's sid.
   string name = 1;                          // Service's name.
   string description = 2;                   // Service's description.
   repeated Task tasks = 5;                  // The list of tasks this service can execute.
