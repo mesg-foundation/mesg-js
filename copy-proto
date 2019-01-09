@@ -4,10 +4,10 @@ DEF_REPO="mesg-foundation/core"
 DEF_BRANCH="master"
 DIR="./"
 
-rm -rf src/client/proto*
-mkdir -p src/client/proto
+rm -rf src/proto*
+mkdir -p src/proto
 
-cd src/client/proto
+cd src/proto
 
 apis="core service"
 for api in $apis; do

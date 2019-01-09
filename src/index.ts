@@ -43,7 +43,7 @@ const application = (options?: ApplicationOptions) => {
 }
 
 function createClient(serviceName: string, filePath: string, endpoint: string){
-  const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'client/proto', filePath));
+  const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'proto', filePath));
   const packageObject = grpc.loadPackageDefinition(packageDefinition);
 
   const clientConstructor = packageObject.api[serviceName];
