@@ -9,6 +9,8 @@ MESG.js is the official JavaScript library to interact with [MESG Core](https://
 
 This library can be used from an Application or a Service.
 
+# Status
+[![CircleCI](https://img.shields.io/circleci/project/github/mesg-foundation/mesg-js.svg)](https://github.com/mesg-foundation/mesg-js) [![codecov](https://codecov.io/gh/mesg-foundation/mesg-js/branch/master/graph/badge.svg)](https://codecov.io/gh/mesg-foundation/mesg-js)
 
 # Contents
 
@@ -31,7 +33,10 @@ npm i mesg-js
 Require MESG.js as an application:
 
 ```javascript
-const MESG = require('mesg-js').application()
+const options = {
+  endpoint: "localhost:50052" // default
+}
+const MESG = require('mesg-js').application(options)
 ```
 
 ## MESG Core endpoint

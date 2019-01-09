@@ -8,8 +8,7 @@ import Application from './application'
 
 const token = process.env.MESG_TOKEN;
 const ymlPath = './mesg.yml';
-const endpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
-const endpointTCP = process.env.MESG_ENDPOINT_TCP;
+const defaultEndpoint = process.env.MESG_ENDPOINT || 'localhost:50052';
 
 var defaultService: Service
 var defaultApplication: Application
@@ -21,15 +20,20 @@ const service = () => {
     defaultService = new Service({
       token: token,
       mesgConfig: mesgConfig,
-      client: createClient('Service', 'api-service.proto', endpointTCP)
+      client: createClient('Service', 'api-service.proto', defaultEndpoint)
     });
   }
 
   return defaultService;
 }
 
-const application = () => {
-  if(!defaultApplication){
+type ApplicationOptions = {
+  endpoint?: string
+}
+
+const application = (options?: ApplicationOptions) => {
+  if (!defaultApplication){
+    const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
     defaultApplication = new Application({
       client: createClient('Core', 'api-core.proto', endpoint)
     });
