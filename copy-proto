@@ -1,0 +1,15 @@
+#!/bin/sh
+
+DEF_REPO="mesg-foundation/core"
+DEF_BRANCH="master"
+DIR="./"
+
+rm -rf src/client/proto*
+mkdir -p src/client/proto
+
+cd src/client/proto
+
+apis="core service"
+for api in $apis; do
+    curl -o api-$api.proto "https://raw.githubusercontent.com/$DEF_REPO/$DEF_BRANCH/protobuf/${api}api/api.proto"
+done
