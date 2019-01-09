@@ -1,4 +1,3 @@
-import { ServiceClient } from '../client';
 import { Stream } from '../client/stream';
 import { handleAPIResponse } from '../util/api';
 import {
@@ -10,12 +9,12 @@ import {
 type Options = {
     token: string
     mesgConfig: any
-    client: ServiceClient
+    client
 }
 
 class Service {
     private token: string
-    private client: ServiceClient
+    private client
     private mesgConfig: any
     private tasks: Tasks
 

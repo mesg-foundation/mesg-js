@@ -1,8 +1,10 @@
-import ClientBuilder from './client'
-import Service from './service'
-import Application from './application'
+import * as grpc from 'grpc'
+import * as protoLoader from '@grpc/proto-loader'
+import * as path from 'path'
 import * as fs from 'fs'
 import * as YAML from 'js-yaml'
+import Service from './service'
+import Application from './application'
 
 const token = process.env.MESG_TOKEN;
 const ymlPath = './mesg.yml';
@@ -19,9 +21,7 @@ const service = () => {
     defaultService = new Service({
       token: token,
       mesgConfig: mesgConfig,
-      client: new ClientBuilder({
-        endpoint: endpointTCP,
-      }).service(),
+      client: createClient('Service', 'api-service.proto', endpointTCP)
     });
   }
 
@@ -31,13 +31,22 @@ const service = () => {
 const application = () => {
   if(!defaultApplication){
     defaultApplication = new Application({
-      client: new ClientBuilder({
-        endpoint: endpoint,
-      }).core(),
+      client: createClient('Core', 'api-core.proto', endpoint)
     });
   }
 
   return defaultApplication;
+}
+
+function createClient(serviceName: string, filePath: string, endpoint: string){
+  const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'client/proto', filePath));
+  const packageObject = grpc.loadPackageDefinition(packageDefinition);
+
+  const clientConstructor = packageObject.api[serviceName];
+  return new clientConstructor(
+    endpoint,
+    grpc.credentials.createInsecure()
+  )
 }
 
 export {
