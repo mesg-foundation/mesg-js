@@ -1,7 +1,7 @@
 import Application from './application'
 import { createClient } from '../util/grpc'
 
-const defaultEndpoint = process.env.MESG_ENDPOINT
+const defaultEndpoint = 'localhost:50052'
 
 var defaultApplication: Application
 
