@@ -1,11 +1,7 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
 import Service from './service'
-import { ServiceClient } from '../client'
-import { Stream } from '../client/stream'
 import { EventEmitter } from 'events';
-import { TaskData } from '../client/service-client';
-import { exec } from 'child_process';
 
 class testClient {
     listenTask(): EventEmitter {
@@ -21,7 +17,7 @@ function newService(config: any, client: testClient): Service {
     return new Service({
         token: token,
         mesgConfig: config,
-        client: client as any as ServiceClient,
+        client: client
     })
 }
 

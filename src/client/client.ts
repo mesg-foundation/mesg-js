@@ -1,8 +1,6 @@
 import * as grpc from 'grpc'
 import * as protoLoader from '@grpc/proto-loader'
 import * as path from 'path'
-import ServiceClient from './service-client'
-import CoreClient from './core-client'
 
 type Options = {
     endpoint: string
@@ -15,23 +13,23 @@ class ClientBuilder {
         this.options = options;
     }
 
-    service(): ServiceClient {
+    service() {
         const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'proto', 'api-service.proto'));
         const packageObject = grpc.loadPackageDefinition(packageDefinition);
       
         const clientConstructor = packageObject.api.Service;
-        return <ServiceClient>new clientConstructor(
+        return new clientConstructor(
             this.options.endpoint,
             grpc.credentials.createInsecure()
         )
     }
 
-    core(): CoreClient {
+    core() {
         const packageDefinition = protoLoader.loadSync(path.join(__dirname, 'proto', 'api-core.proto'));
         const packageObject = grpc.loadPackageDefinition(packageDefinition);
         
         const clientConstructor = packageObject.api.Core;
-        return <CoreClient>new clientConstructor(
+        return new clientConstructor(
             this.options.endpoint,
             grpc.credentials.createInsecure()
         )
