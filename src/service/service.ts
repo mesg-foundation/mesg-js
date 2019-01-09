@@ -1,10 +1,4 @@
-import { Stream } from '../client/stream';
-import { handleAPIResponse } from '../util/api';
-import {
-    TaskData,
-    SubmitResultReply,
-    EmitEventReply
-} from '../client/service-client';
+import { handleAPIResponse } from '../util/api'
 
 type Options = {
     token: string
@@ -13,8 +7,8 @@ type Options = {
 }
 
 class Service {
-    private token: string
     private client
+    private token: string
     private mesgConfig: any
     private tasks: Tasks
 
@@ -98,11 +92,34 @@ interface TaskOutputCallbackInput {
     [key: string]: any
 }
 
+declare interface Stream<T> {
+    on(event: 'data', listener: (data: T) => void): this;
+    on(event: 'end', listener: () => void): this;
+    on(event: 'error', listener: (e) => void): this;
+    on(event: 'status', listener: (status) => void): this;
+}
+
+interface EmitEventReply {
+}
+
+interface SubmitResultReply {
+}
+
+interface TaskData {
+    executionID: string
+    taskKey: string
+    inputData: string
+}
+
 export default Service;
 export {
     Options,
     Tasks,
     TaskInputs,
     TaskOutputs,
-    TaskOutputCallbackInput
+    TaskOutputCallbackInput,
+    Stream,
+    EmitEventReply,
+    SubmitResultReply,
+    TaskData,
 }

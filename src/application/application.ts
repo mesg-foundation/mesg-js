@@ -1,11 +1,4 @@
-import { Stream } from '../client/stream';
 import { handleAPIResponse } from '../util/api';
-import { 
-    EventData,
-    ResultData, 
-    ExecuteTaskReply, 
-    StartServiceReply
-} from '../client/core-client';
 
 type Options = {
     client
@@ -20,7 +13,15 @@ class Application {
     }
 }
 
+declare interface Stream<T> {
+    on(event: 'data', listener: (data: T) => void): this;
+    on(event: 'end', listener: () => void): this;
+    on(event: 'error', listener: (e) => void): this;
+    on(event: 'status', listener: (status) => void): this;
+}
+
 export default Application;
 export {
     Options,
+    Stream
 }
