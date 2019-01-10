@@ -1,6 +1,6 @@
 import * as uuidv4 from 'uuid/v4'
 import { handleAPIResponse } from '../util/api';
-import { checkStreamReady, errNoStatus } from '../util/grpc';
+import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
 
 type Options = {
   client
@@ -56,16 +56,6 @@ class Application {
         })
     })
   }
-}
-
-declare interface Stream<T> {
-  on(event: 'data', listener: (data: T) => void): this;
-  on(event: 'end', listener: () => void): this;
-  on(event: 'error', listener: (e) => void): this;
-  on(event: 'status', listener: (status) => void): this;
-  on(event: 'metadata', listener: (metadata) => void): this;
-  cancel(): void
-  destroy(err?: Error): void
 }
 
 interface ListenEventRequest {
