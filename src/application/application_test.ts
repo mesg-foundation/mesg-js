@@ -1,7 +1,7 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
 import * as clone from 'clone'
-import Application from '.';
+import Application from './application';
 import { EventEmitter } from 'events';
 
 class testClient { }
