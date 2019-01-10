@@ -7,14 +7,16 @@ type Options = {
 }
 
 class Service {
-    private client
+    // api gives access to low level gRPC calls.
+    api
+
     private token: string
     private mesgConfig: any
     private tasks: Tasks
 
     constructor(options: Options){
         this.mesgConfig = options.mesgConfig;
-        this.client = options.client;
+        this.api = options.client;
         this.token = options.token;
     }
 
@@ -24,14 +26,14 @@ class Service {
         }
         this.tasks = tasks;
         this.validateTaskNames();
-        const stream = this.client.listenTask({ token: this.token });
+        const stream = this.api.listenTask({ token: this.token });
         stream.on('data', this.handleTaskData.bind(this));
         return stream;
     }
 
     emitEvent(event: string, data: any): Promise<EmitEventReply | Error> {
         return new Promise<EmitEventReply | Error>((resolve, reject) => {
-            this.client.emitEvent({
+            this.api.emitEvent({
                 token: this.token,
                 eventKey: event,
                 eventData: JSON.stringify(data)
@@ -52,7 +54,7 @@ class Service {
         for (let outputKey in taskConfig.outputs){
             outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
                 return new Promise<SubmitResultReply | Error>((resolve, reject) => {
-                    this.client.submitResult({
+                    this.api.submitResult({
                         executionID,
                         outputKey,
                         outputData: JSON.stringify(data)
