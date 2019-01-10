@@ -7,7 +7,7 @@ type Options = {
   endpoint?: string
 }
 
-const applicationBuilder = (options?: Options) => {
+const applicationBuilder = (options?: Options): Application => {
 	const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
 	return new Application({
 		client: createClient('Core', 'api-core.proto', endpoint)

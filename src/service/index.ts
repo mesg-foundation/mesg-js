@@ -7,7 +7,7 @@ const token = process.env.MESG_TOKEN
 const endpoint = process.env.MESG_ENDPOINT
 const ymlPath = './mesg.yml'
 
-const serviceBuilder = () => {
+const serviceBuilder = (): Service => {
 	const mesgConfig = YAML.safeLoad(fs.readFileSync(ymlPath));
 	return new Service({
 		token: token,
