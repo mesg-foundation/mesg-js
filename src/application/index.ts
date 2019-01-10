@@ -3,21 +3,15 @@ import { createClient } from '../util/grpc'
 
 const defaultEndpoint = 'localhost:50052'
 
-var defaultApplication: Application
-
 type Options = {
   endpoint?: string
 }
 
-const applicationBuilder = (options?: Options) => {
-	if (!defaultApplication){
-		const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
-		defaultApplication = new Application({
-			client: createClient('Core', 'api-core.proto', endpoint)
-		});
-	}
-
-	return defaultApplication;
+const applicationBuilder = (options?: Options): Application => {
+	const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
+	return new Application({
+		client: createClient('Core', 'api-core.proto', endpoint)
+	});
 }
 
 export default applicationBuilder;
