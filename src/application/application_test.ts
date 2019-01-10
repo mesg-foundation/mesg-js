@@ -7,7 +7,7 @@ import { EventEmitter } from 'events';
 class testClient { }
 
 test('Application should expose the core gRPC api', (t) => {
-    t.plan(1);
-    const application = new Application({ client: new testClient });
-    t.ok(application.api);
+  t.plan(1);
+  const application = new Application({ client: new testClient });
+  t.ok(application.api);
 });
