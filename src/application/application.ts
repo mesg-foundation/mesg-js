@@ -1,4 +1,6 @@
+import * as uuidv4 from 'uuid/v4'
 import { handleAPIResponse } from '../util/api';
+import { checkStreamReady, errNoStatus } from '../util/grpc';
 
 type Options = {
     client
@@ -25,6 +27,35 @@ class Application {
             this.api.ExecuteTask(req, handleAPIResponse(resolve, reject))
         })
     }
+
+    executeTaskAndWaitFirstResult(req: ExecuteTaskRequest): Promise<ResultData> {
+        return new Promise<ResultData>((resolve, reject) => {
+            const id = uuidv4()
+            const stream = this.listenResult({ serviceID: req.serviceID, tagFilters: [id] })
+                .on('metadata', (metadata) => {
+                    const err = checkStreamReady(metadata)
+                    if (err == errNoStatus) return
+                    if (err) {
+                        stream.destroy(err)
+                        return
+                    }
+                    if (req.executionTags) {
+                        req.executionTags.push(id)
+                    } else {
+                        req.executionTags = [id]
+                    }
+                    this.executeTask(req).catch((err) => stream.destroy(err))
+                })
+                .on('data', (result) => {
+                    stream.cancel()
+                    resolve(result)
+                })
+                .on('error', (err) => {
+                    stream.cancel()
+                    reject(err)
+                })
+        })
+    }
 }
 
 declare interface Stream<T> {
@@ -32,6 +63,9 @@ declare interface Stream<T> {
     on(event: 'end', listener: () => void): this;
     on(event: 'error', listener: (e) => void): this;
     on(event: 'status', listener: (status) => void): this;
+    on(event: 'metadata', listener: (metadata) => void): this;
+    cancel(): void
+    destroy(err?: Error): void
 }
 
 interface ListenEventRequest {
