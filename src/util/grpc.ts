@@ -15,13 +15,14 @@ function createClient(serviceName: string, filePath: string, endpoint: string){
 
 const statusKey = 'status'
 const statusReady = 'ready'
+const errNoStatus = new Error('stream header does not contain any status')
 
 // checkStreamReady checks if MESG's gRPC stream is ready to serve data.
 // if not, it returns a non-empty error.
 const checkStreamReady = (metadata): Error => {
 	const statuses = metadata.get(statusKey)
 	if (!statuses.length) {
-		return new Error('stream header does not contain any status')
+		return errNoStatus
 	}
 	const lastStatus = statuses[statuses.length-1]
 	if (lastStatus != statusReady) {
@@ -31,5 +32,6 @@ const checkStreamReady = (metadata): Error => {
 
 export {
 	createClient,
-	checkStreamReady
+	checkStreamReady,
+	errNoStatus
 }

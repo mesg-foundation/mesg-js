@@ -1,6 +1,6 @@
 import * as uuidv4 from 'uuid/v4'
 import { handleAPIResponse } from '../util/api';
-import { checkStreamReady } from '../util/grpc';
+import { checkStreamReady, errNoStatus } from '../util/grpc';
 
 type Options = {
     client
@@ -28,22 +28,32 @@ class Application {
         })
     }
 
-    executeTasKAndWaitFirstResult(req: ExecuteTaskRequest): Promise<ResultData> {
+    executeTaskAndWaitFirstResult(req: ExecuteTaskRequest): Promise<ResultData> {
         return new Promise<ResultData>((resolve, reject) => {
             const id = uuidv4()
             const stream = this.listenResult({ serviceID: req.serviceID, tagFilters: [id] })
-                .on('error', (err) => { reject(err) })
                 .on('metadata', (metadata) => {
                     const err = checkStreamReady(metadata)
-                    if (err) return
+                    if (err == errNoStatus) return
+                    if (err) {
+                        stream.destroy(err)
+                        return
+                    }
                     if (req.executionTags) {
                         req.executionTags.push(id)
                     } else {
                         req.executionTags = [id]
                     }
-                    this.executeTask(req).catch((err) => { stream.destroy(err) })
+                    this.executeTask(req).catch((err) => stream.destroy(err))
                 })
-                .on('data', (result) => { resolve(result) })
+                .on('data', (result) => {
+                    stream.cancel()
+                    resolve(result)
+                })
+                .on('error', (err) => {
+                    stream.cancel()
+                    reject(err)
+                })
         })
     }
 }
