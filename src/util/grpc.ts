@@ -19,7 +19,7 @@ const errNoStatus = new Error('stream header does not contain any status')
 
 // checkStreamReady checks if MESG's gRPC stream is ready to serve data.
 // if not, it returns a non-empty error.
-const checkStreamReady = (metadata): Error => {
+const checkStreamReady = (metadata: Metadata): Error => {
 	const statuses = metadata.get(statusKey)
 	if (!statuses.length) {
 		return errNoStatus
@@ -30,8 +30,34 @@ const checkStreamReady = (metadata): Error => {
 	}
 }
 
+// Stream is a type for gRPC ClientReadableStream but only covers a
+// subset of its APIs.
+interface Stream<T> {
+    on(event: 'data', listener: (data: T) => void): this;
+    on(event: 'end', listener: () => void): this;
+    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: 'status', listener: (status: Status) => void): this;
+    on(event: 'metadata', listener: (metadata: Metadata) => void): this;
+    cancel(): void;
+    destroy(err?: Error): void;
+}
+
+// Metadata is a type for gRPC Metadata but only covers a subset of it
+// for reading metadata on Stream.
+interface Metadata {
+	get(key: string): Array<string|Buffer>
+}
+
+// Status is a type for gRPC Status.
+interface Status {
+	code: number
+	details: string
+	metadata: Metadata
+}
+
 export {
 	createClient,
 	checkStreamReady,
-	errNoStatus
+	errNoStatus,
+	Stream
 }
