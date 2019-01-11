@@ -28,7 +28,7 @@ class Application {
     })
   }
 
-  executeTaskAndWaitFirstResult(req: ExecuteTaskRequest): Promise<ResultData> {
+  executeTaskAndWaitResult(req: ExecuteTaskRequest): Promise<ResultData> {
     return new Promise<ResultData>((resolve, reject) => {
       const id = uuidv4()
       const stream = this.listenResult({ serviceID: req.serviceID, tagFilters: [id] })
