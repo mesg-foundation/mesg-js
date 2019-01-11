@@ -109,48 +109,48 @@ test('executeTask() should reject promise with err', (t) => {
   stub.restore()
 });
 
-test('executeTaskAndWaitFirstResult() should listen for results', (t) => {
+test('executeTaskAndWaitResult() should listen for results', (t) => {
   t.plan(2);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client, 'ListenResult')
-  application.executeTaskAndWaitFirstResult({ serviceID: '1',  taskKey: '2',  inputData: '3' })
+  application.executeTaskAndWaitResult({ serviceID: '1',  taskKey: '2',  inputData: '3' })
   const req: ListenResultRequest = spy.getCall(0).args[0]
   t.equal(req.serviceID, '1')
   t.ok(isUUID.v4(req.tagFilters[0]))
   spy.restore()
 });
 
-test('executeTaskAndWaitFirstResult() should reject and cancel result stream on `error` event', (t) => {
+test('executeTaskAndWaitResult() should reject and cancel result stream on `error` event', (t) => {
   t.plan(2);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client.resultStream, 'cancel')
-  application.executeTaskAndWaitFirstResult({ serviceID: '2',  taskKey: '3', inputData: '4' })
+  application.executeTaskAndWaitResult({ serviceID: '2',  taskKey: '3', inputData: '4' })
     .catch((err) => t.equal(err.message, '1'))
   client.resultStream.emit('error', new Error('1'))
   t.ok(spy.calledOnce)
   spy.restore()
 });
 
-test('executeTaskAndWaitFirstResult() should resolve and cancel result stream on first `data` event', (t) => {
+test('executeTaskAndWaitResult() should resolve and cancel result stream on first `data` event', (t) => {
   t.plan(2);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client.resultStream, 'cancel')
-  application.executeTaskAndWaitFirstResult({  serviceID: '2', taskKey: '3', inputData: '4' })
+  application.executeTaskAndWaitResult({  serviceID: '2', taskKey: '3', inputData: '4' })
     .then((result) => t.equal(result.executionID, '2'))
   client.resultStream.emit('data', { executionID: '2' })
   t.ok(spy.calledOnce)
   spy.restore()
 });
 
-test('executeTaskAndWaitFirstResult() should execute task', (t) => {
+test('executeTaskAndWaitResult() should execute task', (t) => {
   t.plan(4);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client, 'ExecuteTask')
-  application.executeTaskAndWaitFirstResult({  serviceID: '2', taskKey: '3', inputData: '4' })
+  application.executeTaskAndWaitResult({  serviceID: '2', taskKey: '3', inputData: '4' })
   client.resultStream.emit('metadata', { get() { return ['ready'] } })
   const req: ExecuteTaskRequest = spy.getCall(0).args[0]
   t.equal(req.serviceID, '2')
