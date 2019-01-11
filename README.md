@@ -16,6 +16,11 @@ This library can be used from an Application or a Service.
 
 - [Installation](#installation)
 - [Application](#application)
+  - [Listen events](#listen-events)
+  - [Listen results](#listen-results)
+  - [Execute task](#execute-task)
+  - [Execute task and wait result](#execute-task-and-wait-result)
+  - [Advanced utilization](#advanced-utilization)
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
@@ -36,27 +41,232 @@ Require MESG.js as an application:
 const options = {
   endpoint: "localhost:50052" // default
 }
-const MESG = require('mesg-js').application(options)
+const mesg = require('mesg-js').application(options)
 ```
 
 ## MESG Core endpoint
 
 By default, the library connects to Core from the endpoint `localhost:50052`.
 
-If you wish to set another endpoint, you must set the environmental variable `MESG_ENDPOINT` to the desired endpoint.
+## Listen events
 
+Listen events from a service.
 
+```javascript
+const { application } = require('mesg-js')
 
-See the [full list of available gRPC APIs](https://github.com/mesg-foundation/mesg-js/blob/master/proto/api-core.proto).
+const mesg = application()
+
+const stream = mesg.listenEvent({
+  serviceID: __EVENT_SERVICE_ID__,
+  eventFilter: __EVENT_KEY__ // optional
+}).on('data', function(event) {
+  console.log('an event received:', event.eventKey)
+}).on('error', function(err) {
+  console.log('an error has occurred:', err.message)
+}).on('end', function() {
+  console.log('stream closed')
+})
+
+// cancel stream anytime
+stream.cancel()
+```
+
+[`ListenEventRequest`](#ListenEventRequest)
+[`EventData`](#EventData)
+
+## Listen results
+
+Listen results from a service.
+
+```javascript
+const { application } = require('mesg-js')
+
+const mesg = application()
+
+const stream = mesg.listenResult({
+  serviceID: __RESULT_SERVICE_ID__
+  taskFilter: __TASK_KEY_FILTER__ // optional
+  outputFilter: __OUTPUT_KEY_FILTER__ // optional
+  tagFilters: [__TAG_FILTER_] // optional
+}).on('data', function(result) {
+  console.log('a result received:', result.outputKey)
+}).on('error', function(err) {
+  console.log('an error has occurred:', err.message)
+}).on('end', function() {
+  console.log('stream closed')
+})
+
+// cancel stream anytime
+stream.cancel()
+```
+
+[`ListenResultRequest`](#ListenResultRequest)
+[`ResultData`](#ResultData)
+
+## Execute task
+
+Execute task on a service.
+
+```javascript
+const { application } = require('mesg-js')
+
+const mesg = application()
+
+mesg.executeTask({
+  serviceID: __TASK_SERVICE_ID__,
+  taskKey: __TASK_KEY__,
+  inputData: JSON.stringify(__INPUT_DATA__),
+  executionTags: [__ASSOCIATE_TAG__] // optional
+}).then((execution) => {
+  console.log('task in progress with execution id:', execution.executionID)
+}).catch((err) => {
+  console.log('task execution failed with err:', err.message)
+})
+```
+
+[`ExecuteTaskRequest`](#ExecuteTaskRequest)
+[`ExecuteTaskReply`](#ExecuteTaskReply)
+
+## Execute task and wait result
+
+Execute task on a service and wait for its result.
+This can be considered as a shortcut for using both `executeTask()` and `listenResult()` at same time.
+
+```javascript
+const { application } = require('mesg-js')
+
+const mesg = application()
+
+mesg.executeTaskAndWaitResult({
+  serviceID: __TASK_SERVICE_ID__,
+  taskKey: __TASK_KEY__,
+  inputData: JSON.stringify(__INPUT_DATA__),
+  executionTags: [__ASSOCIATE_TAG__] // optional
+}).then((result) => {
+  console.log('a result received:', result.outputKey)
+}).catch((err) => {
+  console.log('task execution failed with err:', err.message)
+})
+```
+
+[`ExecuteTaskRequest`](#ExecuteTaskRequest)
+[`ResultData`](#ResultData)
+
+## Object definition
+
+### `ListenEventRequest`
+
+```ts
+interface ListenEventRequest {
+  // Event's service ID.
+  serviceID: string
+
+  // Listen for this event's key. Leave empty or set `*` to listen for any event
+  // from this service.
+  eventFilter?: string
+}
+```
+
+### `EventData`
+
+```ts
+interface EventData {
+  // Event's key.
+  eventKey: string
+
+  // Event's data. It's JSON encoded.
+  eventData: string
+}
+```
+
+### `ListenResultRequest`
+
+```ts
+interface ListenResultRequest {
+  // Result's service ID.
+  serviceID: string
+
+  // Only listen for this task's key. Leave empty or set `*` to listen for any
+  // task's result from this service.
+  taskFilter?: string
+
+  // Only listen for the output key. If set, `taskFilter` is required.
+  // Leave it empty or set `*` to listen for any task's output from this service.
+  outputFilter?: string
+
+  // List of tags required to process this result. All inclusive filter.
+  tagFilters?: string[]
+}
+```
+
+### `ResultData`
+
+```ts
+interface ResultData {
+  // Execution id of the task that result belongs to.
+  executionID: string
+
+  // Task key of the result.
+  taskKey: string
+
+  // Output key of the result.
+  outputKey: string
+
+  // Output data of the result. It's JSON encoded.
+  outputData: string
+
+  // Associated execution tags during the task execution.
+  executionTags: string[]
+
+  // Error is filled when task execution is failed.
+  error: string
+}
+```
+
+### `ExecuteTaskRequest`
+
+```ts
+interface ExecuteTaskRequest {
+  // Task's service ID.
+  serviceID: string
+
+  // Task key to execute.
+  taskKey: string
+
+  // Input to pass on to the task.
+  // It must be JSON encoded and should fulfil the task's input definition types.
+  inputData: string
+
+  // List of tags to send for the execution. These tags can be static,
+  // generated based on an event or a result.
+  executionTags?: string[]
+}
+```
+
+```ts
+interface ExecuteTaskReply {
+  // Unique id for the execution. 
+  executionID: string
+}
+```
+
+## Advanced utilization
+
+The application can use gRPC APIs directly for advanced utilization.
+
+See the [full list of available gRPC APIs](https://docs.mesg.com/api/core.html).
 
 Here some examples for the most useful gRPC APIs that your application can use:
 
 ### Execute a task
 
 ```javascript
-const MESG = require('mesg-js').application()
+const { application } = require('mesg-js')
 
-MESG.api.ExecuteTask({
+const grpc = application().api
+
+grpc.ExecuteTask({
   serviceID: __TASK_SERVICE_ID__,
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
@@ -71,16 +281,16 @@ MESG.api.ExecuteTask({
 ### Listen for an event
 
 ```javascript
-const MESG = require('mesg-js').application()
+const { application } = require('mesg-js')
 
-MESG.api.ListenEvent({
+const grpc = application().api
+
+grpc.ListenEvent({
   serviceID: __TASK_SERVICE_ID__,
   eventFilter: __EVENT_KEY__
-})
-.on('error', function(error) {
+}).on('error', function(error) {
   // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
+}).on('data', function(data) {
   ...
 })
 ```
@@ -90,17 +300,17 @@ MESG.api.ListenEvent({
 ### Listen to a task's result
 
 ```javascript
-const MESG = require('mesg-js').application()
+const { application } = require('mesg-js')
 
-MESG.api.ListenResult({
+const grpc = application().api
+
+grpc.ListenResult({
   serviceID: __TASK_SERVICE_ID__,
   taskFilter: __TASK_KEY__,
   outputFilter: __OUTPUT_KEY__
-})
-.on('error', function(error) {
+}).on('error', function(error) {
   // An error has occurred and the stream has been closed.
-})
-.on('data', function(data) {
+}).on('data', function(data) {
   ...
 })
 ```
@@ -112,15 +322,17 @@ MESG.api.ListenResult({
 Require MESG.js as a service:
 
 ```javascript
-const MESG = require('mesg-js').service()
+const { service } = require('mesg-js')
+
+const mesg = service()
 ```
 
 ## Task
 
-The service should call `MESG.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
+The service should call `mesg.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
 
 ```javascript
-MESG.listenTask({
+mesg.listenTask({
   __TASK_1_KEY__: function (inputs, outputs) {
     // Function of the task 1
     ...
@@ -130,8 +342,7 @@ MESG.listenTask({
     ...
   },
   ...
-})
-.on('error', function (error) {
+}).on('error', function (error) {
   // Handle error
 })
 ```
@@ -190,11 +401,9 @@ The parameter `outputs` is an object that contains the two tasks' outputs: `succ
 ```javascript
 outputs.success({
   result: __MULTIPLICATION_RESULT__
-})
-.then(function () {
+}).then(function () {
   ...
-})
-.catch(function (error) {
+}).catch(function (error) {
   // handle error
 })
 ```
@@ -203,11 +412,9 @@ And `error` is defined like:
 ```javascript
 outputs.error({
   message: __ERROR_MESSAGE__
-})
-.then(function () {
+}).then(function () {
   ...
-})
-.catch(function (error) {
+}).catch(function (error) {
   // handle error
 })
 ```
@@ -216,13 +423,12 @@ outputs.error({
 
 The last step is to register the task function with MESG.
 
-The service should call `MESG.listenTask` with a containing object as the key of the task, and the task's function as a value. In this example, the key is `multiply` and the function is `taskMultiply`
+The service should call `mesg.listenTask` with a containing object as the key of the task, and the task's function as a value. In this example, the key is `multiply` and the function is `taskMultiply`
 
 ```javascript
-MESG.listenTask({
+mesg.listenTask({
   multiply: taskMultiply
-})
-.on('error', function (error) {
+}).on('error', function (error) {
   // Handle error
 })
 ```
@@ -231,47 +437,44 @@ MESG.listenTask({
 
 ```javascript
 // Require MESG.js as a service
-const MESG = require('mesg-js').service()
+const { service } = require('mesg-js')
+
+const mesg = service()
+
+// Register the task multiply to MESG
+mesg.listenTask({
+  multiply: taskMultiply
+}).on('error', function (error) {
+  console.error(error)
+})
 
 function taskMultiply (inputs, outputs) {
   if (inputs.a === undefined || inputs.b === undefined) {
     // There is an error. Return the error output with the message.
     outputs.error({
       message: 'a and/or b are undefined'
-    })
-    .catch(function (error) {
+    }).catch(function (error) {
       console.error(error)
     })
   } else {
     // Return the success output with the result of the multiplication
     outputs.success({
       result: inputs.a * inputs.b
-    })
-    .catch(function (error) {
+    }).catch(function (error) {
       console.error(error)
     })
   }
 }
-
-// Register the task multiply to MESG
-MESG.listenTask({
-  multiply: taskMultiply
-})
-.on('error', function (error) {
-  console.error(error)
-})
 ```
 
 ## Event
 
-To emit an event, the service should call the `MESG.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
+To emit an event, the service should call the `mesg.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
 
 ```javascript
-MESG.emitEvent(__EVENT_KEY__, __EVENT_DATA__)
-.then(function () {
+mesg.emitEvent(__EVENT_KEY__, __EVENT_DATA__).then(function () {
   ...
-})
-.catch(function (error) {
+}).catch(function (error) {
   // handle error
 })
 ```
@@ -290,13 +493,14 @@ events:
 
 And the JavaScript code:
 ```javascript
-const MESG = require('mesg-js').service()
+const { service } = require('mesg-js')
+
+const mesg = service()
 
 function emitEvent () {
-  MESG.emitEvent('minute', {
+  mesg.emitEvent('minute', {
     timestamp: Date.now()
-  })
-  .catch(function (error) {
+  }).catch(function (error) {
     console.error(error)
   })
 }
