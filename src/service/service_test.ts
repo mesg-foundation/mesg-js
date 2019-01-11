@@ -16,7 +16,7 @@ const token = "token"
 function newService(config: any, client: testClient): Service {
   return new Service({
     token: token,
-    mesgConfig: config,
+    definition: config,
     client: client
   })
 }
@@ -24,16 +24,16 @@ function newService(config: any, client: testClient): Service {
 test('Service should expose the service gRPC api', (t) => {
   t.plan(1);
   const client = new testClient;
-  const mesgConfig = { tasks: {"task1": {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {"task1": {}} };
+  const service = newService(definition, client);
   t.ok(service.api);
 });
 
 test('listenTask() should pass task validation', function (t) {
   t.plan(1);
   const client = new testClient;
-  const mesgConfig = { tasks: {"task1": {}, "task2": {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {"task1": {}, "task2": {}} };
+  const service = newService(definition, client);
   const spy = sinon.stub(service, 'listenTask');
   try {
     service.listenTask({ "task1": () => {},  "task2": () => {} });
@@ -46,8 +46,8 @@ test('listenTask() should pass task validation', function (t) {
 test('listenTask() should throw because missing task in mesg.yml', function (t) {
   t.plan(1);
   const client = new testClient;
-  const mesgConfig = { tasks: {"task1": {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {"task1": {}} };
+  const service = newService(definition, client);
   try {
     service.listenTask({ "task1": () => {},  "task2": () => {} });
     t.fail("should throw");
@@ -59,8 +59,8 @@ test('listenTask() should throw because missing task in mesg.yml', function (t) 
 test('listenTask() should throw because missing task callback', function (t) {
   t.plan(1);
   const client = new testClient;
-  const mesgConfig = { tasks: {"task1": {}, "task2": {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {"task1": {}, "task2": {}} };
+  const service = newService(definition, client);
   try {
     service.listenTask({ "task1": () => {} });
     t.fail("should throw");
@@ -72,8 +72,8 @@ test('listenTask() should throw because missing task callback', function (t) {
 test('listenTask() should throw when called more than once', function (t) {
   t.plan(1);
   const client = new testClient;
-  const mesgConfig = { tasks: {"task1": {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {"task1": {}} };
+  const service = newService(definition, client);
   service.listenTask({ "task1": () => {} });
   try {
     service.listenTask({ "task1": () => {} });
@@ -87,8 +87,8 @@ test('listenTask() should listen for tasks', function (t) {
   t.plan(2);
   const client = new testClient;
   const spy = sinon.spy(client, 'listenTask');
-  const mesgConfig = { tasks: {'task1': {}, 'task2': {}} };
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {'task1': {}, 'task2': {}} };
+  const service = newService(definition, client);
   service.listenTask({ 'task1': () => {}, 'task2': () => {} });
   t.ok(spy.calledOnce);
   t.equal(spy.getCall(0).args[0].token, token);
@@ -101,8 +101,8 @@ test('listenTask() should handle tasks and submit result', function (t) {
   const inputData = {input: 'data'};
   const outputData = {output: 'data'};
   const client = new testClient;
-  const mesgConfig = { tasks: {'task1': { outputs: { success: {} } }}};
-  const service = newService(mesgConfig, client);
+  const definition = { tasks: {'task1': { outputs: { success: {} } }}};
+  const service = newService(definition, client);
   const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
     t.equal(inputData, inputData);
     t.ok(outputs.success);
@@ -122,8 +122,8 @@ test('emitEvent() should emit an event', function (t) {
   const event = 'event1';
   const eventData = {event: 'data'};
   const client = new testClient;
-  const mesgConfig = {};
-  const service = newService(mesgConfig, client);
+  const definition = {};
+  const service = newService(definition, client);
   const spy = sinon.spy(client, 'emitEvent');
   service.emitEvent(event, eventData);
   const args = spy.getCall(0).args[0];

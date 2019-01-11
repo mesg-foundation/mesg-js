@@ -8,10 +8,10 @@ const endpoint = process.env.MESG_ENDPOINT
 const ymlPath = './mesg.yml'
 
 const serviceBuilder = (): Service => {
-	const mesgConfig = YAML.safeLoad(fs.readFileSync(ymlPath));
+	const definition = YAML.safeLoad(fs.readFileSync(ymlPath));
 	return new Service({
 		token: token,
-		mesgConfig: mesgConfig,
+		definition: definition,
 		client: createClient('Service', 'api-service.proto', endpoint)
 	});
 }

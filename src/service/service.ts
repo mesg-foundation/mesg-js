@@ -4,7 +4,7 @@ import { Stream } from '../util/grpc';
 
 type Options = {
     token: string
-    mesgConfig: any
+    definition: any
     client
 }
 
@@ -13,11 +13,11 @@ class Service {
   api
 
   private token: string
-  private mesgConfig: any
+  private definition: any
   private tasks: Tasks
 
   constructor(options: Options){
-    this.mesgConfig = options.mesgConfig;
+    this.definition = options.definition;
     this.api = options.client;
     this.token = options.token;
   }
@@ -51,7 +51,7 @@ class Service {
 
     const data = JSON.parse(inputData);
     const outputs = {};
-    const taskConfig = this.mesgConfig.tasks[taskKey];
+    const taskConfig = this.definition.tasks[taskKey];
 
     for (let outputKey in taskConfig.outputs){
       outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
@@ -69,11 +69,11 @@ class Service {
   }
 
   private validateTaskNames(){
-    const nonDescribedTasks = Object.keys(this.tasks).filter(x => !this.mesgConfig.tasks[x]);
+    const nonDescribedTasks = Object.keys(this.tasks).filter(x => !this.definition.tasks[x]);
     if (nonDescribedTasks.length > 0){
       throw new Error(`The following tasks does not present in your mesg.yml: ${nonDescribedTasks.join(', ')}`);
     }
-    const nonHandledTasks = Object.keys(this.mesgConfig.tasks).filter(x => !this.tasks[x]);
+    const nonHandledTasks = Object.keys(this.definition.tasks).filter(x => !this.tasks[x]);
     if (nonHandledTasks.length > 0){
       throw new Error(`The following tasks described in your mesg.yml don't have callbacks: ${nonHandledTasks.join(', ')}`);
     }
