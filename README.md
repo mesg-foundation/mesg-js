@@ -38,10 +38,12 @@ npm i mesg-js
 Require MESG.js as an application:
 
 ```javascript
+const { application } = require('mesg-js')
+
 const options = {
   endpoint: "localhost:50052" // default
 }
-const mesg = require('mesg-js').application(options)
+const mesg = application(options)
 ```
 
 ## MESG Core endpoint
@@ -61,7 +63,7 @@ const stream = mesg.listenEvent({
   serviceID: __EVENT_SERVICE_ID__,
   eventFilter: __EVENT_KEY__ // optional
 }).on('data', function(event) {
-  console.log('an event received:', event.eventKey)
+  console.log('an event received:', event.eventKey, JSON.parse(event.eventData))
 }).on('error', function(err) {
   console.log('an error has occurred:', err.message)
 }).on('end', function() {
@@ -72,6 +74,7 @@ const stream = mesg.listenEvent({
 stream.cancel()
 ```
 
+Reference: 
 [`ListenEventRequest`](#ListenEventRequest)
 [`EventData`](#EventData)
 
@@ -90,7 +93,7 @@ const stream = mesg.listenResult({
   outputFilter: __OUTPUT_KEY_FILTER__ // optional
   tagFilters: [__TAG_FILTER_] // optional
 }).on('data', function(result) {
-  console.log('a result received:', result.outputKey)
+  console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
 }).on('error', function(err) {
   console.log('an error has occurred:', err.message)
 }).on('end', function() {
@@ -101,6 +104,7 @@ const stream = mesg.listenResult({
 stream.cancel()
 ```
 
+Reference: 
 [`ListenResultRequest`](#ListenResultRequest)
 [`ResultData`](#ResultData)
 
@@ -125,6 +129,7 @@ mesg.executeTask({
 })
 ```
 
+Reference: 
 [`ExecuteTaskRequest`](#ExecuteTaskRequest)
 [`ExecuteTaskReply`](#ExecuteTaskReply)
 
@@ -144,12 +149,13 @@ mesg.executeTaskAndWaitResult({
   inputData: JSON.stringify(__INPUT_DATA__),
   executionTags: [__ASSOCIATE_TAG__] // optional
 }).then((result) => {
-  console.log('a result received:', result.outputKey)
+  console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
 }).catch((err) => {
   console.log('task execution failed with err:', err.message)
 })
 ```
 
+Reference: 
 [`ExecuteTaskRequest`](#ExecuteTaskRequest)
 [`ResultData`](#ResultData)
 
@@ -264,9 +270,9 @@ Here some examples for the most useful gRPC APIs that your application can use:
 ```javascript
 const { application } = require('mesg-js')
 
-const grpc = application().api
+const mesg = application()
 
-grpc.ExecuteTask({
+mesg.api.ExecuteTask({
   serviceID: __TASK_SERVICE_ID__,
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
@@ -283,9 +289,9 @@ grpc.ExecuteTask({
 ```javascript
 const { application } = require('mesg-js')
 
-const grpc = application().api
+const mesg = application()
 
-grpc.ListenEvent({
+mesg.api.ListenEvent({
   serviceID: __TASK_SERVICE_ID__,
   eventFilter: __EVENT_KEY__
 }).on('error', function(error) {
@@ -302,9 +308,9 @@ grpc.ListenEvent({
 ```javascript
 const { application } = require('mesg-js')
 
-const grpc = application().api
+const mesg = application()
 
-grpc.ListenResult({
+mesg.api.ListenResult({
   serviceID: __TASK_SERVICE_ID__,
   taskFilter: __TASK_KEY__,
   outputFilter: __OUTPUT_KEY__
