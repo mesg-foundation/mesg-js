@@ -1,3 +1,11 @@
+## v2.0.0
+
+- High level application APIs has changed.
+  - Added/updated `listenEvent()`, `listenResult()`, `executeTask()`, `executeTaskAndWaitResult()`.
+  - Previous ones removed.
+- `application()` constructor accepts options to configure Core's endpoint.
+- TS types updated to be more precise.
+
 ## v1.4.0
 
 - Possibility to associate tags for executions.
