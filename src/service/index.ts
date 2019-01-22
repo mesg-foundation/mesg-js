@@ -17,13 +17,18 @@ const serviceBuilder = (): Service => {
 }
 
 export default serviceBuilder;
+
 export {
-	Tasks,
-	TaskInputs,
-	TaskOutputs,
-	TaskOutputCallbackInput,
-	Stream,
-	EmitEventReply,
-	SubmitResultReply,
-	TaskData
+  Service
+}
+
+export {
+  Tasks,
+  TaskInputs,
+  TaskOutputs,
+  TaskOutputCallbackInput,
+  Stream,
+  EmitEventReply,
+  SubmitResultReply,
+  TaskData
 } from './service'

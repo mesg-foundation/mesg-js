@@ -21,10 +21,10 @@
   },
   "devDependencies": {
     "@types/node": "^10.5.2",
-    "@types/sinon": "^5.0.1",
+    "@types/sinon": "^5.0.2",
     "@types/tape": "^4.2.32",
-    "istanbul": "^0.4.5",
     "is-uuid": "^1.0.2",
+    "istanbul": "^0.4.5",
     "ncp": "^2.0.0",
     "nodemon": "^1.18.2",
     "rimraf": "^2.6.2",
