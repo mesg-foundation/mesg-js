@@ -15,4 +15,18 @@ const applicationBuilder = (options?: Options): Application => {
 }
 
 export default applicationBuilder;
-export { Options }
+
+export {
+  Application,
+  Options
+}
+
+export {
+  Stream,
+  ListenEventRequest,
+  ExecuteTaskRequest,
+  ExecuteTaskReply,
+  ListenResultRequest,
+  EventData,
+  ResultData
+} from './application'

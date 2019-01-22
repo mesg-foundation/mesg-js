@@ -17,6 +17,11 @@ const serviceBuilder = (): Service => {
 }
 
 export default serviceBuilder;
+
+export {
+  Service
+}
+
 export {
 	Tasks,
 	TaskInputs,
