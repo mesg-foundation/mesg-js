@@ -23,12 +23,12 @@ export {
 }
 
 export {
-	Tasks,
-	TaskInputs,
-	TaskOutputs,
-	TaskOutputCallbackInput,
-	Stream,
-	EmitEventReply,
-	SubmitResultReply,
-	TaskData
+  Tasks,
+  TaskInputs,
+  TaskOutputs,
+  TaskOutputCallbackInput,
+  Stream,
+  EmitEventReply,
+  SubmitResultReply,
+  TaskData
 } from './service'
