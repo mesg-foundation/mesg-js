@@ -280,7 +280,7 @@ mesg.api.ExecuteTask({
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
 }, (error, reply) => {
-  if (error !== undefined) {
+  if (error) {
     console.error(error)
     return
   }
