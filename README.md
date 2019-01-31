@@ -24,6 +24,7 @@ This library can be used from an Application or a Service.
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
+  - [Advanced utilization](#advanced-utilization-1)
 - [Community](#community)
 - [Contribute](#contribute)
 
@@ -62,11 +63,11 @@ const mesg = application()
 const stream = mesg.listenEvent({
   serviceID: __EVENT_SERVICE_ID__,
   eventFilter: __EVENT_KEY__ // optional
-}).on('data', function(event) {
+}).on('data', (event) => {
   console.log('an event received:', event.eventKey, JSON.parse(event.eventData))
-}).on('error', function(err) {
-  console.log('an error has occurred:', err.message)
-}).on('end', function() {
+}).on('error', (err) => {
+  console.error('an error has occurred:', err.message)
+}).on('end', () => {
   console.log('stream closed')
 })
 
@@ -92,11 +93,11 @@ const stream = mesg.listenResult({
   taskFilter: __TASK_KEY_FILTER__ // optional
   outputFilter: __OUTPUT_KEY_FILTER__ // optional
   tagFilters: [__TAG_FILTER_] // optional
-}).on('data', function(result) {
+}).on('data', (result) => {
   console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
-}).on('error', function(err) {
-  console.log('an error has occurred:', err.message)
-}).on('end', function() {
+}).on('error', (err) => {
+  console.error('an error has occurred:', err.message)
+}).on('end', () => {
   console.log('stream closed')
 })
 
@@ -125,7 +126,7 @@ mesg.executeTask({
 }).then((execution) => {
   console.log('task in progress with execution id:', execution.executionID)
 }).catch((err) => {
-  console.log('task execution failed with err:', err.message)
+  console.error('task execution failed with err:', err.message)
 })
 ```
 
@@ -151,7 +152,7 @@ mesg.executeTaskAndWaitResult({
 }).then((result) => {
   console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
 }).catch((err) => {
-  console.log('task execution failed with err:', err.message)
+  console.error('task execution failed with err:', err.message)
 })
 ```
 
@@ -250,6 +251,8 @@ interface ExecuteTaskRequest {
 }
 ```
 
+### `ExecuteTaskReply`
+
 ```ts
 interface ExecuteTaskReply {
   // Unique id for the execution. 
@@ -276,13 +279,16 @@ mesg.api.ExecuteTask({
   serviceID: __TASK_SERVICE_ID__,
   taskKey: __TASK_KEY__,
   inputData: JSON.stringify(__INPUT_DATA__)
-}, function (error, reply) {
+}, (error, reply) => {
+  if (error) {
+    console.error(error)
+    return
+  }
   console.log('task in progress with execution id:', reply.executionID)
-  ...
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/execute-a-task)
+[Documentation](https://docs.mesg.com/guide/application/execute-a-task.html)
 
 ### Listen for an event
 
@@ -294,14 +300,14 @@ const mesg = application()
 mesg.api.ListenEvent({
   serviceID: __TASK_SERVICE_ID__,
   eventFilter: __EVENT_KEY__
-}).on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-}).on('data', function(data) {
-  ...
+}).on('error', (error) => {
+  console.error(error)
+}).on('data', (data) => {
+  console.log('Event received with data:', data)
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
+[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listening-for-events-from-services)
 
 ### Listen to a task's result
 
@@ -314,14 +320,14 @@ mesg.api.ListenResult({
   serviceID: __TASK_SERVICE_ID__,
   taskFilter: __TASK_KEY__,
   outputFilter: __OUTPUT_KEY__
-}).on('error', function(error) {
-  // An error has occurred and the stream has been closed.
-}).on('data', function(data) {
-  ...
+}).on('error', (error) => {
+  console.error(error)
+}).on('data', (data) => {
+  console.log('Result received with data:', data)
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/listen-for-events#listen-for-task-execution-outputs)
+[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listen-for-task-execution-outputs)
 
 # Service
 
@@ -339,17 +345,14 @@ The service should call `mesg.listenTask` to register its available tasks to MES
 
 ```javascript
 mesg.listenTask({
-  __TASK_1_KEY__: function (inputs, outputs) {
+  __TASK_1_KEY__: (inputs, outputs) => {
     // Function of the task 1
-    ...
   }, 
-  __TASK_2_KEY__: function (inputs, outputs) {
+  __TASK_2_KEY__: (inputs, outputs) => {
     // Function of the task 2
-    ...
   },
-  ...
-}).on('error', function (error) {
-  // Handle error
+}).on('error', (error) => {
+  console.error(error)
 })
 ```
 
@@ -381,14 +384,14 @@ tasks:
             type: String
 ```
 
-If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/service/service-file).
+If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/guide/service/service-file.html).
 
 #### Task function
 
 Task functions should always accept `inputs` and `outputs` as parameters.
 
 ```javascript
-function taskMultiply(inputs, outputs)
+const taskMultiply = (inputs, outputs) => {}
 ```
 
 #### Inputs
@@ -407,10 +410,8 @@ The parameter `outputs` is an object that contains the two tasks' outputs: `succ
 ```javascript
 outputs.success({
   result: __MULTIPLICATION_RESULT__
-}).then(function () {
-  ...
-}).catch(function (error) {
-  // handle error
+}).catch((error) => {
+  console.error(error)
 })
 ```
 
@@ -418,10 +419,8 @@ And `error` is defined like:
 ```javascript
 outputs.error({
   message: __ERROR_MESSAGE__
-}).then(function () {
-  ...
-}).catch(function (error) {
-  // handle error
+}).catch((error) => {
+  console.error(error)
 })
 ```
 
@@ -434,8 +433,8 @@ The service should call `mesg.listenTask` with a containing object as the key of
 ```javascript
 mesg.listenTask({
   multiply: taskMultiply
-}).on('error', function (error) {
-  // Handle error
+}).on('error', (error) => {
+  console.error(error)
 })
 ```
 
@@ -447,30 +446,31 @@ const { service } = require('mesg-js')
 
 const mesg = service()
 
-// Register the task multiply to MESG
-mesg.listenTask({
-  multiply: taskMultiply
-}).on('error', function (error) {
-  console.error(error)
-})
-
-function taskMultiply (inputs, outputs) {
+// create taskMultiply handler
+const taskMultiply = (inputs, outputs) => {
   if (inputs.a === undefined || inputs.b === undefined) {
     // There is an error. Return the error output with the message.
     outputs.error({
       message: 'a and/or b are undefined'
-    }).catch(function (error) {
+    }).catch((error) => {
       console.error(error)
     })
   } else {
     // Return the success output with the result of the multiplication
     outputs.success({
       result: inputs.a * inputs.b
-    }).catch(function (error) {
+    }).catch((error) => {
       console.error(error)
     })
   }
 }
+
+// Register the task multiply to MESG
+mesg.listenTask({
+  multiply: taskMultiply
+}).on('error', (error) => {
+  console.error(error)
+})
 ```
 
 ## Event
@@ -478,10 +478,8 @@ function taskMultiply (inputs, outputs) {
 To emit an event, the service should call the `mesg.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
 
 ```javascript
-mesg.emitEvent(__EVENT_KEY__, __EVENT_DATA__).then(function () {
-  ...
-}).catch(function (error) {
-  // handle error
+mesg.emitEvent(__EVENT_KEY__, __EVENT_DATA__).catch((error) => {
+  console.error(error)
 })
 ```
 
@@ -506,13 +504,27 @@ const mesg = service()
 function emitEvent () {
   mesg.emitEvent('minute', {
     timestamp: Date.now()
-  }).catch(function (error) {
+  }).catch((error) => {
     console.error(error)
   })
 }
 setInterval(emitEvent, 60 * 1000)
 ```
 
+## Advanced utilization
+
+The service can use gRPC APIs directly for advanced utilization.
+
+See the [full list of available gRPC APIs](https://docs.mesg.com/api/service.html).
+
 # Community
 
+You can find us and other MESG users on the [forum](https://forum.mesg.com). Feel free to check existing posts and help other users of MESG.
+
+Also, be sure to check out the [blog](https://medium.com/mesg) to stay up-to-date with our articles.
+
 # Contribute
+
+Contributions are more than welcome.
+
+If you have any questions, please reach out to us directly on [Discord](https://discordapp.com/invite/SaZ5HcE).
