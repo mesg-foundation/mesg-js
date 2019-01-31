@@ -24,6 +24,7 @@ This library can be used from an Application or a Service.
 - [Service](#service)
   - [Task](#task)
   - [Event](#event)
+  - [Advanced utilization](#advanced-utilization-1)
 - [Community](#community)
 - [Contribute](#contribute)
 
@@ -509,6 +510,12 @@ function emitEvent () {
 }
 setInterval(emitEvent, 60 * 1000)
 ```
+
+## Advanced utilization
+
+The service can use gRPC APIs directly for advanced utilization.
+
+See the [full list of available gRPC APIs](https://docs.mesg.com/api/service.html).
 
 # Community
 
