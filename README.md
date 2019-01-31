@@ -250,6 +250,8 @@ interface ExecuteTaskRequest {
 }
 ```
 
+### `ExecuteTaskReply`
+
 ```ts
 interface ExecuteTaskReply {
   // Unique id for the execution. 
@@ -285,7 +287,7 @@ mesg.api.ExecuteTask({
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/execute-a-task)
+[Documentation](https://docs.mesg.com/guide/application/execute-a-task.html)
 
 ### Listen for an event
 
@@ -304,7 +306,7 @@ mesg.api.ListenEvent({
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/listen-for-events#listening-for-events-from-services)
+[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listening-for-events-from-services)
 
 ### Listen to a task's result
 
@@ -324,7 +326,7 @@ mesg.api.ListenResult({
 })
 ```
 
-[Documentation](https://docs.mesg.com/application/listen-for-events#listen-for-task-execution-outputs)
+[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listen-for-task-execution-outputs)
 
 # Service
 
@@ -381,7 +383,7 @@ tasks:
             type: String
 ```
 
-If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/service/service-file).
+If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/guide/service/service-file.html).
 
 #### Task function
 
