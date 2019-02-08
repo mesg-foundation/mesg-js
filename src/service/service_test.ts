@@ -96,7 +96,7 @@ test('listenTask() should listen for tasks', function (t) {
 });
 
 test('listenTask() should handle tasks and submit result', function (t) {
-  t.plan(5);
+  t.plan(6);
   const executionID = 'id';
   const inputData = {input: 'data'};
   const outputData = {output: 'data'};
@@ -106,7 +106,7 @@ test('listenTask() should handle tasks and submit result', function (t) {
   const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
     t.equal(inputData, inputData);
     t.ok(outputs.success);
-    outputs.success(outputData);
+    t.doesNotThrow(() => outputs.success(outputData))
   }});
   const spy = sinon.spy(client, 'submitResult');
   stream.emit('data', { executionID, taskKey: 'task1', inputData: JSON.stringify(inputData) });
@@ -115,6 +115,25 @@ test('listenTask() should handle tasks and submit result', function (t) {
   t.equal(args.executionID, executionID);
   t.equal(args.outputKey, 'success');
   t.equal(args.outputData, JSON.stringify(outputData));
+});
+
+test('output callback should throw when no data provided', function (t) {
+  t.plan(1);
+  const client = new testClient;
+  const definition = { tasks: {'task1': { outputs: { success: {} } }}};
+  const service = newService(definition, client);
+  const stream = <any>service.listenTask({ 'task1': (inputs, outputs) => {
+    try {
+      (<any>outputs.success)()
+    } catch(e) {
+      t.equal(e.message, 'output callback requires object data')
+    }
+  }});
+  stream.emit('data', {
+    executionID: 'id',
+    taskKey: 'task1',
+    inputData: JSON.stringify({input: 'data'})
+  });
 });
 
 test('emitEvent() should emit an event', function (t) {
