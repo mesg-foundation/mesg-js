@@ -63,7 +63,7 @@ test('listenTask() should give warning because missing task callback', function 
   const service = newService(definition, client);
   const spy = sinon.spy(console, 'log');
   service.listenTask({ "task1": () => {} });
-  t.equal(spy.getCall(0).args[0], 'WARNING: The following tasks described in your mesg.yml don\'t have callbacks: task2');
+  t.equal(spy.getCall(0).args[0], 'WARNING: The following tasks described in the mesg.yml haven\'t implemented: task2');
   spy.restore();
 });
 
