@@ -55,6 +55,7 @@ class Service {
 
     for (let outputKey in taskConfig.outputs){
       outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
+        if (!data) throw new Error('output callback requires object data')
         return new Promise<SubmitResultReply | Error>((resolve, reject) => {
           this.api.submitResult({
             executionID,
