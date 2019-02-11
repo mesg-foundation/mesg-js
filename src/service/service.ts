@@ -76,7 +76,7 @@ class Service {
     }
     const nonHandledTasks = Object.keys(this.definition.tasks).filter(x => !this.tasks[x]);
     if (nonHandledTasks.length > 0) {
-      console.log(`WARNING: The following tasks described in the mesg.yml haven't implemented: ${nonHandledTasks.join(', ')}`);
+      console.log(`WARNING: The following tasks described in the mesg.yml haven't been implemented: ${nonHandledTasks.join(', ')}`);
     }
   }
 }
