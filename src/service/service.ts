@@ -33,7 +33,8 @@ class Service {
     return stream;
   }
 
-  emitEvent(event: string, data: any): Promise<EmitEventReply | Error> {
+  emitEvent(event: string, data: EventData): Promise<EmitEventReply | Error> {
+    if (!data) throw new Error('data object must be send while emitting event')
     return new Promise<EmitEventReply | Error>((resolve, reject) => {
       this.api.emitEvent({
         token: this.token,
@@ -55,7 +56,7 @@ class Service {
 
     for (let outputKey in taskConfig.outputs){
       outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
-        if (!data) throw new Error('output callback requires object data')
+        if (!data) throw new Error('data object must be send while submitting output')
         return new Promise<SubmitResultReply | Error>((resolve, reject) => {
           this.api.submitResult({
             executionID,
@@ -94,6 +95,10 @@ interface TaskOutputs  {
 }
 
 interface TaskOutputCallbackInput {
+  [key: string]: any
+}
+
+interface EventData {
   [key: string]: any
 }
 
