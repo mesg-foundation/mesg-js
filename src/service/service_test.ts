@@ -124,7 +124,7 @@ test('output callback should throw when no data provided', function (t) {
     try {
       (<any>outputs.success)()
     } catch(e) {
-      t.equal(e.message, 'output callback requires object data')
+      t.equal(e.message, 'data object must be send while submitting output')
     }
   }});
   stream.emit('data', {
@@ -135,17 +135,27 @@ test('output callback should throw when no data provided', function (t) {
 });
 
 test('emitEvent() should emit an event', function (t) {
-  t.plan(3);
+  t.plan(4);
   const event = 'event1';
   const eventData = {event: 'data'};
   const client = new testClient;
   const definition = {};
   const service = newService(definition, client);
   const spy = sinon.spy(client, 'emitEvent');
-  service.emitEvent(event, eventData);
+  t.doesNotThrow(() => service.emitEvent(event, eventData));
   const args = spy.getCall(0).args[0];
   t.equal(args.token, token);
   t.equal(args.eventKey, event);
   t.equal(args.eventData, JSON.stringify(eventData));
   spy.restore();
+});
+
+test('emitEvent() should throw when no data provided', function (t) {
+  t.plan(1);
+  const service = newService({}, new testClient);
+  try {
+    (<any>service.emitEvent)('event1')
+  } catch(e) {
+    t.equal(e.message, 'data object must be send while emitting event')
+  }
 });
