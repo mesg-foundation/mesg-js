@@ -72,12 +72,12 @@ class Service {
 
   private validateTaskNames(){
     const nonDescribedTasks = Object.keys(this.tasks).filter(x => !this.definition.tasks[x]);
-    if (nonDescribedTasks.length > 0){
-      throw new Error(`The following tasks does not present in your mesg.yml: ${nonDescribedTasks.join(', ')}`);
+    if (nonDescribedTasks.length > 0) {
+      throw new Error(`The following tasks are not present in the mesg.yml: ${nonDescribedTasks.join(', ')}`);
     }
     const nonHandledTasks = Object.keys(this.definition.tasks).filter(x => !this.tasks[x]);
-    if (nonHandledTasks.length > 0){
-      throw new Error(`The following tasks described in your mesg.yml don't have callbacks: ${nonHandledTasks.join(', ')}`);
+    if (nonHandledTasks.length > 0) {
+      console.warn(`WARNING: The following tasks described in the mesg.yml haven't been implemented: ${nonHandledTasks.join(', ')}`);
     }
   }
 }

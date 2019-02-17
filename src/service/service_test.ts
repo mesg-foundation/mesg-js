@@ -56,17 +56,15 @@ test('listenTask() should throw because missing task in mesg.yml', function (t) 
   }
 });
 
-test('listenTask() should throw because missing task callback', function (t) {
+test('listenTask() should give warning because missing task callback', function (t) {
   t.plan(1);
   const client = new testClient;
   const definition = { tasks: {"task1": {}, "task2": {}} };
   const service = newService(definition, client);
-  try {
-    service.listenTask({ "task1": () => {} });
-    t.fail("should throw");
-  } catch(e) {
-    t.ok(e);
-  }
+  const spy = sinon.spy(console, 'warn');
+  service.listenTask({ "task1": () => {} });
+  t.equal(spy.getCall(0).args[0], 'WARNING: The following tasks described in the mesg.yml haven\'t been implemented: task2');
+  spy.restore();
 });
 
 test('listenTask() should throw when called more than once', function (t) {
