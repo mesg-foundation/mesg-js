@@ -11,7 +11,7 @@ option go_package = "coreapi";
 //
 // Services must not use this API, but rather use the [Service API](./service.md).
 //
-// The source file of this API is hosted on [GitHub](https://github.com/mesg-foundation/core/blob/master/api/core/api.proto).
+// The source file of this API is hosted on [GitHub](https://github.com/mesg-foundation/core/blob/master/protobuf/coreapi/api.proto).
 service Core {
   // Subscribe to a stream that listens for events from a service.
   rpc ListenEvent (ListenEventRequest) returns (stream EventData) {}
@@ -43,55 +43,8 @@ service Core {
   // ServiceLogs gives a stream for dependency logs of a service.
   rpc ServiceLogs (ServiceLogsRequest) returns (stream LogData) {}
 
-  // CreateWorkflow creates and runs a new workflow.
-  rpc CreateWorkflow (CreateWorkflowRequest) returns (CreateWorkflowReply) {}
-
-  // DeleteWorkflow stops and deletes a workflow.
-  rpc DeleteWorkflow (DeleteWorkflowRequest) returns (DeleteWorkflowReply) {}
-}
-
-// The request's data for the `CreateWorkflow` API.
-//
-// **Example**
-// ```json
-// {
-//   "file":   __FILE__,
-//   "name": "__UNIQUE_WORKFLOW_NAME__"
-// }
-// ```
-message CreateWorkflowRequest {
-  message WorkflowDefinition {
-  }
-  WorkflowDefinition definition = 1;  // Workflow definition.
-  string name = 2; // An optional unique name for workflow.
-}
-
-// The reply's data of the `CreateWorkflow` API.
-//
-// **Example**
-// ```json
-// {
-//   "id": "__WORKFLOW_ID__"
-// }
-// ```
-message CreateWorkflowReply {
-  string ID = 1; // Unique ID of workflow.
-}
-
-// The request's data for the `DeleteWorkflow` API.
-//
-// **Example**
-// ```json
-// {
-//   "id": "__WORKFLOW_ID__"
-// }
-// ```
-message DeleteWorkflowRequest {
-  string ID = 1;  // Unique name or ID of workflow.
-}
-
-// Reply of `DeleteWorkflow` API doesn't contain any data.
-message DeleteWorkflowReply {
+  // Info returns all necessary information from the core.
+  rpc Info(InfoRequest) returns (InfoReply) {}
 }
 
 // The request's data for the `ListenEvent` stream's API.
@@ -290,10 +243,15 @@ message DeployServiceReply {
     Type type = 2;      // Type of status message.
   }
 
+  message Service {
+    string sid = 1;   // `sid` is the service ID.
+    string hash = 2;  // `hash` is the service hash.
+  }
+
   oneof value {
     Status status = 2;          // `status` will be sent after each status change.
-    string serviceID = 3;       // `serviceID` will be sent as the last message of stream when service deployed successfully.
     string validationError = 4; // `validationError` will be sent as the last message of stream when there is a validation error.
+    Service service = 5;        // `service` will be sent as the last message of stream when service deployed successfully.
   }
 }
 
@@ -452,6 +410,23 @@ message ServiceLogsRequest {
   repeated string dependencies = 2; // __Optional.__ List of dependencies to filter service logs. All by default.
 }
 
+// The request to fetch all informations of the Core
+message InfoRequest {}
+
+// Information concerning the Core from the `info` API.
+message InfoReply {
+  message CoreService {
+    string sid = 1;   // sid of the service
+    string hash = 2;  // hash of the service
+    string url = 3;   // url used to deploy the service
+    string key = 4;   // key to identify the core service
+  }
+  repeated CoreService services = 1; // List of services that the core is running as core service
+  string address = 2; // Address to reach the core
+  string image = 3;   // Docker image used
+  string version = 4; // Version of the core
+}
+
 // The data received from the stream of the `ServiceLogs` API.
 // The data will be received over time as long as the stream is open.
 //
@@ -491,7 +466,6 @@ message Service {
   repeated Task tasks = 5;                  // The list of tasks this service can execute.
   repeated Event events = 6;                // The list of events this service can emit.
   repeated Dependency dependencies = 7;     // The Docker dependencies this service requires.
-  Dependency configuration = 8;             // Service's Docker configuration.
   string repository = 9;                    // Service's repository that contain its source code.
   Status status = 11;                       // Service's status.
 }
@@ -526,8 +500,10 @@ message Parameter {
   string key = 8;         // Parameter's key.
   string name = 1;        // Parameter's name.
   string description = 2; // Parameter's description.
-  string type = 3;        // Parameter's type: `String`, `Number`, `Boolean` or `Object`.
+  string type = 3;        // Parameter's type: `String`, `Number`, `Boolean`, `Object` or `Any`.
   bool optional = 4;      // Set the parameter as optional.
+  bool repeated = 9;      // Mark a parameter as an array of the defined type
+  repeated Parameter object = 10; // Optional object structure definition when type is set to `Object`
 }
 
 // A dependency is a configuration of an other Docker container that runs separately from the service.
