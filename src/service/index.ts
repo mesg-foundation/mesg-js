@@ -12,7 +12,7 @@ const serviceBuilder = (): Service => {
 	return new Service({
 		token: token,
 		definition: definition,
-		client: createClient('Service', 'api-service.proto', endpoint)
+		client: createClient('Service', 'serviceapi/api.proto', endpoint)
 	});
 }
 

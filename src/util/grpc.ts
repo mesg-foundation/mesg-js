@@ -3,7 +3,12 @@ import * as protoLoader from '@grpc/proto-loader'
 import * as path from 'path'
 
 function createClient(serviceName: string, filePath: string, endpoint: string){
-  const packageDefinition = protoLoader.loadSync(path.join(__dirname, '../proto', filePath));
+  const packageDefinition = protoLoader.loadSync(filePath, {
+    includeDirs: [
+      path.join(__dirname, '../protobuf'),
+      path.join(__dirname, '../')
+    ],
+  });
   const packageObject = grpc.loadPackageDefinition(packageDefinition);
 
   const clientConstructor = packageObject.api[serviceName];
