@@ -1,3 +1,10 @@
+## v2.1.0
+
+- [#81](https://github.com/mesg-foundation/mesg-js/pull/81) Service: throw an error when task's output functions are called without any data.
+- [#82](https://github.com/mesg-foundation/mesg-js/pull/82) Service: show a warning instead of throwing an error when tasks are defined in `mesg.yml` but not implemented.
+- [#84](https://github.com/mesg-foundation/mesg-js/pull/84) Service: throw an error when emit event functions are called without any data.
+- [#86](https://github.com/mesg-foundation/mesg-js/pull/86) Update proto files with latest version from [MESG Core](https://github.com/mesg-foundation/core).
+
 ## v2.0.0
 
 - High level application APIs has changed.
