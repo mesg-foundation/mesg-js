@@ -10,7 +10,7 @@ type Options = {
 const applicationBuilder = (options?: Options): Application => {
 	const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
 	return new Application({
-		client: createClient('Core', 'api-core.proto', endpoint)
+		client: createClient('Core', 'protobuf/coreapi/api.proto', endpoint)
 	});
 }
 
