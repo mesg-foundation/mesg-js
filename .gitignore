@@ -1,5 +1,4 @@
 node_modules/
-lib/
 istanbul/
 coverage/
 .DS_Store
