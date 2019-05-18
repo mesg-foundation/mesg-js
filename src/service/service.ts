@@ -3,9 +3,9 @@ import { Stream } from '../util/grpc';
 
 
 type Options = {
-    token: string
-    definition: any
-    client
+  token: string
+  definition: any
+  client
 }
 
 class Service {
@@ -53,8 +53,9 @@ class Service {
     const data = JSON.parse(inputData);
     const outputs = {};
     const taskConfig = this.definition.tasks[taskKey];
-
-    for (let outputKey in taskConfig.outputs){
+    const outputKeys = [...Object.keys(taskConfig.outputs || {}), "success", "error"]
+      .filter((x, i, a) => a.indexOf(x) == i)
+    for (let outputKey of outputKeys) {
       outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
         if (!data) throw new Error('data object must be send while submitting output')
         return new Promise<SubmitResultReply | Error>((resolve, reject) => {
