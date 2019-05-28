@@ -66,8 +66,8 @@ class Service {
     }
   }
 
-  private submitResult(request: SubmitResultRequest): Promise<SubmitResultReply>  {
-    return new Promise<SubmitResultReply>((resolve, reject) => {
+  private submitResult(request: SubmitResultRequest): Promise<void>  {
+    return new Promise<void>((resolve, reject) => {
       this.api.submitResult(request, handleAPIResponse(resolve, reject));
     })
   }
@@ -102,9 +102,6 @@ interface SubmitResultRequest {
   outputData?: string
 }
 
-interface SubmitResultReply {
-}
-
 interface TaskData {
   executionID: string
   taskKey: string
@@ -117,7 +114,6 @@ export {
   Tasks,
   TaskInputs,
   Stream,
-  SubmitResultReply,
   TaskData,
   EventData,
   SubmitResultRequest,
