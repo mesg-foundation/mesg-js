@@ -79,14 +79,10 @@ class Service {
 }
 
 interface Tasks {
-  [task: string]: (inputs: TaskInputs) => TaskOutputs
+  [task: string]: (inputs: TaskInputs) => object | Promise<object>
 }
 
 interface TaskInputs {
-  [key: string]: any
-}
-
-interface TaskOutputs  {
   [key: string]: any
 }
 
@@ -111,7 +107,6 @@ export {
   Options,
   Tasks,
   TaskInputs,
-  TaskOutputs,
   Stream,
   EmitEventReply,
   SubmitResultReply,
