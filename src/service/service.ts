@@ -106,5 +106,4 @@ export {
   Tasks,
   Stream,
   TaskData,
-  SubmitResultRequest,
 }
