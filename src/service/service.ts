@@ -33,9 +33,9 @@ class Service {
     return stream;
   }
 
-  emitEvent(event: string, data: EventData): Promise<EmitEventReply> {
+  emitEvent(event: string, data: EventData): Promise<void> {
     if (!data) throw new Error('data object must be send while emitting event')
-    return new Promise<EmitEventReply>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.api.emitEvent({
         token: this.token,
         eventKey: event,
@@ -96,9 +96,6 @@ interface EventData {
   [key: string]: any
 }
 
-interface EmitEventReply {
-}
-
 interface SubmitResultRequest {
   executionID: string
   error?: string
@@ -120,7 +117,6 @@ export {
   Tasks,
   TaskInputs,
   Stream,
-  EmitEventReply,
   SubmitResultReply,
   TaskData,
   EventData,
