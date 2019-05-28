@@ -24,9 +24,6 @@ export {
 
 export {
   Tasks,
-  TaskInputs,
   Stream,
-  EmitEventReply,
-  SubmitResultReply,
   TaskData
 } from './service'
