@@ -85,11 +85,7 @@ class Service {
 }
 
 interface Tasks {
-  [task: string]: (inputs: TaskInputs) => object | Promise<object>
-}
-
-interface TaskInputs {
-  [key: string]: any
+  [task: string]: (inputs: object) => object | Promise<object>
 }
 
 interface SubmitResultRequest {
@@ -108,7 +104,6 @@ export default Service;
 export {
   Options,
   Tasks,
-  TaskInputs,
   Stream,
   TaskData,
   SubmitResultRequest,
