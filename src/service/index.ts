@@ -25,7 +25,6 @@ export {
 export {
   Tasks,
   TaskInputs,
-  TaskOutputs,
   Stream,
   EmitEventReply,
   SubmitResultReply,
