@@ -44,25 +44,31 @@ class Service {
     })
   }
 
-  private async handleTaskData({ executionID, taskKey, inputData }) {
-    const callback = this.tasks[taskKey];
+  private async handleTaskData(taskData: TaskData) {
+    const callback = this.tasks[taskData.taskKey];
     if (!callback) {
-      throw new Error(`Task ${taskKey} is not defined in your services`);
+      throw new Error(`Task ${taskData.taskKey} is not defined in your services`);
     }
-    const data = JSON.parse(inputData);
+    const data = JSON.parse(taskData.inputData);
     try {
       const outputs = await callback(data);
       const outputData = JSON.stringify(outputs);
-      return this.submitResult({ executionID, outputData });
+      return this.submitResult({
+        executionID: taskData.executionID,
+        outputData: outputData,
+      });
     } catch (err) {
       const error = err.message;
-      return this.submitResult({ executionID, error });
+      return this.submitResult({
+        executionID: taskData.executionID,
+        error: error,
+      });
     }
   }
 
-  private submitResult(payload: any)  {
+  private submitResult(request: SubmitResultRequest): Promise<SubmitResultReply>  {
     return new Promise<SubmitResultReply>((resolve, reject) => {
-      this.api.submitResult(payload, handleAPIResponse(resolve, reject));
+      this.api.submitResult(request, handleAPIResponse(resolve, reject));
     })
   }
 
@@ -93,6 +99,12 @@ interface EventData {
 interface EmitEventReply {
 }
 
+interface SubmitResultRequest {
+  executionID: string
+  error?: string
+  outputData?: string
+}
+
 interface SubmitResultReply {
 }
 
@@ -111,4 +123,6 @@ export {
   EmitEventReply,
   SubmitResultReply,
   TaskData,
+  EventData,
+  SubmitResultRequest,
 }
