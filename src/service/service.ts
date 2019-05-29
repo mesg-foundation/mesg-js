@@ -3,9 +3,9 @@ import { Stream } from '../util/grpc';
 
 
 type Options = {
-    token: string
-    definition: any
-    client
+  token: string
+  definition: any
+  client
 }
 
 class Service {
@@ -33,9 +33,9 @@ class Service {
     return stream;
   }
 
-  emitEvent(event: string, data: EventData): Promise<EmitEventReply | Error> {
+  emitEvent(event: string, data: EventData): Promise<EmitEventReply> {
     if (!data) throw new Error('data object must be send while emitting event')
-    return new Promise<EmitEventReply | Error>((resolve, reject) => {
+    return new Promise<EmitEventReply>((resolve, reject) => {
       this.api.emitEvent({
         token: this.token,
         eventKey: event,
@@ -44,30 +44,26 @@ class Service {
     })
   }
 
-  private handleTaskData({ executionID, taskKey, inputData }) {
+  private async handleTaskData({ executionID, taskKey, inputData }) {
     const callback = this.tasks[taskKey];
     if (!callback) {
       throw new Error(`Task ${taskKey} is not defined in your services`);
     }
-
     const data = JSON.parse(inputData);
-    const outputs = {};
-    const taskConfig = this.definition.tasks[taskKey];
-
-    for (let outputKey in taskConfig.outputs){
-      outputs[outputKey] = (data: TaskOutputCallbackInput): Promise<SubmitResultReply | Error> => {
-        if (!data) throw new Error('data object must be send while submitting output')
-        return new Promise<SubmitResultReply | Error>((resolve, reject) => {
-          this.api.submitResult({
-            executionID,
-            outputKey,
-            outputData: JSON.stringify(data)
-          }, handleAPIResponse(resolve, reject));
-        })
-      }
+    try {
+      const outputs = await callback(data);
+      const outputData = JSON.stringify(outputs);
+      return this.submitResult({ executionID, outputData });
+    } catch (err) {
+      const error = err.message;
+      return this.submitResult({ executionID, error });
     }
+  }
 
-    callback(data, outputs);
+  private submitResult(payload: any)  {
+    return new Promise<SubmitResultReply>((resolve, reject) => {
+      this.api.submitResult(payload, handleAPIResponse(resolve, reject));
+    })
   }
 
   private validateTaskNames(){
@@ -83,18 +79,10 @@ class Service {
 }
 
 interface Tasks {
-  [task: string]: (inputs: TaskInputs, outputs: TaskOutputs) => void
+  [task: string]: (inputs: TaskInputs) => object | Promise<object>
 }
 
 interface TaskInputs {
-  [key: string]: any
-}
-
-interface TaskOutputs  {
-  [key: string]: (input: TaskOutputCallbackInput) => Promise<void>
-}
-
-interface TaskOutputCallbackInput {
   [key: string]: any
 }
 
@@ -119,8 +107,6 @@ export {
   Options,
   Tasks,
   TaskInputs,
-  TaskOutputs,
-  TaskOutputCallbackInput,
   Stream,
   EmitEventReply,
   SubmitResultReply,
