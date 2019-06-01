@@ -13,7 +13,7 @@
   "author": "Anthony Estebe <anthony@mesg.tech>",
   "license": "ISC",
   "dependencies": {
-    "@grpc/proto-loader": "^0.3.0",
+    "@grpc/proto-loader": "^0.5.1",
     "clone": "^2.1.2",
     "grpc": "^1.13.0",
     "js-yaml": "^3.12.0",
