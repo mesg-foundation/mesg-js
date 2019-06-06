@@ -5,7 +5,7 @@
 
 [Website](https://mesg.com/) - [Docs](https://docs.mesg.com/) - [Chat](https://discordapp.com/invite/SaZ5HcE) - [Blog](https://medium.com/mesg)
 
-MESG.js is the official JavaScript library to interact with [MESG Core](https://github.com/mesg-foundation/core).
+MESG.js is the official JavaScript library to interact with [MESG Engine](https://github.com/mesg-foundation/core).
 
 This library can be used from an Application or a Service.
 
@@ -47,7 +47,7 @@ const options = {
 const mesg = application(options)
 ```
 
-## MESG Core endpoint
+## MESG Engine endpoint
 
 By default, the library connects to Core from the endpoint `localhost:50052`.
 
@@ -341,7 +341,7 @@ const mesg = service()
 
 ## Task
 
-The service should call `mesg.listenTask` to register its available tasks to MESG Core. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
+The service should call `mesg.listenTask` to register its available tasks to MESG Engine. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
 
 ```javascript
 mesg.listenTask({
