@@ -51,14 +51,12 @@ test('listenResult() should listen for results and return a stream', (t) => {
   const stream = application.listenResult({ 
     serviceID: '1',
     taskFilter: '2',
-    outputFilter: '3',
     tagFilters: ['4', '5']
   })
   const req: ListenResultRequest = spy.getCall(0).args[0]
   t.ok(stream instanceof testStream)
   t.equal(req.serviceID, '1')
   t.equal(req.taskFilter, '2')
-  t.equal(req.outputFilter, '3')
   t.same(req.tagFilters, ['4', '5'])
   spy.restore()
 });
