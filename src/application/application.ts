@@ -76,7 +76,7 @@ interface EventData {
 }
 
 interface ResultData {
-  executionID: string
+  executionHash: string
   taskKey: string
   outputKey: string
   outputData: string
@@ -92,7 +92,7 @@ interface ExecuteTaskRequest {
 }
 
 interface ExecuteTaskReply {
-  executionID: string
+  executionHash: string
 }
 
 export default Application;

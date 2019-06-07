@@ -86,13 +86,13 @@ test('executeTask() should resolve promise with reply', (t) => {
   t.plan(1);
   const client = new testClient;
   const application = new Application({ client });
-  const reply: ExecuteTaskReply = { executionID: '1' }
+  const reply: ExecuteTaskReply = { executionHash: '1' }
   const stub = sinon.stub(client, 'ExecuteTask').callsFake((req, cb) => cb(undefined, reply))
   application.executeTask({
     serviceID: '2',
     taskKey: '3',
     inputData: '4'
-  }).then((reply) =>  t.equal(reply.executionID, '1') )
+  }).then((reply) =>  t.equal(reply.executionHash, '1') )
   stub.restore()
 });
 
@@ -139,8 +139,8 @@ test('executeTaskAndWaitResult() should resolve and cancel result stream on firs
   const application = new Application({ client });
   const spy = sinon.spy(client.resultStream, 'cancel')
   application.executeTaskAndWaitResult({  serviceID: '2', taskKey: '3', inputData: '4' })
-    .then((result) => t.equal(result.executionID, '2'))
-  client.resultStream.emit('data', { executionID: '2' })
+    .then((result) => t.equal(result.executionHash, '2'))
+  client.resultStream.emit('data', { executionHash: '2' })
   t.ok(spy.calledOnce)
   spy.restore()
 });
