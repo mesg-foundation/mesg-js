@@ -124,7 +124,7 @@ mesg.executeTask({
   inputData: JSON.stringify(__INPUT_DATA__),
   executionTags: [__ASSOCIATE_TAG__] // optional
 }).then((execution) => {
-  console.log('task in progress with execution id:', execution.executionID)
+  console.log('task in progress with execution:', execution.executionHash)
 }).catch((err) => {
   console.error('task execution failed with err:', err.message)
 })
@@ -211,8 +211,8 @@ interface ListenResultRequest {
 
 ```ts
 interface ResultData {
-  // Execution id of the task that result belongs to.
-  executionID: string
+  // Hash of the execution.
+  executionHash: string
 
   // Task key of the result.
   taskKey: string
@@ -255,8 +255,8 @@ interface ExecuteTaskRequest {
 
 ```ts
 interface ExecuteTaskReply {
-  // Unique id for the execution. 
-  executionID: string
+  // Hash of the execution.
+  executionHash: string
 }
 ```
 
@@ -284,7 +284,7 @@ mesg.api.ExecuteTask({
     console.error(error)
     return
   }
-  console.log('task in progress with execution id:', reply.executionID)
+  console.log('task in progress with execution:', reply.executionHash)
 })
 ```
 
