@@ -44,7 +44,7 @@ class Service {
     })
   }
 
-  private async handleTaskData({ executionID, taskKey, inputData }) {
+  private async handleTaskData({ executionHash, taskKey, inputData }) {
     const callback = this.tasks[taskKey];
     if (!callback) {
       throw new Error(`Task ${taskKey} is not defined in your services`);
@@ -53,10 +53,10 @@ class Service {
     try {
       const outputs = await callback(data);
       const outputData = JSON.stringify(outputs);
-      return this.submitResult({ executionID, outputData });
+      return this.submitResult({ executionHash, outputData });
     } catch (err) {
       const error = err.message;
-      return this.submitResult({ executionID, error });
+      return this.submitResult({ executionHash, error });
     }
   }
 
@@ -97,7 +97,7 @@ interface SubmitResultReply {
 }
 
 interface TaskData {
-  executionID: string
+  executionHash: string
   taskKey: string
   inputData: string
 }

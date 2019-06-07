@@ -95,7 +95,7 @@ test('listenTask() should listen for tasks', function (t) {
 
 test('listenTask() should handle tasks and submit result', async function (t) {
   t.plan(4);
-  const executionID = 'id';
+  const executionHash = 'hash';
   const inputData = {input: 'data'};
   const outputData = {output: 'data'};
   const client = new testClient;
@@ -106,11 +106,11 @@ test('listenTask() should handle tasks and submit result', async function (t) {
     t.deepEqual(inputData, inputs);
     return outputData
   }});
-  t.doesNotThrow(() => stream.emit('data', { executionID, taskKey: 'task1', inputData: JSON.stringify(inputData) }));
+  t.doesNotThrow(() => stream.emit('data', { executionHash, taskKey: 'task1', inputData: JSON.stringify(inputData) }));
   await setTimeout(()=>{}, 0)
   const args = spy.getCall(0).args[0];
   spy.restore();
-  t.equal(args.executionID, executionID);
+  t.equal(args.executionHash, executionHash);
   t.equal(args.outputData, JSON.stringify(outputData));
 });
 
