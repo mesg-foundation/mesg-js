@@ -5,7 +5,7 @@
 
 [Website](https://mesg.com/) - [Docs](https://docs.mesg.com/) - [Chat](https://discordapp.com/invite/SaZ5HcE) - [Blog](https://medium.com/mesg)
 
-MESG.js is the official JavaScript library to interact with [MESG Engine](https://github.com/mesg-foundation/core).
+MESG.js is the official JavaScript library to interact with [MESG Engine](https://github.com/mesg-foundation/engine).
 
 This library can be used from an Application or a Service.
 
@@ -49,7 +49,7 @@ const mesg = application(options)
 
 ## MESG Engine endpoint
 
-By default, the library connects to Core from the endpoint `localhost:50052`.
+By default, the library connects to the MESG Engine from the endpoint `localhost:50052`.
 
 ## Listen events
 
