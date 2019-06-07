@@ -44,21 +44,19 @@ test('listenEvent() should listen for events and return a stream', (t) => {
 });
 
 test('listenResult() should listen for results and return a stream', (t) => {
-  t.plan(5);
+  t.plan(4);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client, 'ListenResult')
   const stream = application.listenResult({ 
     serviceID: '1',
     taskFilter: '2',
-    outputFilter: '3',
     tagFilters: ['4', '5']
   })
   const req: ListenResultRequest = spy.getCall(0).args[0]
   t.ok(stream instanceof testStream)
   t.equal(req.serviceID, '1')
   t.equal(req.taskFilter, '2')
-  t.equal(req.outputFilter, '3')
   t.same(req.tagFilters, ['4', '5'])
   spy.restore()
 });
