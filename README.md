@@ -5,7 +5,7 @@
 
 [Website](https://mesg.com/) - [Docs](https://docs.mesg.com/) - [Chat](https://discordapp.com/invite/SaZ5HcE) - [Blog](https://medium.com/mesg)
 
-MESG.js is the official JavaScript library to interact with [MESG Engine](https://github.com/mesg-foundation/core).
+MESG.js is the official JavaScript library to interact with [MESG Engine](https://github.com/mesg-foundation/engine).
 
 This library can be used from an Application or a Service.
 
@@ -49,7 +49,7 @@ const mesg = application(options)
 
 ## MESG Engine endpoint
 
-By default, the library connects to Core from the endpoint `localhost:50052`.
+By default, the library connects to the MESG Engine from the endpoint `localhost:50052`.
 
 ## Listen events
 
@@ -91,10 +91,13 @@ const mesg = application()
 const stream = mesg.listenResult({
   serviceID: __RESULT_SERVICE_ID__
   taskFilter: __TASK_KEY_FILTER__ // optional
-  outputFilter: __OUTPUT_KEY_FILTER__ // optional
   tagFilters: [__TAG_FILTER_] // optional
 }).on('data', (result) => {
-  console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
+  if (result.error) {
+    console.error('an error has occurred:', result.error)
+    return
+  }
+  console.log('a result received:', JSON.parse(result.outputData))
 }).on('error', (err) => {
   console.error('an error has occurred:', err.message)
 }).on('end', () => {
@@ -150,7 +153,11 @@ mesg.executeTaskAndWaitResult({
   inputData: JSON.stringify(__INPUT_DATA__),
   executionTags: [__ASSOCIATE_TAG__] // optional
 }).then((result) => {
-  console.log('a result received:', result.outputKey, JSON.parse(result.outputData))
+  if (result.error) {
+    console.error('an error has occurred:', result.error)
+    return
+  }
+  console.log('a result received:', JSON.parse(result.outputData))
 }).catch((err) => {
   console.error('task execution failed with err:', err.message)
 })
@@ -198,10 +205,6 @@ interface ListenResultRequest {
   // task's result from this service.
   taskFilter?: string
 
-  // Only listen for the output key. If set, `taskFilter` is required.
-  // Leave it empty or set `*` to listen for any task's output from this service.
-  outputFilter?: string
-
   // List of tags required to process this result. All inclusive filter.
   tagFilters?: string[]
 }
@@ -216,9 +219,6 @@ interface ResultData {
 
   // Task key of the result.
   taskKey: string
-
-  // Output key of the result.
-  outputKey: string
 
   // Output data of the result. It's JSON encoded.
   outputData: string
@@ -319,7 +319,6 @@ const mesg = application()
 mesg.api.ListenResult({
   serviceID: __TASK_SERVICE_ID__,
   taskFilter: __TASK_KEY__,
-  outputFilter: __OUTPUT_KEY__
 }).on('error', (error) => {
   console.error(error)
 }).on('data', (data) => {
@@ -341,25 +340,32 @@ const mesg = service()
 
 ## Task
 
-The service should call `mesg.listenTask` to register its available tasks to MESG Engine. An object containing the tasks' key is the only parameter of this function and the tasks' functions are the values. This function returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
+The service have to call `mesg.listenTask` to start listening for task to execute by passing an object containing the tasks' key and function.
 
 ```javascript
 mesg.listenTask({
-  __TASK_1_KEY__: (inputs, outputs) => {
+  'TASK_1_KEY': (inputs) => {
     // Function of the task 1
+    // Can directly throw error
+    if (inputs.foo === undefined) {
+      throw new Error('foo is undefined')
+    }
+    // Return an object
+    return { foo: inputs.a + 'bar' }
   }, 
-  __TASK_2_KEY__: (inputs, outputs) => {
+  'TASK_2_KEY': (inputs) => {
     // Function of the task 2
+    // Return an Promise containing an object
+    return Promise.new(resolve => {
+      resolve( { foo: inputs.a + 'bar' })
+    })
   },
 }).on('error', (error) => {
   console.error(error)
 })
 ```
 
-`inputs` is containing the task's inputs as defined in its `service.yml`.
-
-`outputs` is containing the task's outputs as function as defined in its `service.yml`.
-The `outputs` function returns a `Promise` and should **ONLY BE CALLED ONCE** per executed task with the desired data as parameters.
+`mesg.listenTask` returns an [event emitter](https://nodejs.org/api/events.html#events_class_eventemitter) with possible events `data` and `error`.
 
 ### Example
 
@@ -374,61 +380,38 @@ tasks:
       b:
         type: Number
     outputs:
-      success:
-        data:
-          result:
-            type: Number
-      error:
-        data:
-          message:
-            type: String
+      result:
+        type: Number
 ```
 
 If you want more information about this file, check out the [documentation on service files](https://docs.mesg.com/guide/service/service-file.html).
 
 #### Task function
 
-Task functions should always accept `inputs` and `outputs` as parameters.
+Task functions accept `inputs` as parameter and returns the `outputs` as object or Promise of object.
+
+The parameter `inputs` is an object that contains the two task's inputs: `a` and `b` in this example.
+
+The task function have to return an object or a Promise of object containing the task's outputs: `result` in this example.
+
+The task function can also throw an Error in case of error. The lib will catch it and send it to the MESG Engine.
 
 ```javascript
-const taskMultiply = (inputs, outputs) => {}
+const taskMultiply = (inputs) => {
+  if (inputs.foo === undefined) {
+    throw new Error('foo is undefined')
+  }
+  return { result: inputs.a * inputs.b }
+}
 ```
 
-#### Inputs
+#### Listen for task
 
-The parameter `inputs` is an object that contains the two task's inputs: `a` and `b`.
+The service have to call `mesg.listenTask` function to start listening for task to execute.
 
-#### Outputs
+This function accepts an object containing the tasks' keys as object keys, and the task's function as object value.
 
-The parameter `outputs` is an object that contains the two tasks' outputs: `success` and `error`.
-
-`success` and `error` are functions that accept an object defined by its `data` structure as its only parameter. Those functions return a `Promise`.
-
-> **ONLY ONE** output function should be called per task execution.
-
-`success` is defined like:
-```javascript
-outputs.success({
-  result: __MULTIPLICATION_RESULT__
-}).catch((error) => {
-  console.error(error)
-})
-```
-
-And `error` is defined like:
-```javascript
-outputs.error({
-  message: __ERROR_MESSAGE__
-}).catch((error) => {
-  console.error(error)
-})
-```
-
-#### Register the task
-
-The last step is to register the task function with MESG.
-
-The service should call `mesg.listenTask` with a containing object as the key of the task, and the task's function as a value. In this example, the key is `multiply` and the function is `taskMultiply`
+In this example, the key is `multiply` and the function is `taskMultiply`.
 
 ```javascript
 mesg.listenTask({
@@ -440,6 +423,8 @@ mesg.listenTask({
 
 #### Javascript code
 
+Here is the full Javascript code of this example:
+
 ```javascript
 // Require MESG.js as a service
 const { service } = require('mesg-js')
@@ -447,21 +432,14 @@ const { service } = require('mesg-js')
 const mesg = service()
 
 // create taskMultiply handler
-const taskMultiply = (inputs, outputs) => {
+const taskMultiply = (inputs) => {
   if (inputs.a === undefined || inputs.b === undefined) {
     // There is an error. Return the error output with the message.
-    outputs.error({
-      message: 'a and/or b are undefined'
-    }).catch((error) => {
-      console.error(error)
-    })
-  } else {
-    // Return the success output with the result of the multiplication
-    outputs.success({
-      result: inputs.a * inputs.b
-    }).catch((error) => {
-      console.error(error)
-    })
+    throw new Error('a or b is undefined')
+  }
+  // Return the success output with the result of the multiplication
+  return {
+    result: inputs.a * inputs.b
   }
 }
 

@@ -66,7 +66,6 @@ interface ListenEventRequest {
 interface ListenResultRequest {
   serviceID: string
   taskFilter?: string
-  outputFilter?: string
   tagFilters?: string[]
 }
 
@@ -78,7 +77,6 @@ interface EventData {
 interface ResultData {
   executionHash: string
   taskKey: string
-  outputKey: string
   outputData: string
   executionTags: string[]
   error: string
