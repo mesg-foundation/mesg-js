@@ -44,7 +44,7 @@ test('listenEvent() should listen for events and return a stream', (t) => {
 });
 
 test('listenResult() should listen for results and return a stream', (t) => {
-  t.plan(5);
+  t.plan(4);
   const client = new testClient;
   const application = new Application({ client });
   const spy = sinon.spy(client, 'ListenResult')
