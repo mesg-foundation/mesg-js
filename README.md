@@ -505,4 +505,4 @@ Also, be sure to check out the [blog](https://medium.com/mesg) to stay up-to-dat
 
 Contributions are more than welcome.
 
-If you have any questions, please reach out to us directly on [Discord](https://discordapp.com/invite/SaZ5HcE).
+If you have any questions, please reach out to us directly on [Discord](https://discordapp.com/invite/5tVTHJC).
