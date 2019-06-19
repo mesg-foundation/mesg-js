@@ -28,6 +28,13 @@
 - ([#84](https://github.com/mesg-foundation/mesg-js/pull/84)) Service: throw an error when emit event functions are called without any data.
 - ([#86](https://github.com/mesg-foundation/mesg-js/pull/86)) Update proto files with latest version from [MESG Core](https://github.com/mesg-foundation/core).
 
+
+## [v2.0.1](https://github.com/mesg-foundation/mesg-js/releases/tag/v2.0.1)
+
+## Fixes
+
+- Export more types and classes from service and application.
+
 ## [v2.0.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v2.0.0)
 
 ### [Click here to see the release notes](https://forum.mesg.com/t/mesg-js-v2-0-0-release-notes/196)
@@ -59,34 +66,33 @@ output key, output data on results.
 
 ## [v1.2.3](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.2.3)
 
-Fix `whenResult` callback execution
+- Fix `whenResult` callback execution
 
 ## [v1.2.2](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.2.2)
 
-Update new API that normalize the inputs for tasks
+- Update new API that normalize the inputs for tasks
 
 ## [v1.2.1](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.2.1)
 
-Update latest API changes that removes error field
+- Update latest API changes that removes error field
 
 ## [v1.2.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.2.0)
 
-Export `api` for application to be able to access any api from the core
+- Export `api` for application to be able to access any api from the core
 
 ## [v1.1.2](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.1.2)
 
-Use better communication system between service and MESG Core
+- Use better communication system between service and MESG Core
 
 ## [v1.1.1](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.1.1)
 
-Fix issue with input conversion for tasks
+- Fix issue with input conversion for tasks
 
 ## [v1.1.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.1.0)
 
-Add library for applications accessible with `require('mesg-js').application()`
-
-- **whenEvent(eventDetails, taskDetails)** that triggers a task when an event occurs
-- **whenResult(resultDetails, taskDetails)** that triggers a task when a result occurs
+- Add library for applications accessible with `require('mesg-js').application()`
+  - **whenEvent(eventDetails, taskDetails)** that triggers a task when an event occurs
+  - **whenResult(resultDetails, taskDetails)** that triggers a task when a result occurs
 
 ```
 require('mesg-js')
@@ -102,9 +108,8 @@ require('mesg-js')
 
 ## [v1.0.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v1.0.0)
 
-Add library for services accessible with `require('mesg-js').service()`
-
-- **listenTask(map<task, function(inputs, outputs)>)** that takes a map of task handlers that are functions with the following signature `taskX(inputs, outputs)`
+- Add library for services accessible with `require('mesg-js').service()`
+  - **listenTask(map<task, function(inputs, outputs)>)** that takes a map of task handlers that are functions with the following signature `taskX(inputs, outputs)`
 ```
 MESG.listenTask({
   taskX: (inputs, outputs) => {
@@ -112,7 +117,8 @@ MESG.listenTask({
   }
 })
 ```
-- **emitEvent(event, data)** that takes the name of the event and the associated data
+
+  - **emitEvent(event, data)** that takes the name of the event and the associated data
 ```
 MESG.emitEvent('eventX', { foo: 'bar' })
 ```
