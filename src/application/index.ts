@@ -1,5 +1,5 @@
 import Application from './application'
-import { createClient } from '../util/grpc'
+import API from '../api'
 
 const defaultEndpoint = 'localhost:50052'
 
@@ -8,25 +8,13 @@ type Options = {
 }
 
 const applicationBuilder = (options?: Options): Application => {
-	const endpoint = options && options.endpoint ? options.endpoint: defaultEndpoint;
-	return new Application({
-		client: createClient('Core', 'protobuf/coreapi/api.proto', endpoint)
-	});
+  const endpoint = options && options.endpoint ? options.endpoint : defaultEndpoint;
+  return new Application(API(endpoint));
 }
 
 export default applicationBuilder;
 
 export {
-  Application,
-  Options
+  Application
 }
 
-export {
-  Stream,
-  ListenEventRequest,
-  ExecuteTaskRequest,
-  ExecuteTaskReply,
-  ListenResultRequest,
-  EventData,
-  ResultData
-} from './application'
