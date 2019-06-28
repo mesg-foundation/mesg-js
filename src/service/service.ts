@@ -1,5 +1,4 @@
 import { handleAPIResponse } from '../util/api'
-import { Stream } from '../util/grpc';
 import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs } from '../api';
 
 
@@ -39,13 +38,13 @@ class Service {
     return stream;
   }
 
-  emitEvent(event: string, data: EventData): EventCreateOutputs {
+  emitEvent(event: string, data: EventData): Promise<EventCreateOutputs> {
     if (!data) throw new Error('data object must be send while emitting event')
-    return this.API.event.Create({
+    return new Promise((resolve, reject) => this.API.event.Create({
       instanceHash: this.token,
       key: event,
       data: JSON.stringify(data)
-    })
+    }, handleAPIResponse(resolve, reject)))
   }
 
   private async handleTaskData({ hash, taskKey, inputs }) {
@@ -57,10 +56,10 @@ class Service {
     try {
       const outputData = await callback(data);
       const outputs = JSON.stringify(outputData);
-      return this.API.execution.Update({ hash, outputs });
+      return new Promise((resolve, reject) => this.API.execution.Update({ hash, outputs }, handleAPIResponse(resolve, reject)));
     } catch (err) {
       const error = err.message;
-      return this.API.execution.Update({ hash, error });
+      return new Promise((resolve, reject) => this.API.execution.Update({ hash, error }, handleAPIResponse(resolve, reject)));
     }
   }
 

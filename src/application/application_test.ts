@@ -1,9 +1,8 @@
 import * as test from 'tape'
 import * as sinon from 'sinon'
 import * as isUUID from 'is-uuid'
-import { EventEmitter } from 'events';
 import Application from './application';
-import Api, { API, ExecutionStatus, streams } from '../api/mock'
+import Api, { ExecutionStatus, streams } from '../api/mock'
 
 test('listenEvent() should listen for events and return a stream', (t) => {
   t.plan(2);
@@ -58,7 +57,7 @@ test('executeTask() should resolve promise with reply', (t) => {
   const api = Api('');
   const application = new Application(api);
   const reply = { hash: '1' }
-  const stub = sinon.stub(api.execution, 'Create').callsFake(() => Promise.resolve(reply))
+  const stub = sinon.stub(api.execution, 'Create').callsFake((_, callback) => callback(null, reply))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
@@ -71,7 +70,7 @@ test('executeTask() should reject promise with err', (t) => {
   t.plan(1);
   const api = Api('');
   const application = new Application(api);
-  const stub = sinon.stub(api.execution, 'Create').callsFake(() => Promise.reject(new Error('1')))
+  const stub = sinon.stub(api.execution, 'Create').callsFake((_, callback) => callback(new Error('1'), null))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
