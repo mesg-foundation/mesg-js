@@ -57,12 +57,12 @@ test('executeTask() should resolve promise with reply', (t) => {
   const api = Api('');
   const application = new Application(api);
   const reply = { hash: '1' }
-  const stub = sinon.stub(api.execution, 'Create').callsFake((_, callback) => callback(null, reply))
+  const stub = sinon.stub(api.execution, 'Create').callsFake(res => Promise.resolve(reply))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
     inputs: '4'
-  }).then((reply) => t.equal(reply.hash, '1'))
+  }).then(reply => t.equal(reply.hash, '1'))
   stub.restore()
 });
 
@@ -70,7 +70,7 @@ test('executeTask() should reject promise with err', (t) => {
   t.plan(1);
   const api = Api('');
   const application = new Application(api);
-  const stub = sinon.stub(api.execution, 'Create').callsFake((_, callback) => callback(new Error('1'), null))
+  const stub = sinon.stub(api.execution, 'Create').callsFake(() => Promise.reject(new Error('1')))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',

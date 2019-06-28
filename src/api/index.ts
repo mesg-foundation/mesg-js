@@ -1,11 +1,43 @@
 import { createClient } from '../util/grpc'
-import { API } from './types'
+import {
+  API,
+  EventCreateInputs, EventCreateOutputs,
+  ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs,
+  InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
+  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs
+} from './types'
 
-export default (endpoint: string): API => ({
-  event: createClient('Event', 'protobuf/api/event.proto', endpoint),
-  execution: createClient('Execution', 'protobuf/api/execution.proto', endpoint),
-  instance: createClient('Instance', 'protobuf/api/instance.proto', endpoint),
-  service: createClient('Service', 'protobuf/api/service.proto', endpoint),
-})
+const promisify = (client, method) => request => new Promise((resolve, reject) => client[method](request, (err, res) => err ? reject(err) : resolve(res)))
+
+export default (endpoint: string): API => {
+  const event = createClient('Event', 'protobuf/api/event.proto', endpoint)
+  const execution = createClient('Execution', 'protobuf/api/execution.proto', endpoint)
+  const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
+  const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
+  return {
+    event: {
+      Create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
+      Stream: event.Stream
+    },
+    execution: {
+      Create: promisify(execution, 'Create') as (request: ExecutionCreateInputs) => ExecutionCreateOutputs,
+      Get: promisify(execution, 'Get') as (request: ExecutionGetInputs) => ExecutionGetOutputs,
+      Update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs,
+      Stream: execution.Stream
+    },
+    instance: {
+      Create: promisify(instance, 'Create') as (request: InstanceCreateInputs) => InstanceCreateOutputs,
+      Get: promisify(instance, 'Get') as (request: InstanceGetInputs) => InstanceGetOutputs,
+      List: promisify(instance, 'List') as (request: InstanceListInputs) => InstanceListOutputs,
+      Delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs) => InstanceDeleteOutputs
+    },
+    service: {
+      Create: promisify(service, 'Create') as (request: ServiceCreateInputs) => ServiceCreateOutputs,
+      Get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
+      List: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
+      Delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+    }
+  }
+}
 
 export * from './types' 

@@ -1,4 +1,3 @@
-import { handleAPIResponse } from '../util/api'
 import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs } from '../api';
 
 
@@ -38,13 +37,13 @@ class Service {
     return stream;
   }
 
-  emitEvent(event: string, data: EventData): Promise<EventCreateOutputs> {
+  emitEvent(event: string, data: EventData): EventCreateOutputs {
     if (!data) throw new Error('data object must be send while emitting event')
-    return new Promise((resolve, reject) => this.API.event.Create({
+    return this.API.event.Create({
       instanceHash: this.token,
       key: event,
       data: JSON.stringify(data)
-    }, handleAPIResponse(resolve, reject)))
+    })
   }
 
   private async handleTaskData({ hash, taskKey, inputs }) {
@@ -56,10 +55,10 @@ class Service {
     try {
       const outputData = await callback(data);
       const outputs = JSON.stringify(outputData);
-      return new Promise((resolve, reject) => this.API.execution.Update({ hash, outputs }, handleAPIResponse(resolve, reject)));
+      return this.API.execution.Update({ hash, outputs });
     } catch (err) {
       const error = err.message;
-      return new Promise((resolve, reject) => this.API.execution.Update({ hash, error }, handleAPIResponse(resolve, reject)));
+      return this.API.execution.Update({ hash, error });
     }
   }
 

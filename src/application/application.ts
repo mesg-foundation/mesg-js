@@ -1,7 +1,6 @@
 import * as uuidv4 from 'uuid/v4'
 import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
 import { API, ExecutionCreateInputs, ExecutionCreateOutputs, EventStreamInputs, Event, ExecutionStreamInputs, Execution, ExecutionStatus } from '../api';
-import { handleAPIResponse } from '../util/api';
 
 type Options = {
   client
@@ -23,8 +22,8 @@ class Application {
     return this.api.execution.Stream(request)
   }
 
-  executeTask(request: ExecutionCreateInputs): Promise<ExecutionCreateOutputs> {
-    return new Promise((resolve, reject) => this.api.execution.Create(request, handleAPIResponse(resolve, reject)))
+  executeTask(request: ExecutionCreateInputs): ExecutionCreateOutputs {
+    return this.api.execution.Create(request)
   }
 
   executeTaskAndWaitResult(request: ExecutionCreateInputs): Promise<Execution> {
