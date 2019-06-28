@@ -32,12 +32,11 @@ class Application {
       const stream = this.listenResult({
         filter: {
           instanceHash: request.instanceHash,
-          status: ExecutionStatus.COMPLETED,
-          // status: [
-          //   ExecutionStatus.COMPLETED,
-          //   ExecutionStatus.FAILED
-          // ],
-          // tag: [id]
+          statuses: [
+            ExecutionStatus.COMPLETED,
+            ExecutionStatus.FAILED,
+          ],
+          tags: [id]
         }
       })
         .on('metadata', (metadata) => {
