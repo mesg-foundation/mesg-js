@@ -87,8 +87,8 @@ test('listenTask() should handle tasks and submit result', async function (t) {
   const definition = { tasks: { 'task1': { inputs: {}, outputs: {} } } };
   const service = newService({ definition, api });
   const stream = <any>service.listenTask({
-    'task1': (inputs) => {
-      t.deepEqual(inputs, inputs);
+    'task1': (taskinputs) => {
+      t.deepEqual(taskinputs, inputs);
       return outputs
     }
   });
@@ -109,9 +109,9 @@ test('emitEvent() should emit an event', function (t) {
   const service = newService({ api });
   t.doesNotThrow(() => service.emitEvent(key, data));
   const args = spy.getCall(0).args[0];
-  t.equal(args.instanceHash, token);
-  t.equal(args.key, key);
-  t.equal(args.data, JSON.stringify(data));
+  t.equal(args.event.instanceHash, token);
+  t.equal(args.event.key, key);
+  t.equal(args.event.data, JSON.stringify(data));
   spy.restore();
 });
 
