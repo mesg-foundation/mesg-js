@@ -57,10 +57,10 @@ export type EventStreamOutputs = Stream<Event>
 export type ExecutionGetInputs = { hash: hash }
 export type ExecutionGetOutputs = Promise<Execution>
 
-export type ExecutionStreamInputs = { filter?: { status?: ExecutionStatus, instanceHash?: hash } }
+export type ExecutionStreamInputs = { filter?: { statuses?: ExecutionStatus[], instanceHash?: hash, taskKey?: string, tags?: string[] } }
 export type ExecutionStreamOutputs = Stream<Execution>
 
-export type ExecutionCreateInputs = { eventID: string, instanceHash: hash, taskKey: string, inputs: JSONString, tags?: string[] }
+export type ExecutionCreateInputs = { instanceHash: hash, taskKey: string, inputs: JSONString, tags?: string[] }
 export type ExecutionCreateOutputs = Promise<{ hash: hash }>
 
 export type ExecutionUpdateInputs = { hash: hash, outputs?: JSONString, error?: string }
