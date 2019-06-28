@@ -4,9 +4,22 @@ import { Stream } from '../util/grpc';
 
 const hash = 'hash'
 
+class StreamMock<T> implements Stream<T> {
+  private eventEmitter = new EventEmitter()
+  on(event: 'data' | 'end' | 'error' | 'status' | 'metadata', listener: (data: any) => void): this {
+    this.eventEmitter.on(event, listener)
+    return this
+  }
+  cancel(): void { }
+  destroy(err?: Error): void { }
+  emit(event: 'data' | 'end' | 'error' | 'status' | 'metadata', data: any) {
+    this.eventEmitter.emit(event, data)
+  }
+}
+
 export const streams = {
-  event: (new EventEmitter() as any) as Stream<Event>,
-  execution: (new EventEmitter() as any) as Stream<Execution>
+  event: new StreamMock<Event>(),
+  execution: new StreamMock<Execution>()
 }
 
 export default (endpoint: string): API => ({

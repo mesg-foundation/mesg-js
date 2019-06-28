@@ -91,44 +91,41 @@ test('executeTaskAndWaitResult() should listen for results', (t) => {
   spy.restore()
 });
 
-// test('executeTaskAndWaitResult() should reject and cancel result stream on `error` event', (t) => {
-//   t.plan(2);
-//   const api = Api('');
-//   const application = new Application(api);
-//   const spy = sinon.spy(streams.execution, 'cancel')
-//   application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4', eventID: 'xxx' })
-//     .catch((err) => t.equal(err.message, '1'))
-//   // @ts-ignore
-//   streams.execution.emit('error', new Error('1'))
-//   t.ok(spy.calledOnce)
-//   spy.restore()
-// });
+test('executeTaskAndWaitResult() should reject and cancel result stream on `error` event', (t) => {
+  t.plan(2);
+  const api = Api('');
+  const application = new Application(api);
+  const spy = sinon.spy(streams.execution, 'cancel')
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+    .catch((err) => t.equal(err, '1'))
+  streams.execution.emit('error', '1')
+  t.ok(spy.called)
+  spy.restore()
+});
 
-// test('executeTaskAndWaitResult() should resolve and cancel result stream on first `data` event', (t) => {
-//   t.plan(2);
-//   const api = Api('');
-//   const application = new Application(api);
-//   const spy = sinon.spy(streams.execution, 'cancel')
-//   application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4', eventID: 'xxx' })
-//     .then((result) => t.equal(result.hash, '2'))
-//   // @ts-ignore
-//   streams.execution.emit('data', { hahs: '2' })
-//   t.ok(spy.calledOnce)
-//   spy.restore()
-// });
+test('executeTaskAndWaitResult() should resolve and cancel result stream on first `data` event', (t) => {
+  t.plan(2);
+  const api = Api('');
+  const application = new Application(api);
+  const spy = sinon.spy(streams.execution, 'cancel')
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+    .then((result) => t.equal(result.hash, '2'))
+  streams.execution.emit('data', { hash: '2' })
+  t.ok(spy.called)
+  spy.restore()
+});
 
-// test('executeTaskAndWaitResult() should execute task', (t) => {
-//   t.plan(4);
-//   const api = Api('');
-//   const application = new Application(api);
-//   const spy = sinon.spy(api.execution, 'Create')
-//   application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4', eventID: 'xxx' })
-//   // @ts-ignore
-//   streams.execution.emit('metadata', { get() { return ['ready'] } })
-//   const req = spy.getCall(0).args[0]
-//   t.equal(req.instanceHash, '2')
-//   t.equal(req.taskKey, '3')
-//   t.equal(req.inputs, '4')
-//   t.ok(isUUID.v4(req.tags[0]))
-//   spy.restore()
-// });
+test('executeTaskAndWaitResult() should execute task', (t) => {
+  t.plan(4);
+  const api = Api('');
+  const application = new Application(api);
+  const spy = sinon.spy(api.execution, 'Create')
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+  streams.execution.emit('metadata', { get() { return ['ready'] } })
+  const req = spy.getCall(0).args[0]
+  t.equal(req.instanceHash, '2')
+  t.equal(req.taskKey, '3')
+  t.equal(req.inputs, '4')
+  t.ok(isUUID.v4(req.tags[0]))
+  spy.restore()
+});
