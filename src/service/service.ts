@@ -32,7 +32,7 @@ class Service {
     const stream = this.API.execution.Stream({
       filter: {
         instanceHash: this.token,
-        status: ExecutionStatus.IN_PROGRESS,
+        statuses: [ExecutionStatus.IN_PROGRESS],
       }
     });
     stream.on('data', this.handleTaskData.bind(this));
