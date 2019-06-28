@@ -25,17 +25,17 @@ test('listenResult() should listen for results and return a stream', (t) => {
   application.listenResult({
     filter: {
       instanceHash: '1',
-      status: ExecutionStatus.COMPLETED
+      statuses: [ExecutionStatus.COMPLETED]
     }
   })
   const req = spy.getCall(0).args[0]
   t.equal(req.filter.instanceHash, '1')
-  t.equal(req.filter.status, ExecutionStatus.COMPLETED)
+  t.equal(req.filter.statuses[0], ExecutionStatus.COMPLETED)
   spy.restore()
 });
 
 test('executeTask() should execute a task', (t) => {
-  t.plan(5);
+  t.plan(4);
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(api.execution, 'Create')
@@ -43,15 +43,13 @@ test('executeTask() should execute a task', (t) => {
     instanceHash: '1',
     taskKey: '2',
     inputs: '3',
-    tags: ['4', '5'],
-    eventID: 'xxx'
+    tags: ['4', '5']
   })
   const req = spy.getCall(0).args[0]
   t.equal(req.instanceHash, '1')
   t.equal(req.taskKey, '2')
   t.equal(req.inputs, '3')
   t.same(req.tags, ['4', '5'])
-  t.same(req.eventID, 'xxx')
   spy.restore()
 });
 
@@ -64,8 +62,7 @@ test('executeTask() should resolve promise with reply', (t) => {
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
-    inputs: '4',
-    eventID: 'xxx'
+    inputs: '4'
   }).then((reply) => t.equal(reply.hash, '1'))
   stub.restore()
 });
@@ -78,8 +75,7 @@ test('executeTask() should reject promise with err', (t) => {
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
-    inputs: '4',
-    eventID: 'xxx'
+    inputs: '4'
   }).catch((err) => t.equal(err.message, '1'))
   stub.restore()
 });
@@ -89,7 +85,7 @@ test('executeTaskAndWaitResult() should listen for results', (t) => {
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(api.execution, 'Stream')
-  application.executeTaskAndWaitResult({ instanceHash: '1', taskKey: '2', inputs: '3', eventID: 'xxx' })
+  application.executeTaskAndWaitResult({ instanceHash: '1', taskKey: '2', inputs: '3' })
   const req = spy.getCall(0).args[0]
   t.equal(req.filter.instanceHash, '1')
   spy.restore()
