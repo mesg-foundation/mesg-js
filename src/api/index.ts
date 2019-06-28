@@ -1,8 +1,8 @@
 import { createClient } from '../util/grpc'
 import {
   API,
-  EventCreateInputs, EventCreateOutputs,
-  ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs,
+  EventCreateInputs, EventCreateOutputs, EventStreamInputs,
+  ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
   ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs
 } from './types'
@@ -17,13 +17,13 @@ export default (endpoint: string): API => {
   return {
     event: {
       Create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
-      Stream: event.Stream
+      Stream: (request: EventStreamInputs) => event.Stream(request)
     },
     execution: {
       Create: promisify(execution, 'Create') as (request: ExecutionCreateInputs) => ExecutionCreateOutputs,
       Get: promisify(execution, 'Get') as (request: ExecutionGetInputs) => ExecutionGetOutputs,
       Update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs,
-      Stream: execution.Stream
+      Stream: (request: ExecutionStreamInputs) => execution.Stream(request)
     },
     instance: {
       Create: promisify(instance, 'Create') as (request: InstanceCreateInputs) => InstanceCreateOutputs,

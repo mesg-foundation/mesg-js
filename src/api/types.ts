@@ -48,7 +48,7 @@ export type Service = {
   source: string
 }
 
-export type EventCreateInputs = Event
+export type EventCreateInputs = { event: Event }
 export type EventCreateOutputs = Promise<{ hash: hash }>
 
 export type EventStreamInputs = { filter?: { hash?: string, instanceHash?: string, key?: string } }
@@ -84,13 +84,11 @@ export type ServiceGetOutputs = Promise<Service>
 export type ServiceListInputs = {}
 export type ServiceListOutputs = Promise<{ services: Service[] }>
 
-export type ServiceCreateInputs = Service
+export type ServiceCreateInputs = { definition: Service }
 export type ServiceCreateOutputs = Promise<{ hash: hash }>
 
 export type ServiceDeleteInputs = { hash: hash }
 export type ServiceDeleteOutputs = Promise<{}>
-
-type callback<T> = (err: Error, data: T) => void
 
 export type API = {
   event: {
