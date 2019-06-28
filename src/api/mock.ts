@@ -4,15 +4,20 @@ import { Stream } from '../util/grpc';
 
 const hash = 'hash'
 
+export const streams = {
+  event: (new EventEmitter() as any) as Stream<Event>,
+  execution: (new EventEmitter() as any) as Stream<Execution>
+}
+
 export default (endpoint: string): API => ({
   event: {
     Create() { return Promise.resolve({ hash }) },
-    Stream() { return (new EventEmitter() as any) as Stream<Event> },
+    Stream() { return streams.event },
   },
   execution: {
     Create() { return Promise.resolve({ hash }) },
     Get() { return Promise.resolve({ parentHash: hash, eventID: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
-    Stream() { return (new EventEmitter() as any) as Stream<Execution> },
+    Stream() { return streams.execution },
     Update() { return Promise.resolve({}) }
   },
   instance: {

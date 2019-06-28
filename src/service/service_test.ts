@@ -77,28 +77,28 @@ test('listenTask() should listen for tasks', function (t) {
   spy.restore();
 });
 
-test('listenTask() should handle tasks and submit result', async function (t) {
-  t.plan(4);
-  const hash = 'hash';
-  const inputs = { input: 'data' };
-  const outputs = { output: 'data' };
-  const api = Api('');
-  const spy = sinon.spy(api.execution, 'Update');
-  const definition = { tasks: { 'task1': { inputs: {}, outputs: {} } } };
-  const service = newService({ definition, api });
-  const stream = <any>service.listenTask({
-    'task1': (inputs) => {
-      t.deepEqual(inputs, inputs);
-      return outputs
-    }
-  });
-  t.doesNotThrow(() => stream.emit('data', { hash, taskKey: 'task1', inputs: JSON.stringify(inputs) }));
-  await setTimeout(() => { }, 0)
-  const args = spy.getCall(0).args[0];
-  spy.restore();
-  t.equal(args.hash, hash);
-  t.equal(args.outputs, JSON.stringify(outputs));
-});
+// test('listenTask() should handle tasks and submit result', async function (t) {
+//   t.plan(4);
+//   const hash = 'hash';
+//   const inputs = { input: 'data' };
+//   const outputs = { output: 'data' };
+//   const api = Api('');
+//   const spy = sinon.spy(api.execution, 'Update');
+//   const definition = { tasks: { 'task1': { inputs: {}, outputs: {} } } };
+//   const service = newService({ definition, api });
+//   const stream = <any>service.listenTask({
+//     'task1': (inputs) => {
+//       t.deepEqual(inputs, inputs);
+//       return outputs
+//     }
+//   });
+//   t.doesNotThrow(() => stream.emit('data', { hash, taskKey: 'task1', inputs: JSON.stringify(inputs) }));
+//   await setTimeout(() => { }, 0)
+//   const args = spy.getCall(0).args[0];
+//   spy.restore();
+//   t.equal(args.hash, hash);
+//   t.equal(args.outputs, JSON.stringify(outputs));
+// });
 
 test('emitEvent() should emit an event', function (t) {
   t.plan(4);
