@@ -28,7 +28,7 @@ class Application {
 
   executeTaskAndWaitResult(request: ExecutionCreateInputs): Promise<Execution> {
     return new Promise<Execution>((resolve, reject) => {
-      const id = uuidv4()
+      const tag = uuidv4()
       const stream = this.listenResult({
         filter: {
           instanceHash: request.instanceHash,
@@ -36,7 +36,7 @@ class Application {
             ExecutionStatus.COMPLETED,
             ExecutionStatus.FAILED,
           ],
-          tags: [id]
+          tags: [tag]
         }
       })
         .on('metadata', (metadata) => {
@@ -46,8 +46,10 @@ class Application {
             stream.destroy(err)
             return
           }
-          request.tags = [...(request.tags || []), id]
-          this.executeTask(request).catch((err) => stream.destroy(err))
+          this.executeTask({
+            ...request,
+            tags: [...(request.tags || []), tag]
+          }).catch((err) => stream.destroy(err))
         })
         .on('data', (result) => {
           stream.cancel()
