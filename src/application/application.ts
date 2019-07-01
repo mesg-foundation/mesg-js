@@ -55,7 +55,7 @@ class Application {
         })
         .on('data', (result) => {
           stream.cancel()
-          result.error ? reject(result.error) : resolve(result)
+          result.error ? reject(new Error(result.error)) : resolve(result)
         })
         .on('error', (err) => {
           stream.cancel()
