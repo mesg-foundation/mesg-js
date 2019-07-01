@@ -75,7 +75,7 @@ export type InstanceListOutputs = Promise<{ instances: Instance[] }>
 export type InstanceCreateInputs = { serviceHash: hash, env?: string[] }
 export type InstanceCreateOutputs = Promise<{ hash: hash }>
 
-export type InstanceDeleteInputs = { hash: hash, deleteDate?: boolean }
+export type InstanceDeleteInputs = { hash: hash, deleteData?: boolean }
 export type InstanceDeleteOutputs = Promise<{}>
 
 export type ServiceGetInputs = { hash: hash }
