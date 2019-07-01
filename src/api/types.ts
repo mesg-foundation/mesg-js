@@ -90,6 +90,8 @@ export type ServiceCreateOutputs = Promise<{ hash: hash }>
 export type ServiceDeleteInputs = { hash: hash }
 export type ServiceDeleteOutputs = Promise<{}>
 
+export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
+
 export type API = {
   event: {
     create: (request: EventCreateInputs) => EventCreateOutputs
@@ -112,5 +114,8 @@ export type API = {
     list: (request: ServiceListInputs) => ServiceListOutputs
     create: (request: ServiceCreateInputs) => ServiceCreateOutputs
     delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+  },
+  core: {
+    info: () => InfoOutputs
   }
 }

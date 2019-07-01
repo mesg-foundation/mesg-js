@@ -44,6 +44,9 @@ export default (endpoint: string): API => ({
     get() { return Promise.resolve({ sid: 'xxx', source: 'xxx' }) },
     list() { return Promise.resolve({ services: [] }) },
     delete() { return Promise.resolve({}) },
+  },
+  core: {
+    info() { return Promise.resolve({ version: '0', services: [] }) }
   }
 })
 

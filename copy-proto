@@ -14,3 +14,4 @@ for ressource in $ressources; do
   curl -o "./src/protobuf/api/${ressource}.proto" "$PROTO_PATH/api/${ressource}.proto"
   curl -o "./src/protobuf/types/${ressource}.proto" "$PROTO_PATH/types/${ressource}.proto"
 done
+curl -o "./src/protobuf/api/core.proto" "$PROTO_PATH/coreapi/api.proto"

@@ -4,7 +4,8 @@ import {
   EventCreateInputs, EventCreateOutputs, EventStreamInputs,
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
-  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs
+  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs,
+  InfoOutputs
 } from './types'
 
 const promisify = (client, method) => request => new Promise((resolve, reject) => client[method](request, (err, res) => err ? reject(err) : resolve(res)))
@@ -14,6 +15,7 @@ export default (endpoint: string): API => {
   const execution = createClient('Execution', 'protobuf/api/execution.proto', endpoint)
   const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
   const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
+  const core = createClient('Core', 'protobuf/api/core.proto', endpoint)
   return {
     event: {
       create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
@@ -36,6 +38,9 @@ export default (endpoint: string): API => {
       get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
       list: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
       delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+    },
+    core: {
+      info: promisify(core, 'Info') as () => InfoOutputs
     }
   }
 }
