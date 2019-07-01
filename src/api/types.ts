@@ -92,25 +92,25 @@ export type ServiceDeleteOutputs = Promise<{}>
 
 export type API = {
   event: {
-    Create: (request: EventCreateInputs) => EventCreateOutputs
-    Stream: (request: EventStreamInputs) => EventStreamOutputs
+    create: (request: EventCreateInputs) => EventCreateOutputs
+    stream: (request: EventStreamInputs) => EventStreamOutputs
   }
   execution: {
-    Get: (request: ExecutionGetInputs) => ExecutionGetOutputs
-    Stream: (request: ExecutionStreamInputs) => ExecutionStreamOutputs
-    Create: (request: ExecutionCreateInputs) => ExecutionCreateOutputs
-    Update: (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs
+    get: (request: ExecutionGetInputs) => ExecutionGetOutputs
+    stream: (request: ExecutionStreamInputs) => ExecutionStreamOutputs
+    create: (request: ExecutionCreateInputs) => ExecutionCreateOutputs
+    update: (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs
   }
   instance: {
-    Get: (request: InstanceGetInputs) => InstanceGetOutputs
-    List: (request: InstanceListInputs) => InstanceListOutputs
-    Create: (request: InstanceCreateInputs) => InstanceCreateOutputs
-    Delete: (request: InstanceDeleteInputs) => InstanceDeleteOutputs
+    get: (request: InstanceGetInputs) => InstanceGetOutputs
+    list: (request: InstanceListInputs) => InstanceListOutputs
+    create: (request: InstanceCreateInputs) => InstanceCreateOutputs
+    delete: (request: InstanceDeleteInputs) => InstanceDeleteOutputs
   }
   service: {
-    Get: (request: ServiceGetInputs) => ServiceGetOutputs
-    List: (request: ServiceListInputs) => ServiceListOutputs
-    Create: (request: ServiceCreateInputs) => ServiceCreateOutputs
-    Delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+    get: (request: ServiceGetInputs) => ServiceGetOutputs
+    list: (request: ServiceListInputs) => ServiceListOutputs
+    create: (request: ServiceCreateInputs) => ServiceCreateOutputs
+    delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
   }
 }

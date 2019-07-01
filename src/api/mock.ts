@@ -24,26 +24,26 @@ export const streams = {
 
 export default (endpoint: string): API => ({
   event: {
-    Create() { return Promise.resolve({ hash }) },
-    Stream() { return streams.event },
+    create() { return Promise.resolve({ hash }) },
+    stream() { return streams.event },
   },
   execution: {
-    Create() { return Promise.resolve({ hash }) },
-    Get() { return Promise.resolve({ parentHash: hash, eventID: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
-    Stream() { return streams.execution },
-    Update() { return Promise.resolve({}) }
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ parentHash: hash, eventID: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
+    stream() { return streams.execution },
+    update() { return Promise.resolve({}) }
   },
   instance: {
-    Create() { return Promise.resolve({ hash }) },
-    Get() { return Promise.resolve({ serviceHash: hash }) },
-    List() { return Promise.resolve({ instances: [] }) },
-    Delete() { return Promise.resolve({}) }
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ serviceHash: hash }) },
+    list() { return Promise.resolve({ instances: [] }) },
+    delete() { return Promise.resolve({}) }
   },
   service: {
-    Create() { return Promise.resolve({ hash }) },
-    Get() { return Promise.resolve({ sid: 'xxx', source: 'xxx' }) },
-    List() { return Promise.resolve({ services: [] }) },
-    Delete() { return Promise.resolve({}) },
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ sid: 'xxx', source: 'xxx' }) },
+    list() { return Promise.resolve({ services: [] }) },
+    delete() { return Promise.resolve({}) },
   }
 })
 

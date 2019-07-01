@@ -27,7 +27,7 @@ class Service {
     }
     this.tasks = tasks;
     this.validateTaskNames();
-    const stream = this.API.execution.Stream({
+    const stream = this.API.execution.stream({
       filter: {
         instanceHash: this.token,
         statuses: [ExecutionStatus.IN_PROGRESS],
@@ -39,7 +39,7 @@ class Service {
 
   emitEvent(event: string, data: EventData): EventCreateOutputs {
     if (!data) throw new Error('data object must be send while emitting event')
-    return this.API.event.Create({
+    return this.API.event.create({
       event: {
         instanceHash: this.token,
         key: event,
@@ -57,10 +57,10 @@ class Service {
     try {
       const outputData = await callback(data);
       const outputs = JSON.stringify(outputData);
-      return this.API.execution.Update({ hash, outputs });
+      return this.API.execution.update({ hash, outputs });
     } catch (err) {
       const error = err.message;
-      return this.API.execution.Update({ hash, error });
+      return this.API.execution.update({ hash, error });
     }
   }
 

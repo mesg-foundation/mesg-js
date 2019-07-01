@@ -8,7 +8,7 @@ test('listenEvent() should listen for events and return a stream', (t) => {
   t.plan(2);
   const api = Api('')
   const application = new Application(api);
-  const spy = sinon.spy(api.event, 'Stream')
+  const spy = sinon.spy(api.event, 'stream')
   application.listenEvent({ filter: { instanceHash: '1', key: '2' } })
   const req = spy.getCall(0).args[0]
   t.equal(req.filter.instanceHash, '1')
@@ -20,7 +20,7 @@ test('listenResult() should listen for results and return a stream', (t) => {
   t.plan(2);
   const api = Api('');
   const application = new Application(api);
-  const spy = sinon.spy(api.execution, 'Stream')
+  const spy = sinon.spy(api.execution, 'stream')
   application.listenResult({
     filter: {
       instanceHash: '1',
@@ -37,7 +37,7 @@ test('executeTask() should execute a task', (t) => {
   t.plan(4);
   const api = Api('');
   const application = new Application(api);
-  const spy = sinon.spy(api.execution, 'Create')
+  const spy = sinon.spy(api.execution, 'create')
   application.executeTask({
     instanceHash: '1',
     taskKey: '2',
@@ -57,7 +57,7 @@ test('executeTask() should resolve promise with reply', (t) => {
   const api = Api('');
   const application = new Application(api);
   const reply = { hash: '1' }
-  const stub = sinon.stub(api.execution, 'Create').callsFake(res => Promise.resolve(reply))
+  const stub = sinon.stub(api.execution, 'create').callsFake(res => Promise.resolve(reply))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
@@ -70,7 +70,7 @@ test('executeTask() should reject promise with err', (t) => {
   t.plan(1);
   const api = Api('');
   const application = new Application(api);
-  const stub = sinon.stub(api.execution, 'Create').callsFake(() => Promise.reject(new Error('1')))
+  const stub = sinon.stub(api.execution, 'create').callsFake(() => Promise.reject(new Error('1')))
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
@@ -83,7 +83,7 @@ test('executeTaskAndWaitResult() should listen for results', (t) => {
   t.plan(1);
   const api = Api('');
   const application = new Application(api);
-  const spy = sinon.spy(api.execution, 'Stream')
+  const spy = sinon.spy(api.execution, 'stream')
   application.executeTaskAndWaitResult({ instanceHash: '1', taskKey: '2', inputs: '3' })
   const req = spy.getCall(0).args[0]
   t.equal(req.filter.instanceHash, '1')
@@ -118,7 +118,7 @@ test('executeTaskAndWaitResult() should execute task', (t) => {
   t.plan(4);
   const api = Api('');
   const application = new Application(api);
-  const spy = sinon.spy(api.execution, 'Create')
+  const spy = sinon.spy(api.execution, 'create')
   application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
   streams.execution.emit('metadata', { get() { return ['ready'] } })
   const req = spy.getCall(0).args[0]

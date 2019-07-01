@@ -16,26 +16,26 @@ export default (endpoint: string): API => {
   const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
   return {
     event: {
-      Create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
-      Stream: (request: EventStreamInputs) => event.Stream(request)
+      create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
+      stream: (request: EventStreamInputs) => event.Stream(request)
     },
     execution: {
-      Create: promisify(execution, 'Create') as (request: ExecutionCreateInputs) => ExecutionCreateOutputs,
-      Get: promisify(execution, 'Get') as (request: ExecutionGetInputs) => ExecutionGetOutputs,
-      Update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs,
-      Stream: (request: ExecutionStreamInputs) => execution.Stream(request)
+      create: promisify(execution, 'Create') as (request: ExecutionCreateInputs) => ExecutionCreateOutputs,
+      get: promisify(execution, 'Get') as (request: ExecutionGetInputs) => ExecutionGetOutputs,
+      update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs,
+      stream: (request: ExecutionStreamInputs) => execution.Stream(request)
     },
     instance: {
-      Create: promisify(instance, 'Create') as (request: InstanceCreateInputs) => InstanceCreateOutputs,
-      Get: promisify(instance, 'Get') as (request: InstanceGetInputs) => InstanceGetOutputs,
-      List: promisify(instance, 'List') as (request: InstanceListInputs) => InstanceListOutputs,
-      Delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs) => InstanceDeleteOutputs
+      create: promisify(instance, 'Create') as (request: InstanceCreateInputs) => InstanceCreateOutputs,
+      get: promisify(instance, 'Get') as (request: InstanceGetInputs) => InstanceGetOutputs,
+      list: promisify(instance, 'List') as (request: InstanceListInputs) => InstanceListOutputs,
+      delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs) => InstanceDeleteOutputs
     },
     service: {
-      Create: promisify(service, 'Create') as (request: ServiceCreateInputs) => ServiceCreateOutputs,
-      Get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
-      List: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
-      Delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+      create: promisify(service, 'Create') as (request: ServiceCreateInputs) => ServiceCreateOutputs,
+      get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
+      list: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
+      delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
     }
   }
 }

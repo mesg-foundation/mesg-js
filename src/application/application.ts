@@ -15,15 +15,15 @@ class Application {
   }
 
   listenEvent(request: EventStreamInputs): Stream<Event> {
-    return this.api.event.Stream(request)
+    return this.api.event.stream(request)
   }
 
   listenResult(request: ExecutionStreamInputs): Stream<Execution> {
-    return this.api.execution.Stream(request)
+    return this.api.execution.stream(request)
   }
 
   executeTask(request: ExecutionCreateInputs): ExecutionCreateOutputs {
-    return this.api.execution.Create(request)
+    return this.api.execution.create(request)
   }
 
   executeTaskAndWaitResult(request: ExecutionCreateInputs): Promise<Execution> {

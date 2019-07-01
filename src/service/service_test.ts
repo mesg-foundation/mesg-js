@@ -68,7 +68,7 @@ test('listenTask() should throw when called more than once', function (t) {
 test('listenTask() should listen for tasks', function (t) {
   t.plan(2);
   const api = Api('');
-  const spy = sinon.spy(api.execution, 'Stream');
+  const spy = sinon.spy(api.execution, 'stream');
   const definition = { tasks: { 'task1': {}, 'task2': {} } };
   const service = newService({ definition, api });
   service.listenTask({ 'task1': () => ({}), 'task2': () => ({}) });
@@ -83,7 +83,7 @@ test('listenTask() should handle tasks and submit result', async function (t) {
   const inputs = { input: 'data' };
   const outputs = { output: 'data' };
   const api = Api('');
-  const spy = sinon.spy(api.execution, 'Update');
+  const spy = sinon.spy(api.execution, 'update');
   const definition = { tasks: { 'task1': { inputs: {}, outputs: {} } } };
   const service = newService({ definition, api });
   const stream = <any>service.listenTask({
@@ -105,7 +105,7 @@ test('emitEvent() should emit an event', function (t) {
   const key = 'event1';
   const data = { event: 'data' };
   const api = Api('');
-  const spy = sinon.spy(api.event, 'Create');
+  const spy = sinon.spy(api.event, 'create');
   const service = newService({ api });
   t.doesNotThrow(() => service.emitEvent(key, data));
   const args = spy.getCall(0).args[0];
