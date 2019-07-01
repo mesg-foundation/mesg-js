@@ -46,11 +46,7 @@ class Application {
             stream.destroy(err)
             return
           }
-          if (request.tags) {
-            request.tags.push(id)
-          } else {
-            request.tags = [id]
-          }
+          request.tags = [...(request.tags || []), id]
           this.executeTask(request).catch((err) => stream.destroy(err))
         })
         .on('data', (result) => {
