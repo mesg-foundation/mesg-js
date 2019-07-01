@@ -29,7 +29,7 @@ export default (endpoint: string): API => ({
   },
   execution: {
     create() { return Promise.resolve({ hash }) },
-    get() { return Promise.resolve({ parentHash: hash, eventID: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
+    get() { return Promise.resolve({ parentHash: hash, eventHash: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
     stream() { return streams.execution },
     update() { return Promise.resolve({}) }
   },

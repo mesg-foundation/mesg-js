@@ -109,9 +109,9 @@ test('emitEvent() should emit an event', function (t) {
   const service = newService({ api });
   t.doesNotThrow(() => service.emitEvent(key, data));
   const args = spy.getCall(0).args[0];
-  t.equal(args.event.instanceHash, token);
-  t.equal(args.event.key, key);
-  t.equal(args.event.data, JSON.stringify(data));
+  t.equal(args.instanceHash, token);
+  t.equal(args.key, key);
+  t.equal(args.data, JSON.stringify(data));
   spy.restore();
 });
 

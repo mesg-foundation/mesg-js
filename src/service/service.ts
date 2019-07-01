@@ -40,11 +40,9 @@ class Service {
   emitEvent(event: string, data: EventData): EventCreateOutputs {
     if (!data) throw new Error('data object must be send while emitting event')
     return this.API.event.create({
-      event: {
-        instanceHash: this.token,
-        key: event,
-        data: JSON.stringify(data)
-      }
+      instanceHash: this.token,
+      key: event,
+      data: JSON.stringify(data)
     })
   }
 
