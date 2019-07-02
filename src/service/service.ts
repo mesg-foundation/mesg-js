@@ -1,72 +1,68 @@
-import { handleAPIResponse } from '../util/api'
-import { Stream } from '../util/grpc';
+import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs } from '../api';
 
 
 type Options = {
   token: string
   definition: any
-  client
+  API: API
 }
 
 class Service {
   // api gives access to low level gRPC calls.
-  api
+  private API: API
 
   private token: string
   private definition: any
   private tasks: Tasks
 
-  constructor(options: Options){
+  constructor(options: Options) {
     this.definition = options.definition;
-    this.api = options.client;
+    this.API = options.API;
     this.token = options.token;
   }
 
-  listenTask({ ...tasks }: Tasks): Stream<TaskData> {
+  listenTask({ ...tasks }: Tasks): ExecutionStreamOutputs {
     if (this.tasks) {
       throw new Error(`listenTask should be called only once`);
     }
     this.tasks = tasks;
     this.validateTaskNames();
-    const stream = this.api.listenTask({ token: this.token });
+    const stream = this.API.execution.stream({
+      filter: {
+        instanceHash: this.token,
+        statuses: [ExecutionStatus.IN_PROGRESS],
+      }
+    });
     stream.on('data', this.handleTaskData.bind(this));
     return stream;
   }
 
-  emitEvent(event: string, data: EventData): Promise<EmitEventReply> {
+  emitEvent(event: string, data: EventData): EventCreateOutputs {
     if (!data) throw new Error('data object must be send while emitting event')
-    return new Promise<EmitEventReply>((resolve, reject) => {
-      this.api.emitEvent({
-        token: this.token,
-        eventKey: event,
-        eventData: JSON.stringify(data)
-      }, handleAPIResponse(resolve, reject));
+    return this.API.event.create({
+      instanceHash: this.token,
+      key: event,
+      data: JSON.stringify(data)
     })
   }
 
-  private async handleTaskData({ executionHash, taskKey, inputData }) {
+  private async handleTaskData({ hash, taskKey, inputs }) {
     const callback = this.tasks[taskKey];
     if (!callback) {
       throw new Error(`Task ${taskKey} is not defined in your services`);
     }
-    const data = JSON.parse(inputData);
+    const data = JSON.parse(inputs);
     try {
-      const outputs = await callback(data);
-      const outputData = JSON.stringify(outputs);
-      return this.submitResult({ executionHash, outputData });
+      const outputData = await callback(data);
+      const outputs = JSON.stringify(outputData);
+      return this.API.execution.update({ hash, outputs });
     } catch (err) {
       const error = err.message;
-      return this.submitResult({ executionHash, error });
+      return this.API.execution.update({ hash, error });
     }
   }
 
-  private submitResult(payload: any)  {
-    return new Promise<SubmitResultReply>((resolve, reject) => {
-      this.api.submitResult(payload, handleAPIResponse(resolve, reject));
-    })
-  }
-
-  private validateTaskNames(){
+  private validateTaskNames() {
     const nonDescribedTasks = Object.keys(this.tasks).filter(x => !this.definition.tasks[x]);
     if (nonDescribedTasks.length > 0) {
       throw new Error(`The following tasks are not present in the mesg.yml: ${nonDescribedTasks.join(', ')}`);
@@ -90,25 +86,8 @@ interface EventData {
   [key: string]: any
 }
 
-interface EmitEventReply {
-}
-
-interface SubmitResultReply {
-}
-
-interface TaskData {
-  executionHash: string
-  taskKey: string
-  inputData: string
-}
-
 export default Service;
 export {
-  Options,
   Tasks,
   TaskInputs,
-  Stream,
-  EmitEventReply,
-  SubmitResultReply,
-  TaskData,
 }

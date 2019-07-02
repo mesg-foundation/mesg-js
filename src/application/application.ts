@@ -1,6 +1,6 @@
 import * as uuidv4 from 'uuid/v4'
-import { handleAPIResponse } from '../util/api';
 import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
+import { API, ExecutionCreateInputs, ExecutionCreateOutputs, EventStreamInputs, Event, ExecutionStreamInputs, Execution, ExecutionStatus } from '../api';
 
 type Options = {
   client
@@ -8,30 +8,37 @@ type Options = {
 
 class Application {
   // api gives access to low level gRPC calls.
-  api
+  private api: API
 
-  constructor(options: Options){
-    this.api = options.client;
+  constructor(api: API) {
+    this.api = api;
   }
 
-  listenEvent(req: ListenEventRequest): Stream<EventData> {
-    return this.api.ListenEvent(req)
+  listenEvent(request: EventStreamInputs): Stream<Event> {
+    return this.api.event.stream(request)
   }
 
-  listenResult(req: ListenResultRequest): Stream<ResultData> {
-    return this.api.ListenResult(req)
+  listenResult(request: ExecutionStreamInputs): Stream<Execution> {
+    return this.api.execution.stream(request)
   }
 
-  executeTask(req: ExecuteTaskRequest): Promise<ExecuteTaskReply> {
-    return new Promise<ExecuteTaskReply>((resolve, reject) => {
-      this.api.ExecuteTask(req, handleAPIResponse(resolve, reject))
-    })
+  executeTask(request: ExecutionCreateInputs): ExecutionCreateOutputs {
+    return this.api.execution.create(request)
   }
 
-  executeTaskAndWaitResult(req: ExecuteTaskRequest): Promise<ResultData> {
-    return new Promise<ResultData>((resolve, reject) => {
-      const id = uuidv4()
-      const stream = this.listenResult({ serviceID: req.serviceID, tagFilters: [id] })
+  executeTaskAndWaitResult(request: ExecutionCreateInputs): Promise<Execution> {
+    return new Promise<Execution>((resolve, reject) => {
+      const tag = uuidv4()
+      const stream = this.listenResult({
+        filter: {
+          instanceHash: request.instanceHash,
+          statuses: [
+            ExecutionStatus.COMPLETED,
+            ExecutionStatus.FAILED,
+          ],
+          tags: [tag]
+        }
+      })
         .on('metadata', (metadata) => {
           const err = checkStreamReady(metadata)
           if (err == errNoStatus) return
@@ -39,16 +46,14 @@ class Application {
             stream.destroy(err)
             return
           }
-          if (req.executionTags) {
-            req.executionTags.push(id)
-          } else {
-            req.executionTags = [id]
-          }
-          this.executeTask(req).catch((err) => stream.destroy(err))
+          this.executeTask({
+            ...request,
+            tags: [...(request.tags || []), tag]
+          }).catch((err) => stream.destroy(err))
         })
         .on('data', (result) => {
           stream.cancel()
-          resolve(result)
+          result.error ? reject(new Error(result.error)) : resolve(result)
         })
         .on('error', (err) => {
           stream.cancel()
@@ -58,49 +63,8 @@ class Application {
   }
 }
 
-interface ListenEventRequest {
-  serviceID: string
-  eventFilter?: string
-}
-
-interface ListenResultRequest {
-  serviceID: string
-  taskFilter?: string
-  tagFilters?: string[]
-}
-
-interface EventData {
-  eventKey: string
-  eventData: string
-}
-
-interface ResultData {
-  executionHash: string
-  taskKey: string
-  outputData: string
-  executionTags: string[]
-  error: string
-}
-
-interface ExecuteTaskRequest {
-  serviceID: string
-  taskKey: string
-  inputData: string
-  executionTags?: string[]
-}
-
-interface ExecuteTaskReply {
-  executionHash: string
-}
-
 export default Application;
 export {
   Options,
   Stream,
-  ListenEventRequest,
-  ExecuteTaskRequest,
-  ExecuteTaskReply,
-  ListenResultRequest,
-  EventData,
-  ResultData
 }
