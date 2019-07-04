@@ -61,10 +61,12 @@ const { application } = require('mesg-js')
 const mesg = application()
 
 const stream = mesg.listenEvent({
-  serviceID: __EVENT_SERVICE_ID__,
-  eventFilter: __EVENT_KEY__ // optional
+  filter: {
+    instanceHash: __EVENT_INSTANCE_HASH__,
+    key: __EVENT_KEY__ // optional
+  }
 }).on('data', (event) => {
-  console.log('an event received:', event.eventKey, JSON.parse(event.eventData))
+  console.log('an event received:', event.key, JSON.parse(event.data))
 }).on('error', (err) => {
   console.error('an error has occurred:', err.message)
 }).on('end', () => {
@@ -74,10 +76,6 @@ const stream = mesg.listenEvent({
 // cancel stream anytime
 stream.cancel()
 ```
-
-Reference: 
-[`ListenEventRequest`](#ListenEventRequest)
-[`EventData`](#EventData)
 
 ## Listen results
 
@@ -89,15 +87,17 @@ const { application } = require('mesg-js')
 const mesg = application()
 
 const stream = mesg.listenResult({
-  serviceID: __RESULT_SERVICE_ID__
-  taskFilter: __TASK_KEY_FILTER__ // optional
-  tagFilters: [__TAG_FILTER_] // optional
+  filter: {
+    instanceHash: __RESULT_INSTANCE_HASH__,
+    taskKey: __TASK_KEY_FILTER__, // optional
+    tags: [__TAG_FILTER_] // optional
+  }
 }).on('data', (result) => {
   if (result.error) {
     console.error('an error has occurred:', result.error)
     return
   }
-  console.log('a result received:', JSON.parse(result.outputData))
+  console.log('a result received:', JSON.parse(result.outputs))
 }).on('error', (err) => {
   console.error('an error has occurred:', err.message)
 }).on('end', () => {
@@ -107,10 +107,6 @@ const stream = mesg.listenResult({
 // cancel stream anytime
 stream.cancel()
 ```
-
-Reference: 
-[`ListenResultRequest`](#ListenResultRequest)
-[`ResultData`](#ResultData)
 
 ## Execute task
 
@@ -122,20 +118,16 @@ const { application } = require('mesg-js')
 const mesg = application()
 
 mesg.executeTask({
-  serviceID: __TASK_SERVICE_ID__,
+  instanceHash: __TASK_INSTANCE_HASH__,
   taskKey: __TASK_KEY__,
-  inputData: JSON.stringify(__INPUT_DATA__),
-  executionTags: [__ASSOCIATE_TAG__] // optional
+  inputs: JSON.stringify(__INPUT_DATA__),
+  tags: [__ASSOCIATE_TAG__] // optional
 }).then((execution) => {
-  console.log('task in progress with execution:', execution.executionHash)
+  console.log('task in progress with execution:', execution.hash)
 }).catch((err) => {
   console.error('task execution failed with err:', err.message)
 })
 ```
-
-Reference: 
-[`ExecuteTaskRequest`](#ExecuteTaskRequest)
-[`ExecuteTaskReply`](#ExecuteTaskReply)
 
 ## Execute task and wait result
 
@@ -148,185 +140,20 @@ const { application } = require('mesg-js')
 const mesg = application()
 
 mesg.executeTaskAndWaitResult({
-  serviceID: __TASK_SERVICE_ID__,
+  instanceHash: __TASK_INSTANCE_HASH__,
   taskKey: __TASK_KEY__,
-  inputData: JSON.stringify(__INPUT_DATA__),
-  executionTags: [__ASSOCIATE_TAG__] // optional
+  inputs: JSON.stringify(__INPUT_DATA__),
+  tags: [__ASSOCIATE_TAG__] // optional
 }).then((result) => {
   if (result.error) {
     console.error('an error has occurred:', result.error)
     return
   }
-  console.log('a result received:', JSON.parse(result.outputData))
+  console.log('a result received:', JSON.parse(result.outputs))
 }).catch((err) => {
   console.error('task execution failed with err:', err.message)
 })
 ```
-
-Reference: 
-[`ExecuteTaskRequest`](#ExecuteTaskRequest)
-[`ResultData`](#ResultData)
-
-## Object definition
-
-### `ListenEventRequest`
-
-```ts
-interface ListenEventRequest {
-  // Event's service ID.
-  serviceID: string
-
-  // Listen for this event's key. Leave empty or set `*` to listen for any event
-  // from this service.
-  eventFilter?: string
-}
-```
-
-### `EventData`
-
-```ts
-interface EventData {
-  // Event's key.
-  eventKey: string
-
-  // Event's data. It's JSON encoded.
-  eventData: string
-}
-```
-
-### `ListenResultRequest`
-
-```ts
-interface ListenResultRequest {
-  // Result's service ID.
-  serviceID: string
-
-  // Only listen for this task's key. Leave empty or set `*` to listen for any
-  // task's result from this service.
-  taskFilter?: string
-
-  // List of tags required to process this result. All inclusive filter.
-  tagFilters?: string[]
-}
-```
-
-### `ResultData`
-
-```ts
-interface ResultData {
-  // Hash of the execution.
-  executionHash: string
-
-  // Task key of the result.
-  taskKey: string
-
-  // Output data of the result. It's JSON encoded.
-  outputData: string
-
-  // Associated execution tags during the task execution.
-  executionTags: string[]
-
-  // Error is filled when task execution is failed.
-  error: string
-}
-```
-
-### `ExecuteTaskRequest`
-
-```ts
-interface ExecuteTaskRequest {
-  // Task's service ID.
-  serviceID: string
-
-  // Task key to execute.
-  taskKey: string
-
-  // Input to pass on to the task.
-  // It must be JSON encoded and should fulfil the task's input definition types.
-  inputData: string
-
-  // List of tags to send for the execution. These tags can be static,
-  // generated based on an event or a result.
-  executionTags?: string[]
-}
-```
-
-### `ExecuteTaskReply`
-
-```ts
-interface ExecuteTaskReply {
-  // Hash of the execution.
-  executionHash: string
-}
-```
-
-## Advanced utilization
-
-The application can use gRPC APIs directly for advanced utilization.
-
-See the [full list of available gRPC APIs](https://docs.mesg.com/api/core.html).
-
-Here some examples for the most useful gRPC APIs that your application can use:
-
-### Execute a task
-
-```javascript
-const { application } = require('mesg-js')
-
-const mesg = application()
-
-mesg.api.ExecuteTask({
-  serviceID: __TASK_SERVICE_ID__,
-  taskKey: __TASK_KEY__,
-  inputData: JSON.stringify(__INPUT_DATA__)
-}, (error, reply) => {
-  if (error) {
-    console.error(error)
-    return
-  }
-  console.log('task in progress with execution:', reply.executionHash)
-})
-```
-
-[Documentation](https://docs.mesg.com/guide/application/execute-a-task.html)
-
-### Listen for an event
-
-```javascript
-const { application } = require('mesg-js')
-
-const mesg = application()
-
-mesg.api.ListenEvent({
-  serviceID: __TASK_SERVICE_ID__,
-  eventFilter: __EVENT_KEY__
-}).on('error', (error) => {
-  console.error(error)
-}).on('data', (data) => {
-  console.log('Event received with data:', data)
-})
-```
-
-[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listening-for-events-from-services)
-
-### Listen to a task's result
-
-```javascript
-const { application } = require('mesg-js')
-
-const mesg = application()
-
-mesg.api.ListenResult({
-  serviceID: __TASK_SERVICE_ID__,
-  taskFilter: __TASK_KEY__,
-}).on('error', (error) => {
-  console.error(error)
-}).on('data', (data) => {
-  console.log('Result received with data:', data)
-})
-```
-
-[Documentation](https://docs.mesg.com/guide/application/listen-for-events.html#listen-for-task-execution-outputs)
 
 # Service
 
