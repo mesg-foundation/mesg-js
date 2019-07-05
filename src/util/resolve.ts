@@ -10,7 +10,7 @@ export const resolveSID = async (api: API, sid: string): Promise<hash> => {
   const { services } = await api.service.list({})
 
   const matching = services.filter(x => x.sid === sid)
-  if (matching.length == 0) throw new Error(`cannot resolve ${sid}`)
+  if (matching.length === 0) throw new Error(`cannot resolve ${sid}`)
   if (matching.length > 1) throw new Error(`multiple services resolve ${sid}`)
   const service = matching[0]
 
