@@ -24,7 +24,15 @@ class Application {
   }
 
   listenResult(request: ExecutionStreamInputs): Stream<Execution> {
-    return this.api.execution.stream(request)
+    return this.api.execution.stream({
+      filter: {
+        ...(request.filter || {}),
+        statuses: [
+          ExecutionStatus.COMPLETED,
+          ExecutionStatus.FAILED,
+        ]
+      }
+    })
   }
 
   executeTask(request: ExecutionCreateInputs): ExecutionCreateOutputs {
@@ -37,10 +45,6 @@ class Application {
       const stream = this.listenResult({
         filter: {
           instanceHash: request.instanceHash,
-          statuses: [
-            ExecutionStatus.COMPLETED,
-            ExecutionStatus.FAILED,
-          ],
           tags: [tag]
         }
       })
