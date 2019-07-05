@@ -37,8 +37,7 @@ test('resolve service by sid (multiple)', async function (t) {
   sinon.stub(api.instance, 'get').callsFake(() => { throw new Error("not found") })
   sinon.stub(api.service, 'list').callsFake(() => ({ services: [{ sid }, { sid }] }))
   try {
-    console.log(await resolveSID(api, sid))
-
+    await resolveSID(api, sid)
   } catch (e) {
     t.equal(e.message, "multiple services resolve multiplesid")
   }
