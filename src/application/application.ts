@@ -1,6 +1,7 @@
 import * as uuidv4 from 'uuid/v4'
 import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
 import { API, ExecutionCreateInputs, ExecutionCreateOutputs, EventStreamInputs, Event, ExecutionStreamInputs, Execution, ExecutionStatus } from '../api';
+import { resolveSID } from '../util/resolve';
 
 type Options = {
   client
@@ -12,6 +13,10 @@ class Application {
 
   constructor(api: API) {
     this.api = api;
+  }
+
+  resolve(sid: string): Promise<string> {
+    return resolveSID(this.api, sid)
   }
 
   listenEvent(request: EventStreamInputs): Stream<Event> {
