@@ -8,6 +8,26 @@
 #### Fixed
 #### Removed
 
+## [v4.1.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.1.0)
+
+#### Breaking Changes
+#### Added
+
+- ([#104](https://github.com/mesg-foundation/mesg-js/pull/104)) Resolve instance hash from Service SID.
+
+#### Changed
+#### Fixed
+
+- ([#108](https://github.com/mesg-foundation/mesg-js/pull/108)) Move filter on Execution's status from `executeTaskAndWaitResult` to `listenResult`.
+
+#### Removed
+
+## [v4.0.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.0.0)
+
+#### Breaking Changes
+
+- ([#102](https://github.com/mesg-foundation/mesg-js/pull/102)) Update internal logic to the new Engine's APIs of v0.11.0. The Service side stay the same (except a few types) but the application side have some modifications on the parameters of the functions. Check the release notes on the forum for more detail.
+
 ## [v3.0.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v3.0.0)
 
 ### [Click here to see the release notes](https://forum.mesg.com/t/mesg-engine-v0-10-js-cli-and-js-library-v3-0-0-release-notes/317)
