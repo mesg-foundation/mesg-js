@@ -37,10 +37,7 @@ Require mesg-js as an application:
 ```javascript
 const { application } = require('mesg-js')
 
-const options = {
-  endpoint: "localhost:50052" // default
-}
-const mesg = application(options)
+const mesg = application()
 ```
 
 ## MESG Engine endpoint
