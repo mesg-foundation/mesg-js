@@ -10,17 +10,13 @@
 
 ## [v4.1.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.1.0)
 
-#### Breaking Changes
 #### Added
 
 - ([#104](https://github.com/mesg-foundation/mesg-js/pull/104)) Resolve instance hash from Service SID.
 
-#### Changed
 #### Fixed
 
 - ([#108](https://github.com/mesg-foundation/mesg-js/pull/108)) Move filter on Execution's status from `executeTaskAndWaitResult` to `listenResult`.
-
-#### Removed
 
 ## [v4.0.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.0.0)
 
