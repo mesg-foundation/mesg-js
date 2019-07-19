@@ -1,8 +1,8 @@
 import { Stream } from '../util/grpc'
-import * as EventType from './types/event'
-import * as ExecutionType from './types/execution'
-import * as InstanceType from './types/instance'
-import * as ServiceType from './types/service'
+import * as EventType from './typedef/event'
+import * as ExecutionType from './typedef/execution'
+import * as InstanceType from './typedef/instance'
+import * as ServiceType from './typedef/service'
 
 export type hash = string
 
