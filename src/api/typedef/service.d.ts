@@ -342,6 +342,9 @@ declare namespace mesg {
             /** Properties of a Workflow. */
             interface IWorkflow {
 
+                /** Workflow key */
+                key?: (string|null);
+
                 /** Workflow trigger */
                 trigger?: (types.Service.Workflow.ITrigger|null);
 
@@ -357,6 +360,9 @@ declare namespace mesg {
                  * @param [properties] Properties to set
                  */
                 constructor(properties?: types.Service.IWorkflow);
+
+                /** Workflow key. */
+                public key: string;
 
                 /** Workflow trigger. */
                 public trigger?: (types.Service.Workflow.ITrigger|null);
