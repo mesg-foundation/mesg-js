@@ -39,6 +39,9 @@ declare namespace mesg {
 
             /** Service source */
             source?: (string|null);
+
+            /** Service workflows */
+            workflows?: (types.Service.IWorkflow[]|null);
         }
 
         /** Represents a Service. */
@@ -79,6 +82,9 @@ declare namespace mesg {
 
             /** Service source. */
             public source: string;
+
+            /** Service workflows. */
+            public workflows: types.Service.IWorkflow[];
         }
 
         namespace Service {
@@ -332,6 +338,156 @@ declare namespace mesg {
                 /** Dependency env. */
                 public env: string[];
             }
+
+            /** Properties of a Workflow. */
+            interface IWorkflow {
+
+                /** Workflow key */
+                key?: (string|null);
+
+                /** Workflow trigger */
+                trigger?: (types.Service.Workflow.ITrigger|null);
+
+                /** Workflow task */
+                task?: (types.Service.Workflow.ITask|null);
+            }
+
+            /** Represents a Workflow. */
+            class Workflow implements IWorkflow {
+
+                /**
+                 * Constructs a new Workflow.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: types.Service.IWorkflow);
+
+                /** Workflow key. */
+                public key: string;
+
+                /** Workflow trigger. */
+                public trigger?: (types.Service.Workflow.ITrigger|null);
+
+                /** Workflow task. */
+                public task?: (types.Service.Workflow.ITask|null);
+            }
+
+            namespace Workflow {
+
+                /** Properties of a Trigger. */
+                interface ITrigger {
+
+                    /** Trigger type */
+                    type?: (types.Service.Workflow.Trigger.Type|null);
+
+                    /** Trigger instanceHash */
+                    instanceHash?: (string|null);
+
+                    /** Trigger key */
+                    key?: (string|null);
+
+                    /** Trigger filters */
+                    filters?: (types.Service.Workflow.Trigger.IFilter[]|null);
+                }
+
+                /** Represents a Trigger. */
+                class Trigger implements ITrigger {
+
+                    /**
+                     * Constructs a new Trigger.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: types.Service.Workflow.ITrigger);
+
+                    /** Trigger type. */
+                    public type: types.Service.Workflow.Trigger.Type;
+
+                    /** Trigger instanceHash. */
+                    public instanceHash: string;
+
+                    /** Trigger key. */
+                    public key: string;
+
+                    /** Trigger filters. */
+                    public filters: types.Service.Workflow.Trigger.IFilter[];
+                }
+
+                namespace Trigger {
+
+                    /** Type enum. */
+                    enum Type {
+                        Unknown = 0,
+                        Event = 1,
+                        Result = 2
+                    }
+
+                    /** Properties of a Filter. */
+                    interface IFilter {
+
+                        /** Filter key */
+                        key?: (string|null);
+
+                        /** Filter predicate */
+                        predicate?: (types.Service.Workflow.Trigger.Filter.Predicate|null);
+
+                        /** Filter value */
+                        value?: (string|null);
+                    }
+
+                    /** Represents a Filter. */
+                    class Filter implements IFilter {
+
+                        /**
+                         * Constructs a new Filter.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: types.Service.Workflow.Trigger.IFilter);
+
+                        /** Filter key. */
+                        public key: string;
+
+                        /** Filter predicate. */
+                        public predicate: types.Service.Workflow.Trigger.Filter.Predicate;
+
+                        /** Filter value. */
+                        public value: string;
+                    }
+
+                    namespace Filter {
+
+                        /** Predicate enum. */
+                        enum Predicate {
+                            Unknown = 0,
+                            EQ = 1
+                        }
+                    }
+                }
+
+                /** Properties of a Task. */
+                interface ITask {
+
+                    /** Task instanceHash */
+                    instanceHash?: (string|null);
+
+                    /** Task taskKey */
+                    taskKey?: (string|null);
+                }
+
+                /** Represents a Task. */
+                class Task implements ITask {
+
+                    /**
+                     * Constructs a new Task.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: types.Service.Workflow.ITask);
+
+                    /** Task instanceHash. */
+                    public instanceHash: string;
+
+                    /** Task taskKey. */
+                    public taskKey: string;
+                }
+            }
         }
     }
 
@@ -466,6 +622,9 @@ declare namespace mesg {
 
             /** CreateServiceRequest source */
             source?: (string|null);
+
+            /** CreateServiceRequest workflows */
+            workflows?: (types.Service.IWorkflow[]|null);
         }
 
         /** Represents a CreateServiceRequest. */
@@ -503,6 +662,9 @@ declare namespace mesg {
 
             /** CreateServiceRequest source. */
             public source: string;
+
+            /** CreateServiceRequest workflows. */
+            public workflows: types.Service.IWorkflow[];
         }
 
         /** Properties of a CreateServiceResponse. */
