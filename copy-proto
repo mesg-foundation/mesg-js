@@ -1,17 +1,25 @@
 #!/bin/sh
 
 DEF_REPO="mesg-foundation/core"
-DEF_BRANCH="dev"
+DEF_BRANCH="${1:-dev}"
 PROTO_PATH="https://raw.githubusercontent.com/$DEF_REPO/$DEF_BRANCH/protobuf"
 DIR="./"
 
 rm -rf src/protobuf
+rm -rf src/api/typedef
 mkdir -p src/protobuf/api
 mkdir -p src/protobuf/types
+mkdir -p src/api/typedef
 
 ressources="event execution instance service"
 for ressource in $ressources; do
   curl -o "./src/protobuf/api/${ressource}.proto" "$PROTO_PATH/api/${ressource}.proto"
   curl -o "./src/protobuf/types/${ressource}.proto" "$PROTO_PATH/types/${ressource}.proto"
+  npx pbjs -t static-module \
+    --no-create --no-encode --no-decode --no-verify --no-convert --no-delimited \
+    -o "./src/api/typedef/$ressource.js" \
+    "./src/protobuf/types/${ressource}.proto" "./src/protobuf/api/${ressource}.proto"
+  npx pbts -o "./src/api/typedef/$ressource.d.ts" --name mesg "./src/api/typedef/$ressource.js"
+  rm "./src/api/typedef/$ressource.js"
 done
 curl -o "./src/protobuf/api/core.proto" "$PROTO_PATH/coreapi/api.proto"

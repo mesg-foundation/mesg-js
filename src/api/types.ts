@@ -1,121 +1,68 @@
 import { Stream } from '../util/grpc'
+import * as EventType from './typedef/event'
+import * as ExecutionType from './typedef/execution'
+import * as InstanceType from './typedef/instance'
+import * as ServiceType from './typedef/service'
 
-export type JSONString = string
 export type hash = string
 
-export type Event = {
-  hash?: hash
-  instanceHash: string
-  key: string
-  data: string
+export const ExecutionStatus = {
+  UNKNOWN: 0,
+  CREATED: 1,
+  IN_PROGRESS: 2,
+  COMPLETED: 3,
+  FAILED: 4
 }
 
-export enum ExecutionStatus {
-  UNKNOWN = 0,
-  CREATED = 1,
-  IN_PROGRESS = 2,
-  COMPLETED = 3,
-  FAILED = 4,
-}
-export type Execution = {
-  hash?: hash
-  parentHash: hash
-  eventHash: hash
-  status: ExecutionStatus
-  instanceHash: string
-  taskKey: string
-  inputs: JSONString
-  outputs?: JSONString
-  error?: string
-  tags?: string[]
-}
+export type Event = EventType.types.IEvent
 
-export type Instance = {
-  hash?: hash
-  serviceHash: hash
-}
+export type Execution = ExecutionType.types.IExecution
 
-export type Service = {
-  hash?: hash
-  sid: string
-  name?: string
-  description?: string
-  configuration?: ServiceConfiguration
-  tasks?: ServiceTask[]
-  events?: ServiceEvent[]
-  dependencies?: ServiceDependency[]
-  repository?: string
-  source: string
-}
+export type Instance = InstanceType.types.IInstance
 
-export type ServiceConfiguration = any // TODO
-export type ServiceTask = any // TODO
-export type ServiceEvent = any // TODO
-export type ServiceDependency = any // TODO
+export type Service = ServiceType.types.IService
 
-export type EventCreateInputs = {
-  instanceHash: string
-  key: string
-  data: JSONString
-}
-export type EventCreateOutputs = Promise<{ hash: hash }>
+export type EventCreateInputs = EventType.api.ICreateEventRequest
+export type EventCreateOutputs = Promise<EventType.api.ICreateEventResponse>
 
-export type EventStreamInputs = { filter?: { hash?: string, instanceHash?: string, key?: string } }
+export type EventStreamInputs = EventType.api.StreamEventRequest
 export type EventStreamOutputs = Stream<Event>
 
-export type ExecutionGetInputs = { hash: hash }
+export type ExecutionGetInputs = ExecutionType.api.IGetExecutionRequest
 export type ExecutionGetOutputs = Promise<Execution>
 
-export type ExecutionStreamInputs = { filter?: { statuses?: ExecutionStatus[], instanceHash?: hash, taskKey?: string, tags?: string[] } }
+export type ExecutionStreamInputs = ExecutionType.api.IStreamExecutionRequest
 export type ExecutionStreamOutputs = Stream<Execution>
 
-export type ExecutionCreateInputs = {
-  instanceHash: hash,
-  taskKey: string,
-  inputs: JSONString,
-  tags?: string[]
-}
-export type ExecutionCreateOutputs = Promise<{ hash: hash }>
+export type ExecutionCreateInputs = ExecutionType.api.ICreateExecutionRequest
+export type ExecutionCreateOutputs = Promise<ExecutionType.api.ICreateExecutionResponse>
 
-export type ExecutionUpdateInputs = { hash: hash, outputs?: JSONString, error?: string }
-export type ExecutionUpdateOutputs = Promise<{}>
+export type ExecutionUpdateInputs = ExecutionType.api.IUpdateExecutionRequest
+export type ExecutionUpdateOutputs = Promise<ExecutionType.api.IUpdateExecutionResponse>
 
-export type InstanceGetInputs = { hash: hash }
+export type InstanceGetInputs = InstanceType.api.IGetInstanceRequest
 export type InstanceGetOutputs = Promise<Instance>
 
-export type InstanceListInputs = { serviceHash?: hash }
-export type InstanceListOutputs = Promise<{ instances: Instance[] }>
+export type InstanceListInputs = InstanceType.api.IListInstancesRequest
+export type InstanceListOutputs = Promise<InstanceType.api.IListInstancesResponse>
 
-export type InstanceCreateInputs = {
-  serviceHash: hash,
-  env?: string[]
-}
-export type InstanceCreateOutputs = Promise<{ hash: hash }>
+export type InstanceCreateInputs = InstanceType.api.ICreateInstanceRequest
+export type InstanceCreateOutputs = Promise<InstanceType.api.ICreateInstanceResponse>
 
-export type InstanceDeleteInputs = { hash: hash, deleteData?: boolean }
-export type InstanceDeleteOutputs = Promise<{}>
+export type InstanceDeleteInputs = InstanceType.api.IDeleteInstanceRequest
+export type InstanceDeleteOutputs = Promise<InstanceType.api.IDeleteInstanceResponse>
 
-export type ServiceGetInputs = { hash: hash }
+export type ServiceGetInputs = ServiceType.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
 
-export type ServiceListInputs = {}
-export type ServiceListOutputs = Promise<{ services: Service[] }>
+export type ServiceListInputs = ServiceType.api.IListServiceRequest
+export type ServiceListOutputs = Promise<ServiceType.api.IListServiceResponse>
 
-export type ServiceCreateInputs = {
-  sid: string,
-  name: string,
-  description: string,
-  configuration: ServiceConfiguration,
-  tasks: ServiceTask[],
-  events: ServiceEvent[],
-  dependencies: ServiceDependency[],
-  repository: string,
-  source: string
-}
-export type ServiceCreateOutputs = Promise<{ hash: hash }>
+export type ServiceCreateInputs = ServiceType.api.ICreateServiceRequest
+export type ServiceCreateOutputs = Promise<ServiceType.api.ICreateServiceResponse>
 
-export type ServiceDeleteInputs = { hash: hash }
-export type ServiceDeleteOutputs = Promise<{}>
+export type ServiceDeleteInputs = ServiceType.api.IDeleteServiceRequest
+export type ServiceDeleteOutputs = Promise<ServiceType.api.IDeleteServiceResponse>
 
 export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
 

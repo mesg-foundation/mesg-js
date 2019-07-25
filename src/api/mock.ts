@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { API, Event, Execution } from './types'
+import { API } from './types'
 import { Stream } from '../util/grpc';
 
 const hash = 'hash'
@@ -18,8 +18,8 @@ class StreamMock<T> implements Stream<T> {
 }
 
 export const streams = {
-  event: new StreamMock<Event>(),
-  execution: new StreamMock<Execution>()
+  event: new StreamMock<any>(),
+  execution: new StreamMock<any>()
 }
 
 export default (endpoint: string): API => ({
