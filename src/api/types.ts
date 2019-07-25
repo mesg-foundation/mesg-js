@@ -7,7 +7,8 @@ import * as ServiceType from './typedef/service'
 export type hash = string
 
 export const ExecutionStatus = {
-  CREATED: 0,
+  UNKNOWN: 0,
+  CREATED: 1,
   IN_PROGRESS: 2,
   COMPLETED: 3,
   FAILED: 4
