@@ -20,7 +20,7 @@ declare namespace mesg {
             key?: (string|null);
 
             /** Event data */
-            data?: (string|null);
+            data?: (google.protobuf.IStruct|null);
         }
 
         /** Represents an Event. */
@@ -42,7 +42,113 @@ declare namespace mesg {
             public key: string;
 
             /** Event data. */
-            public data: string;
+            public data?: (google.protobuf.IStruct|null);
+        }
+    }
+
+    /** Namespace google. */
+    namespace google {
+
+        /** Namespace protobuf. */
+        namespace protobuf {
+
+            /** Properties of a Struct. */
+            interface IStruct {
+
+                /** Struct fields */
+                fields?: ({ [k: string]: google.protobuf.IValue }|null);
+            }
+
+            /** Represents a Struct. */
+            class Struct implements IStruct {
+
+                /**
+                 * Constructs a new Struct.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IStruct);
+
+                /** Struct fields. */
+                public fields: { [k: string]: google.protobuf.IValue };
+            }
+
+            /** Properties of a Value. */
+            interface IValue {
+
+                /** Value nullValue */
+                nullValue?: (google.protobuf.NullValue|null);
+
+                /** Value numberValue */
+                numberValue?: (number|null);
+
+                /** Value stringValue */
+                stringValue?: (string|null);
+
+                /** Value boolValue */
+                boolValue?: (boolean|null);
+
+                /** Value structValue */
+                structValue?: (google.protobuf.IStruct|null);
+
+                /** Value listValue */
+                listValue?: (google.protobuf.IListValue|null);
+            }
+
+            /** Represents a Value. */
+            class Value implements IValue {
+
+                /**
+                 * Constructs a new Value.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IValue);
+
+                /** Value nullValue. */
+                public nullValue: google.protobuf.NullValue;
+
+                /** Value numberValue. */
+                public numberValue: number;
+
+                /** Value stringValue. */
+                public stringValue: string;
+
+                /** Value boolValue. */
+                public boolValue: boolean;
+
+                /** Value structValue. */
+                public structValue?: (google.protobuf.IStruct|null);
+
+                /** Value listValue. */
+                public listValue?: (google.protobuf.IListValue|null);
+
+                /** Value kind. */
+                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
+            }
+
+            /** NullValue enum. */
+            enum NullValue {
+                NULL_VALUE = 0
+            }
+
+            /** Properties of a ListValue. */
+            interface IListValue {
+
+                /** ListValue values */
+                values?: (google.protobuf.IValue[]|null);
+            }
+
+            /** Represents a ListValue. */
+            class ListValue implements IListValue {
+
+                /**
+                 * Constructs a new ListValue.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IListValue);
+
+                /** ListValue values. */
+                public values: google.protobuf.IValue[];
+            }
         }
     }
 
@@ -171,7 +277,7 @@ declare namespace mesg {
             key?: (string|null);
 
             /** CreateEventRequest data */
-            data?: (string|null);
+            data?: (google.protobuf.IStruct|null);
         }
 
         /** Represents a CreateEventRequest. */
@@ -190,7 +296,7 @@ declare namespace mesg {
             public key: string;
 
             /** CreateEventRequest data. */
-            public data: string;
+            public data?: (google.protobuf.IStruct|null);
         }
 
         /** Properties of a CreateEventResponse. */
