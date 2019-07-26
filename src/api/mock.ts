@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import { API } from './types'
 import { Stream } from '../util/grpc';
+import { encode } from '../util/encoder';
 
 const hash = 'hash'
 
@@ -29,7 +30,7 @@ export default (endpoint: string): API => ({
   },
   execution: {
     create() { return Promise.resolve({ hash }) },
-    get() { return Promise.resolve({ parentHash: hash, eventHash: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: '{}' }) },
+    get() { return Promise.resolve({ parentHash: hash, eventHash: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: encode({}) }) },
     stream() { return streams.execution },
     update() { return Promise.resolve({}) }
   },
