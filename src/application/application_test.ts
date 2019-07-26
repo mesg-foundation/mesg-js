@@ -41,13 +41,13 @@ test('executeTask() should execute a task', (t) => {
   application.executeTask({
     instanceHash: '1',
     taskKey: '2',
-    inputs: '3',
+    inputs: application.encodeData({ foo: 'bar' }),
     tags: ['4', '5']
   })
   const req = spy.getCall(0).args[0]
   t.equal(req.instanceHash, '1')
   t.equal(req.taskKey, '2')
-  t.equal(req.inputs, '3')
+  t.equal(application.decodeData(req.inputs).foo, 'bar')
   t.same(req.tags, ['4', '5'])
   spy.restore()
 });
@@ -61,7 +61,7 @@ test('executeTask() should resolve promise with reply', (t) => {
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
-    inputs: '4'
+    inputs: {}
   }).then(reply => t.equal(reply.hash, '1'))
   stub.restore()
 });
@@ -74,7 +74,7 @@ test('executeTask() should reject promise with err', (t) => {
   application.executeTask({
     instanceHash: '2',
     taskKey: '3',
-    inputs: '4'
+    inputs: {}
   }).catch((err) => t.equal(err.message, '1'))
   stub.restore()
 });
@@ -84,7 +84,7 @@ test('executeTaskAndWaitResult() should listen for results', (t) => {
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(api.execution, 'stream')
-  application.executeTaskAndWaitResult({ instanceHash: '1', taskKey: '2', inputs: '3' })
+  application.executeTaskAndWaitResult({ instanceHash: '1', taskKey: '2', inputs: {} })
   const req = spy.getCall(0).args[0]
   t.equal(req.filter.instanceHash, '1')
   spy.restore()
@@ -95,7 +95,7 @@ test('executeTaskAndWaitResult() should reject and cancel result stream on `erro
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(streams.execution, 'cancel')
-  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: {} })
     .catch((err) => t.equal(err, '1'))
   streams.execution.emit('error', '1')
   t.ok(spy.called)
@@ -107,7 +107,7 @@ test('executeTaskAndWaitResult() should resolve and cancel result stream on firs
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(streams.execution, 'cancel')
-  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: {} })
     .then((result) => t.equal(result.hash, '2'))
   streams.execution.emit('data', { hash: '2' })
   t.ok(spy.called)
@@ -119,12 +119,12 @@ test('executeTaskAndWaitResult() should execute task', (t) => {
   const api = Api('');
   const application = new Application(api);
   const spy = sinon.spy(api.execution, 'create')
-  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: '4' })
+  application.executeTaskAndWaitResult({ instanceHash: '2', taskKey: '3', inputs: application.encodeData({ foo: 'bar' }) })
   streams.execution.emit('metadata', { get() { return ['ready'] } })
   const req = spy.getCall(0).args[0]
   t.equal(req.instanceHash, '2')
   t.equal(req.taskKey, '3')
-  t.equal(req.inputs, '4')
+  t.equal(application.decodeData(req.inputs).foo, 'bar')
   t.ok(isUUID.v4(req.tags[0]))
   spy.restore()
 });

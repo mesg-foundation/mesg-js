@@ -2,6 +2,7 @@ import * as test from 'tape'
 import * as sinon from 'sinon'
 import Service from './service'
 import Api, { API } from '../api/mock'
+import { encode } from '../util/encoder';
 
 const token = "token"
 
@@ -92,12 +93,12 @@ test('listenTask() should handle tasks and submit result', async function (t) {
       return outputs
     }
   });
-  t.doesNotThrow(() => stream.emit('data', { hash, taskKey: 'task1', inputs: JSON.stringify(inputs) }));
+  t.doesNotThrow(() => stream.emit('data', { hash, taskKey: 'task1', inputs: encode(inputs) }));
   await setTimeout(() => { }, 0)
   const args = spy.getCall(0).args[0];
   spy.restore();
   t.equal(args.hash, hash);
-  t.equal(args.outputs, JSON.stringify(outputs));
+  t.equal(JSON.stringify(args.outputs), JSON.stringify(encode(outputs)));
 });
 
 test('emitEvent() should emit an event', function (t) {
@@ -111,7 +112,7 @@ test('emitEvent() should emit an event', function (t) {
   const args = spy.getCall(0).args[0];
   t.equal(args.instanceHash, token);
   t.equal(args.key, key);
-  t.equal(args.data, JSON.stringify(data));
+  t.equal(JSON.stringify(args.data), JSON.stringify(encode(data)));
   spy.restore();
 });
 
