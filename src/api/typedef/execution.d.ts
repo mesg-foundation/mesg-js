@@ -38,10 +38,10 @@ declare namespace mesg {
             taskKey?: (string|null);
 
             /** Execution inputs */
-            inputs?: (string|null);
+            inputs?: (google.protobuf.IStruct|null);
 
             /** Execution outputs */
-            outputs?: (string|null);
+            outputs?: (google.protobuf.IStruct|null);
 
             /** Execution error */
             error?: (string|null);
@@ -78,16 +78,122 @@ declare namespace mesg {
             public taskKey: string;
 
             /** Execution inputs. */
-            public inputs: string;
+            public inputs?: (google.protobuf.IStruct|null);
 
             /** Execution outputs. */
-            public outputs: string;
+            public outputs?: (google.protobuf.IStruct|null);
 
             /** Execution error. */
             public error: string;
 
             /** Execution tags. */
             public tags: string[];
+        }
+    }
+
+    /** Namespace google. */
+    namespace google {
+
+        /** Namespace protobuf. */
+        namespace protobuf {
+
+            /** Properties of a Struct. */
+            interface IStruct {
+
+                /** Struct fields */
+                fields?: ({ [k: string]: google.protobuf.IValue }|null);
+            }
+
+            /** Represents a Struct. */
+            class Struct implements IStruct {
+
+                /**
+                 * Constructs a new Struct.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IStruct);
+
+                /** Struct fields. */
+                public fields: { [k: string]: google.protobuf.IValue };
+            }
+
+            /** Properties of a Value. */
+            interface IValue {
+
+                /** Value nullValue */
+                nullValue?: (google.protobuf.NullValue|null);
+
+                /** Value numberValue */
+                numberValue?: (number|null);
+
+                /** Value stringValue */
+                stringValue?: (string|null);
+
+                /** Value boolValue */
+                boolValue?: (boolean|null);
+
+                /** Value structValue */
+                structValue?: (google.protobuf.IStruct|null);
+
+                /** Value listValue */
+                listValue?: (google.protobuf.IListValue|null);
+            }
+
+            /** Represents a Value. */
+            class Value implements IValue {
+
+                /**
+                 * Constructs a new Value.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IValue);
+
+                /** Value nullValue. */
+                public nullValue: google.protobuf.NullValue;
+
+                /** Value numberValue. */
+                public numberValue: number;
+
+                /** Value stringValue. */
+                public stringValue: string;
+
+                /** Value boolValue. */
+                public boolValue: boolean;
+
+                /** Value structValue. */
+                public structValue?: (google.protobuf.IStruct|null);
+
+                /** Value listValue. */
+                public listValue?: (google.protobuf.IListValue|null);
+
+                /** Value kind. */
+                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
+            }
+
+            /** NullValue enum. */
+            enum NullValue {
+                NULL_VALUE = 0
+            }
+
+            /** Properties of a ListValue. */
+            interface IListValue {
+
+                /** ListValue values */
+                values?: (google.protobuf.IValue[]|null);
+            }
+
+            /** Represents a ListValue. */
+            class ListValue implements IListValue {
+
+                /**
+                 * Constructs a new ListValue.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: google.protobuf.IListValue);
+
+                /** ListValue values. */
+                public values: google.protobuf.IValue[];
+            }
         }
     }
 
@@ -203,7 +309,7 @@ declare namespace mesg {
             taskKey?: (string|null);
 
             /** CreateExecutionRequest inputs */
-            inputs?: (string|null);
+            inputs?: (google.protobuf.IStruct|null);
 
             /** CreateExecutionRequest tags */
             tags?: (string[]|null);
@@ -225,7 +331,7 @@ declare namespace mesg {
             public taskKey: string;
 
             /** CreateExecutionRequest inputs. */
-            public inputs: string;
+            public inputs?: (google.protobuf.IStruct|null);
 
             /** CreateExecutionRequest tags. */
             public tags: string[];
@@ -339,7 +445,7 @@ declare namespace mesg {
             hash?: (string|null);
 
             /** UpdateExecutionRequest outputs */
-            outputs?: (string|null);
+            outputs?: (google.protobuf.IStruct|null);
 
             /** UpdateExecutionRequest error */
             error?: (string|null);
@@ -358,7 +464,7 @@ declare namespace mesg {
             public hash: string;
 
             /** UpdateExecutionRequest outputs. */
-            public outputs: string;
+            public outputs?: (google.protobuf.IStruct|null);
 
             /** UpdateExecutionRequest error. */
             public error: string;
