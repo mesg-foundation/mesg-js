@@ -12,7 +12,7 @@ const encodeField = (data, key) => {
       }}
     case '[object Array]':
       return { listValue: {
-        values: encodeFields(value)
+        values: value.map((_, i) => encodeField(value, i))
       }}
     case '[object Number]':
       return { numberValue: value }
@@ -27,7 +27,7 @@ const encodeField = (data, key) => {
   }
 }
 
-const encodeFields = data => Object.keys(data).reduce((prev, next) => ({
+const encodeFields = data => Object.keys(data || {}).reduce((prev, next) => ({
   ...prev,
   [next]: encodeField(data, next)
 }), {})
@@ -51,14 +51,14 @@ const decodeField = (field: google.protobuf.IValue) => {
     case 'struct':
       return decode(value)
     case 'list':
-      return Object.keys(value.values).map(x => decodeField(value.values[x]))
+      return value.values.map((_, i) => decodeField(value.values[i]))
     default:
       throw new Error('not implemented')
   }
 }
 
 export const decode = (data: google.protobuf.IStruct): { [key: string]: any } => {
-  return Object.keys(data.fields).reduce((prev, next) => ({
+  return Object.keys(data.fields || {}).reduce((prev, next) => ({
     ...prev,
     [next]: decodeField(data.fields[next])
   }), {})
