@@ -56,7 +56,7 @@ mesg.listenEvent({
   }
 })
 .on('data', (event) => {
-  console.log('an event received:', event.key, JSON.parse(event.data))
+  console.log('an event received:', event.key, mesg.decodeData(event.data))
 })
 ```
 
@@ -77,7 +77,7 @@ mesg.listenResult({
     console.error('an error has occurred:', result.error)
     return
   }
-  console.log('a result received:', JSON.parse(result.outputs))
+  console.log('a result received:', mesg.decodeData(result.outputs))
 })
 ```
 
@@ -89,7 +89,7 @@ Execute task on a service.
 const execution = await mesg.executeTask({
   instanceHash: 'TASK_INSTANCE_HASH',
   taskKey: 'TASK_KEY',
-  inputs: JSON.stringify('INPUT_DATA'),
+  inputs: mesg.encodeData({ key: 'INPUT_DATA' }),
   tags: ['ASSOCIATE_TAG'] // optional
 })
 console.log('task in progress with execution:', execution.hash)
@@ -104,14 +104,14 @@ This can be considered as a shortcut for using both `executeTask()` and `listenR
 const result = await mesg.executeTaskAndWaitResult({
   instanceHash: 'TASK_INSTANCE_HASH',
   taskKey: 'TASK_KEY',
-  inputs: JSON.stringify('INPUT_DATA'),
+  inputs: mesg.encodeData({ key: 'INPUT_DATA' }),
   tags: ['ASSOCIATE_TAG'] // optional
 })
 if (result.error) {
   console.error('an error has occurred:', result.error)
   throw new Error(result.error)
 }
-console.log('a result received:', JSON.parse(result.outputs))
+console.log('a result received:', mesg.decodeData(result.outputs))
 ```
 
 ## Resolve SID

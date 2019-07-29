@@ -1,5 +1,5 @@
-import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs } from '../api';
-
+import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs, Execution } from '../api';
+import { decode, encode } from '../util/encoder'
 
 type Options = {
   token: string
@@ -42,20 +42,21 @@ class Service {
     return this.API.event.create({
       instanceHash: this.token,
       key: event,
-      data: JSON.stringify(data)
+      data: encode(data)
     })
   }
 
-  private async handleTaskData({ hash, taskKey, inputs }) {
+  private async handleTaskData({ hash, taskKey, inputs }: Execution) {
     const callback = this.tasks[taskKey];
     if (!callback) {
       throw new Error(`Task ${taskKey} is not defined in your services`);
     }
-    const data = JSON.parse(inputs);
     try {
-      const outputData = await callback(data);
-      const outputs = JSON.stringify(outputData);
-      return this.API.execution.update({ hash, outputs });
+      const outputs = await callback(decode(inputs));
+      return this.API.execution.update({
+        hash,
+        outputs: encode(outputs)
+      });
     } catch (err) {
       const error = err.message;
       return this.API.execution.update({ hash, error });
@@ -75,7 +76,11 @@ class Service {
 }
 
 interface Tasks {
-  [task: string]: (inputs: TaskInputs) => object | Promise<object>
+  [task: string]: (inputs: TaskInputs) => TaskOutputs | Promise<TaskOutputs>
+}
+
+interface TaskOutputs {
+  [key: string]: any
 }
 
 interface TaskInputs {

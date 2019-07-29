@@ -1,4 +1,6 @@
 import * as uuidv4 from 'uuid/v4'
+import { google } from "../api/typedef/execution";
+import { decode, encode } from '../util/encoder'
 import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
 import { API, ExecutionCreateInputs, ExecutionCreateOutputs, EventStreamInputs, Event, ExecutionStreamInputs, Execution, ExecutionStatus } from '../api';
 import { resolveSID } from '../util/resolve';
@@ -13,6 +15,14 @@ class Application {
 
   constructor(api: API) {
     this.api = api;
+  }
+
+  decodeData(data: google.protobuf.IStruct) {
+    return decode(data)
+  }
+
+  encodeData(data: { [key: string]: any }) {
+    return encode(data)
   }
 
   resolve(sid: string): Promise<string> {

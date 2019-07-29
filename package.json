@@ -8,7 +8,8 @@
     "prepublishOnly": "npm run test && npm run build",
     "test": "ts-node ./node_modules/tape/bin/tape 'src/**/*_test.ts'",
     "coverage": "rimraf ./istanbul && tsc --project tsconfig-istanbul.json && ncp ./src/protobuf/ ./istanbul/protobuf && istanbul cover -x 'istanbul/**/*_test.js' --report html ./node_modules/.bin/tape 'istanbul/**/*_test.js'",
-    "dev": "nodemon -e ts src --exec 'npm run test'"
+    "dev": "nodemon -e ts src --exec 'npm run test'",
+    "ts-node": "ts-node"
   },
   "author": "Anthony Estebe <anthony@mesg.tech>",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "@grpc/proto-loader": "^0.5.1",
     "grpc": "^1.21.1",
     "js-yaml": "^3.13.1",
+    "pb-util": "^0.1.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
