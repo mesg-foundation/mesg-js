@@ -8,6 +8,21 @@
 #### Fixed
 #### Removed
 
+
+## [v4.2.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.2.0)
+
+#### Breaking Changes
+
+- ([#114](https://github.com/mesg-foundation/mesg-js/pull/114)) Support of proto Structs type that replace JSON strings.
+
+#### Changed
+
+- ([#112](https://github.com/mesg-foundation/mesg-js/pull/112)) Automatic type generation.
+
+#### Experimental
+
+- ([#113](https://github.com/mesg-foundation/mesg-js/pull/113)) Add workflow APIs.
+
 ## [v4.1.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.1.0)
 
 ### [Click here to see the release notes](https://forum.mesg.com/t/release-notes-of-engine-v0-11-cli-v1-1-and-js-library-v4/339)
