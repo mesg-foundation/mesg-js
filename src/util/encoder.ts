@@ -53,7 +53,7 @@ const decodeField = (field: google.protobuf.IValue) => {
     case 'struct':
       return decode(value)
     case 'list':
-      return value.values.map((_, i) => decodeField(value.values[i]))
+      return (value.values || []).map((_, i) => decodeField(value.values[i]))
     default:
       throw new Error('not implemented')
   }
