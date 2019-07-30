@@ -22,6 +22,8 @@ const encodeField = (data, key) => {
       return { stringValue: value }
     case '[object Date]':
       return { stringValue: (value as Date).toJSON() }
+    case '[object BigNumber]':
+      return { stringValue: value.toJSON() }
     default:
       throw new Error('not supported')
   }
