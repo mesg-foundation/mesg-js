@@ -22,6 +22,8 @@ const encodeField = (data, key) => {
       return { stringValue: value }
     case '[object Date]':
       return { stringValue: (value as Date).toJSON() }
+    case '[object BigNumber]':
+      return { stringValue: value.toJSON() }
     default:
       throw new Error('not supported')
   }
@@ -51,7 +53,7 @@ const decodeField = (field: google.protobuf.IValue) => {
     case 'struct':
       return decode(value)
     case 'list':
-      return value.values.map((_, i) => decodeField(value.values[i]))
+      return (value.values || []).map((_, i) => decodeField(value.values[i]))
     default:
       throw new Error('not implemented')
   }
