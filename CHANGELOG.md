@@ -12,7 +12,7 @@
 
 #### Fixed
 
-- ([#116](https://github.com/mesg-foundation/mesg-js/pull/116)) Fix missing support for big number with proto structs
+- ([#116](https://github.com/mesg-foundation/mesg-js/pull/116)) Fix missing support for big number with proto structs.
 
 ## [v4.2.0](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.2.0)
 
