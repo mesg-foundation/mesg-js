@@ -3,6 +3,7 @@ import * as EventType from './typedef/event'
 import * as ExecutionType from './typedef/execution'
 import * as InstanceType from './typedef/instance'
 import * as ServiceType from './typedef/service'
+import * as WorkflowType from './typedef/workflow'
 
 export type hash = string
 
@@ -21,6 +22,8 @@ export type Execution = ExecutionType.types.IExecution
 export type Instance = InstanceType.types.IInstance
 
 export type Service = ServiceType.types.IService
+
+export type Workflow = WorkflowType.types.IWorkflow
 
 export type EventCreateInputs = EventType.api.ICreateEventRequest
 export type EventCreateOutputs = Promise<EventType.api.ICreateEventResponse>
@@ -64,6 +67,18 @@ export type ServiceCreateOutputs = Promise<ServiceType.api.ICreateServiceRespons
 export type ServiceDeleteInputs = ServiceType.api.IDeleteServiceRequest
 export type ServiceDeleteOutputs = Promise<ServiceType.api.IDeleteServiceResponse>
 
+export type WorkflowGetInputs = WorkflowType.api.IGetWorkflowRequest
+export type WorkflowGetOutputs = Promise<Workflow>
+
+export type WorkflowListInputs = WorkflowType.api.IListWorkflowRequest
+export type WorkflowListOutputs = Promise<WorkflowType.api.IListWorkflowResponse>
+
+export type WorkflowCreateInputs = WorkflowType.api.ICreateWorkflowRequest
+export type WorkflowCreateOutputs = Promise<WorkflowType.api.ICreateWorkflowResponse>
+
+export type WorkflowDeleteInputs = WorkflowType.api.IDeleteWorkflowRequest
+export type WorkflowDeleteOutputs = Promise<WorkflowType.api.IDeleteWorkflowResponse>
+
 export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
 
 export type API = {
@@ -88,6 +103,12 @@ export type API = {
     list: (request: ServiceListInputs) => ServiceListOutputs
     create: (request: ServiceCreateInputs) => ServiceCreateOutputs
     delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+  },
+  workflow: {
+    get: (request: WorkflowGetInputs) => WorkflowGetOutputs
+    list: (request: WorkflowListInputs) => WorkflowListOutputs
+    create: (request: WorkflowCreateInputs) => WorkflowCreateOutputs
+    delete: (request: WorkflowDeleteInputs) => WorkflowDeleteOutputs
   },
   core: {
     info: () => InfoOutputs

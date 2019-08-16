@@ -46,6 +46,12 @@ export default (endpoint: string): API => ({
     list() { return Promise.resolve({ services: [] }) },
     delete() { return Promise.resolve({}) },
   },
+  workflow: {
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ }) },
+    list() { return Promise.resolve({ workflows: [] }) },
+    delete() { return Promise.resolve({}) },
+  },
   core: {
     info() { return Promise.resolve({ version: '0', services: [] }) }
   }
