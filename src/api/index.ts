@@ -5,6 +5,7 @@ import {
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
   ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs,
+  WorkflowCreateInputs, WorkflowGetInputs, WorkflowListInputs, WorkflowDeleteInputs, WorkflowCreateOutputs, WorkflowGetOutputs, WorkflowListOutputs, WorkflowDeleteOutputs,
   InfoOutputs
 } from './types'
 
@@ -15,6 +16,7 @@ export default (endpoint: string): API => {
   const execution = createClient('Execution', 'protobuf/api/execution.proto', endpoint)
   const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
   const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
+  const workflow = createClient('Workflow', 'protobuf/api/workflow.proto', endpoint)
   const core = createClient('Core', 'protobuf/api/core.proto', endpoint)
   return {
     event: {
@@ -38,6 +40,12 @@ export default (endpoint: string): API => {
       get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
       list: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
       delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+    },
+    workflow: {
+      create: promisify(workflow, 'Create') as (request: WorkflowCreateInputs) => WorkflowCreateOutputs,
+      get: promisify(workflow, 'Get') as (request: WorkflowGetInputs) => WorkflowGetOutputs,
+      list: promisify(workflow, 'List') as (request: WorkflowListInputs) => WorkflowListOutputs,
+      delete: promisify(workflow, 'Delete') as (request: WorkflowDeleteInputs) => WorkflowDeleteOutputs
     },
     core: {
       info: promisify(core, 'Info') as () => InfoOutputs

@@ -48,6 +48,12 @@ declare namespace mesg {
 
             /** Execution tags */
             tags?: (string[]|null);
+
+            /** Execution workflowHash */
+            workflowHash?: (string|null);
+
+            /** Execution stepID */
+            stepID?: (string|null);
         }
 
         /** Represents an Execution. */
@@ -88,6 +94,12 @@ declare namespace mesg {
 
             /** Execution tags. */
             public tags: string[];
+
+            /** Execution workflowHash. */
+            public workflowHash: string;
+
+            /** Execution stepID. */
+            public stepID: string;
         }
     }
 
