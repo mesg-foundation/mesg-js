@@ -3,7 +3,7 @@ import { API } from './types'
 import { Stream } from '../util/grpc';
 import { encode } from '../util/encoder';
 
-const hash = 'hash'
+const hash = Buffer.from('hash')
 
 class StreamMock<T> implements Stream<T> {
   private eventEmitter = new EventEmitter()
@@ -30,7 +30,7 @@ export default (endpoint: string): API => ({
   },
   execution: {
     create() { return Promise.resolve({ hash }) },
-    get() { return Promise.resolve({ parentHash: hash, eventHash: 'xxx', status: 0, instanceHash: hash, taskKey: 'xxx', inputs: encode({}) }) },
+    get() { return Promise.resolve({ parentHash: hash, eventHash: Buffer.from('xxx'), status: 0, instanceHash: hash, taskKey: 'xxx', inputs: encode({}) }) },
     stream() { return streams.execution },
     update() { return Promise.resolve({}) }
   },

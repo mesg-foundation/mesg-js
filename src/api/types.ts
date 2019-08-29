@@ -5,7 +5,7 @@ import * as InstanceType from './typedef/instance'
 import * as ServiceType from './typedef/service'
 import * as WorkflowType from './typedef/workflow'
 
-export type hash = string
+export type hash = Uint8Array
 
 export const ExecutionStatus = {
   UNKNOWN: 0,

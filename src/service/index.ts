@@ -3,16 +3,14 @@ import * as fs from 'fs'
 import Service from './service'
 import API from '../api'
 
-const token = process.env.MESG_TOKEN
-const endpoint = process.env.MESG_ENDPOINT
 const ymlPath = './mesg.yml'
 
 const serviceBuilder = (): Service => {
   const definition = YAML.safeLoad(fs.readFileSync(ymlPath));
   return new Service({
-    token: token,
+    token: Buffer.from(process.env.MESG_TOKEN),
     definition: definition,
-    API: API(endpoint)
+    API: API(process.env.MESG_ENDPOINT)
   });
 }
 
