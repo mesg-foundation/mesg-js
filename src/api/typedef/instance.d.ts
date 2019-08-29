@@ -11,10 +11,10 @@ declare namespace mesg {
         interface IInstance {
 
             /** Instance hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** Instance serviceHash */
-            serviceHash?: (string|null);
+            serviceHash?: (Uint8Array|null);
         }
 
         /** Represents an Instance. */
@@ -27,10 +27,10 @@ declare namespace mesg {
             constructor(properties?: types.IInstance);
 
             /** Instance hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** Instance serviceHash. */
-            public serviceHash: string;
+            public serviceHash: Uint8Array;
         }
     }
 
@@ -140,7 +140,7 @@ declare namespace mesg {
         interface IGetInstanceRequest {
 
             /** GetInstanceRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a GetInstanceRequest. */
@@ -153,14 +153,14 @@ declare namespace mesg {
             constructor(properties?: api.IGetInstanceRequest);
 
             /** GetInstanceRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a ListInstancesRequest. */
         interface IListInstancesRequest {
 
             /** ListInstancesRequest serviceHash */
-            serviceHash?: (string|null);
+            serviceHash?: (Uint8Array|null);
         }
 
         /** Represents a ListInstancesRequest. */
@@ -173,7 +173,7 @@ declare namespace mesg {
             constructor(properties?: api.IListInstancesRequest);
 
             /** ListInstancesRequest serviceHash. */
-            public serviceHash: string;
+            public serviceHash: Uint8Array;
         }
 
         /** Properties of a ListInstancesResponse. */
@@ -200,7 +200,7 @@ declare namespace mesg {
         interface ICreateInstanceRequest {
 
             /** CreateInstanceRequest serviceHash */
-            serviceHash?: (string|null);
+            serviceHash?: (Uint8Array|null);
 
             /** CreateInstanceRequest env */
             env?: (string[]|null);
@@ -216,7 +216,7 @@ declare namespace mesg {
             constructor(properties?: api.ICreateInstanceRequest);
 
             /** CreateInstanceRequest serviceHash. */
-            public serviceHash: string;
+            public serviceHash: Uint8Array;
 
             /** CreateInstanceRequest env. */
             public env: string[];
@@ -226,7 +226,7 @@ declare namespace mesg {
         interface ICreateInstanceResponse {
 
             /** CreateInstanceResponse hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a CreateInstanceResponse. */
@@ -239,14 +239,14 @@ declare namespace mesg {
             constructor(properties?: api.ICreateInstanceResponse);
 
             /** CreateInstanceResponse hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a DeleteInstanceRequest. */
         interface IDeleteInstanceRequest {
 
             /** DeleteInstanceRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** DeleteInstanceRequest deleteData */
             deleteData?: (boolean|null);
@@ -262,7 +262,7 @@ declare namespace mesg {
             constructor(properties?: api.IDeleteInstanceRequest);
 
             /** DeleteInstanceRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** DeleteInstanceRequest deleteData. */
             public deleteData: boolean;

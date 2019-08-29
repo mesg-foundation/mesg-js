@@ -11,7 +11,7 @@ declare namespace mesg {
         interface IService {
 
             /** Service hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** Service sid */
             sid?: (string|null);
@@ -51,7 +51,7 @@ declare namespace mesg {
             constructor(properties?: types.IService);
 
             /** Service hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** Service sid. */
             public sid: string;
@@ -509,7 +509,7 @@ declare namespace mesg {
         interface ICreateServiceResponse {
 
             /** CreateServiceResponse hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a CreateServiceResponse. */
@@ -522,14 +522,14 @@ declare namespace mesg {
             constructor(properties?: api.ICreateServiceResponse);
 
             /** CreateServiceResponse hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a DeleteServiceRequest. */
         interface IDeleteServiceRequest {
 
             /** DeleteServiceRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a DeleteServiceRequest. */
@@ -542,7 +542,7 @@ declare namespace mesg {
             constructor(properties?: api.IDeleteServiceRequest);
 
             /** DeleteServiceRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a DeleteServiceResponse. */
@@ -563,7 +563,7 @@ declare namespace mesg {
         interface IGetServiceRequest {
 
             /** GetServiceRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a GetServiceRequest. */
@@ -576,7 +576,7 @@ declare namespace mesg {
             constructor(properties?: api.IGetServiceRequest);
 
             /** GetServiceRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a ListServiceRequest. */

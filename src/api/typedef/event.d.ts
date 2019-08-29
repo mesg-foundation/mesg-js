@@ -11,10 +11,10 @@ declare namespace mesg {
         interface IEvent {
 
             /** Event hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** Event instanceHash */
-            instanceHash?: (string|null);
+            instanceHash?: (Uint8Array|null);
 
             /** Event key */
             key?: (string|null);
@@ -33,10 +33,10 @@ declare namespace mesg {
             constructor(properties?: types.IEvent);
 
             /** Event hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** Event instanceHash. */
-            public instanceHash: string;
+            public instanceHash: Uint8Array;
 
             /** Event key. */
             public key: string;
@@ -238,10 +238,10 @@ declare namespace mesg {
             interface IFilter {
 
                 /** Filter hash */
-                hash?: (string|null);
+                hash?: (Uint8Array|null);
 
                 /** Filter instanceHash */
-                instanceHash?: (string|null);
+                instanceHash?: (Uint8Array|null);
 
                 /** Filter key */
                 key?: (string|null);
@@ -257,10 +257,10 @@ declare namespace mesg {
                 constructor(properties?: api.StreamEventRequest.IFilter);
 
                 /** Filter hash. */
-                public hash: string;
+                public hash: Uint8Array;
 
                 /** Filter instanceHash. */
-                public instanceHash: string;
+                public instanceHash: Uint8Array;
 
                 /** Filter key. */
                 public key: string;
@@ -271,7 +271,7 @@ declare namespace mesg {
         interface ICreateEventRequest {
 
             /** CreateEventRequest instanceHash */
-            instanceHash?: (string|null);
+            instanceHash?: (Uint8Array|null);
 
             /** CreateEventRequest key */
             key?: (string|null);
@@ -290,7 +290,7 @@ declare namespace mesg {
             constructor(properties?: api.ICreateEventRequest);
 
             /** CreateEventRequest instanceHash. */
-            public instanceHash: string;
+            public instanceHash: Uint8Array;
 
             /** CreateEventRequest key. */
             public key: string;
@@ -303,7 +303,7 @@ declare namespace mesg {
         interface ICreateEventResponse {
 
             /** CreateEventResponse hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a CreateEventResponse. */
@@ -316,7 +316,7 @@ declare namespace mesg {
             constructor(properties?: api.ICreateEventResponse);
 
             /** CreateEventResponse hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
     }
 }
