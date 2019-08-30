@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package types;
+option go_package = "github.com/mesg-foundation/engine/protobuf/types";
+
+// A process is a configuration to trigger a specific task when certains conditions of a trigger are valid.
+message Process {
+  // Node of the process
+  message Node {
+    message Result {
+      string key = 1;           // Key that identifies the node.
+      bytes instanceHash = 2;  // Hash of the instance that triggers the process.
+      string taskKey = 3;       // Key of the task that triggers the process.
+    }
+
+    message Event {
+      string key = 1;           // Key that identifies the node.
+      bytes instanceHash = 2;  // Hash of the instance that triggers the process.
+      string eventKey = 3;      // Key of the event that triggers the process.
+    }
+
+    message Task {
+      string key = 1;           // Key that identifies the node.
+      bytes instanceHash = 2;  // Hash of the instance to execute.
+      string taskKey = 3;       // Task of the instance to execute.
+    }
+
+    message Map {
+      message Output {
+        message Reference {
+          string nodeKey = 1; // Key of the node in the graph. If empty, will be using the src of the edge.
+          string key = 2;     // Key of a specific parameter of the referenced node's output data.
+        }
+
+        string key = 1;       // Key of the output.
+        oneof value {
+          Reference ref = 2;  // Input defined as reference.
+        }
+      }
+      string key = 1;               // Key of the mapping.
+      repeated Output outputs = 2;  // Outputs of the mapping.
+    }
+    message Filter {
+      message Condition {
+        // Type of condition available to compare the values.
+        enum Predicate {
+          Unknown = 0;  // Predicate not defined.
+          EQ = 1;       // Equal
+        }
+
+        string key = 1;           // Key to check.
+        Predicate predicate = 2;  // Type of condition to apply.
+        string value = 3;         // Value of the filter. 
+      }
+      string key = 1;                     // Key for the filter
+      repeated Condition conditions = 2;  // List of condition to apply for this filter
+    }
+
+    oneof type {
+      Result result = 1;  // Result is a trigger that listens for a specific result.
+      Event event = 2;    // Event is a trigger that listens for a specific event.
+      Task task = 3;      // Task is a command to execute a specific task.
+      Map map = 4;        // Map is a set of instructions to convert data.
+      Filter filter = 5;  // Filter is a list of condition to apply on data.
+    }
+  }
+
+  message Edge {
+    string src = 1;   // Source of the edge.
+    string dst = 2;   // Destination of the edge.
+  }
+
+  bytes hash = 1;          // Process's hash
+  string key = 2;           // Process's key
+  repeated Node nodes = 4;  // Nodes with information related to the execution to trigger.
+  repeated Edge edges = 5;  // Edges to create the link between the nodes.
+}

@@ -46,10 +46,10 @@ export default (endpoint: string): API => ({
     list() { return Promise.resolve({ services: [] }) },
     delete() { return Promise.resolve({}) },
   },
-  workflow: {
+  process: {
     create() { return Promise.resolve({ hash }) },
     get() { return Promise.resolve({ }) },
-    list() { return Promise.resolve({ workflows: [] }) },
+    list() { return Promise.resolve({ processes: [] }) },
     delete() { return Promise.resolve({}) },
   },
   core: {

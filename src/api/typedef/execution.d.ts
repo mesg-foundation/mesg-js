@@ -49,8 +49,8 @@ declare namespace mesg {
             /** Execution tags */
             tags?: (string[]|null);
 
-            /** Execution workflowHash */
-            workflowHash?: (Uint8Array|null);
+            /** Execution processHash */
+            processHash?: (Uint8Array|null);
 
             /** Execution stepID */
             stepID?: (string|null);
@@ -95,8 +95,8 @@ declare namespace mesg {
             /** Execution tags. */
             public tags: string[];
 
-            /** Execution workflowHash. */
-            public workflowHash: Uint8Array;
+            /** Execution processHash. */
+            public processHash: Uint8Array;
 
             /** Execution stepID. */
             public stepID: string;

@@ -3,7 +3,7 @@ import * as EventType from './typedef/event'
 import * as ExecutionType from './typedef/execution'
 import * as InstanceType from './typedef/instance'
 import * as ServiceType from './typedef/service'
-import * as WorkflowType from './typedef/workflow'
+import * as ProcessType from './typedef/process'
 
 export type hash = Uint8Array
 
@@ -23,7 +23,7 @@ export type Instance = InstanceType.types.IInstance
 
 export type Service = ServiceType.types.IService
 
-export type Workflow = WorkflowType.types.IWorkflow
+export type Process = ProcessType.types.IProcess
 
 export type EventCreateInputs = EventType.api.ICreateEventRequest
 export type EventCreateOutputs = Promise<EventType.api.ICreateEventResponse>
@@ -67,17 +67,17 @@ export type ServiceCreateOutputs = Promise<ServiceType.api.ICreateServiceRespons
 export type ServiceDeleteInputs = ServiceType.api.IDeleteServiceRequest
 export type ServiceDeleteOutputs = Promise<ServiceType.api.IDeleteServiceResponse>
 
-export type WorkflowGetInputs = WorkflowType.api.IGetWorkflowRequest
-export type WorkflowGetOutputs = Promise<Workflow>
+export type ProcessGetInputs = ProcessType.api.IGetProcessRequest
+export type ProcessGetOutputs = Promise<Process>
 
-export type WorkflowListInputs = WorkflowType.api.IListWorkflowRequest
-export type WorkflowListOutputs = Promise<WorkflowType.api.IListWorkflowResponse>
+export type ProcessListInputs = ProcessType.api.IListProcessRequest
+export type ProcessListOutputs = Promise<ProcessType.api.IListProcessResponse>
 
-export type WorkflowCreateInputs = WorkflowType.api.ICreateWorkflowRequest
-export type WorkflowCreateOutputs = Promise<WorkflowType.api.ICreateWorkflowResponse>
+export type ProcessCreateInputs = ProcessType.api.ICreateProcessRequest
+export type ProcessCreateOutputs = Promise<ProcessType.api.ICreateProcessResponse>
 
-export type WorkflowDeleteInputs = WorkflowType.api.IDeleteWorkflowRequest
-export type WorkflowDeleteOutputs = Promise<WorkflowType.api.IDeleteWorkflowResponse>
+export type ProcessDeleteInputs = ProcessType.api.IDeleteProcessRequest
+export type ProcessDeleteOutputs = Promise<ProcessType.api.IDeleteProcessResponse>
 
 export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
 
@@ -104,11 +104,11 @@ export type API = {
     create: (request: ServiceCreateInputs) => ServiceCreateOutputs
     delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
   },
-  workflow: {
-    get: (request: WorkflowGetInputs) => WorkflowGetOutputs
-    list: (request: WorkflowListInputs) => WorkflowListOutputs
-    create: (request: WorkflowCreateInputs) => WorkflowCreateOutputs
-    delete: (request: WorkflowDeleteInputs) => WorkflowDeleteOutputs
+  process: {
+    get: (request: ProcessGetInputs) => ProcessGetOutputs
+    list: (request: ProcessListInputs) => ProcessListOutputs
+    create: (request: ProcessCreateInputs) => ProcessCreateOutputs
+    delete: (request: ProcessDeleteInputs) => ProcessDeleteOutputs
   },
   core: {
     info: () => InfoOutputs
