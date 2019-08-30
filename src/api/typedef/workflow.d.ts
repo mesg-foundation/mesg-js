@@ -11,7 +11,7 @@ declare namespace mesg {
         interface IWorkflow {
 
             /** Workflow hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** Workflow key */
             key?: (string|null);
@@ -36,7 +36,7 @@ declare namespace mesg {
             constructor(properties?: types.IWorkflow);
 
             /** Workflow hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** Workflow key. */
             public key: string;
@@ -57,7 +57,7 @@ declare namespace mesg {
             interface ITrigger {
 
                 /** Trigger instanceHash */
-                instanceHash?: (string|null);
+                instanceHash?: (Uint8Array|null);
 
                 /** Trigger taskKey */
                 taskKey?: (string|null);
@@ -82,7 +82,7 @@ declare namespace mesg {
                 constructor(properties?: types.Workflow.ITrigger);
 
                 /** Trigger instanceHash. */
-                public instanceHash: string;
+                public instanceHash: Uint8Array;
 
                 /** Trigger taskKey. */
                 public taskKey: string;
@@ -151,7 +151,7 @@ declare namespace mesg {
                 key?: (string|null);
 
                 /** Node instanceHash */
-                instanceHash?: (string|null);
+                instanceHash?: (Uint8Array|null);
 
                 /** Node taskKey */
                 taskKey?: (string|null);
@@ -170,7 +170,7 @@ declare namespace mesg {
                 public key: string;
 
                 /** Node instanceHash. */
-                public instanceHash: string;
+                public instanceHash: Uint8Array;
 
                 /** Node taskKey. */
                 public taskKey: string;
@@ -184,6 +184,9 @@ declare namespace mesg {
 
                 /** Edge dst */
                 dst?: (string|null);
+
+                /** Edge inputs */
+                inputs?: (types.Workflow.Edge.IInput[]|null);
             }
 
             /** Represents an Edge. */
@@ -200,6 +203,70 @@ declare namespace mesg {
 
                 /** Edge dst. */
                 public dst: string;
+
+                /** Edge inputs. */
+                public inputs: types.Workflow.Edge.IInput[];
+            }
+
+            namespace Edge {
+
+                /** Properties of an Input. */
+                interface IInput {
+
+                    /** Input key */
+                    key?: (string|null);
+
+                    /** Input ref */
+                    ref?: (types.Workflow.Edge.Input.IReference|null);
+                }
+
+                /** Represents an Input. */
+                class Input implements IInput {
+
+                    /**
+                     * Constructs a new Input.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: types.Workflow.Edge.IInput);
+
+                    /** Input key. */
+                    public key: string;
+
+                    /** Input ref. */
+                    public ref?: (types.Workflow.Edge.Input.IReference|null);
+
+                    /** Input value. */
+                    public value?: "ref";
+                }
+
+                namespace Input {
+
+                    /** Properties of a Reference. */
+                    interface IReference {
+
+                        /** Reference nodeKey */
+                        nodeKey?: (string|null);
+
+                        /** Reference key */
+                        key?: (string|null);
+                    }
+
+                    /** Represents a Reference. */
+                    class Reference implements IReference {
+
+                        /**
+                         * Constructs a new Reference.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: types.Workflow.Edge.Input.IReference);
+
+                        /** Reference nodeKey. */
+                        public nodeKey: string;
+
+                        /** Reference key. */
+                        public key: string;
+                    }
+                }
             }
         }
     }
@@ -348,7 +415,7 @@ declare namespace mesg {
         interface ICreateWorkflowResponse {
 
             /** CreateWorkflowResponse hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a CreateWorkflowResponse. */
@@ -361,14 +428,14 @@ declare namespace mesg {
             constructor(properties?: api.ICreateWorkflowResponse);
 
             /** CreateWorkflowResponse hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a DeleteWorkflowRequest. */
         interface IDeleteWorkflowRequest {
 
             /** DeleteWorkflowRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a DeleteWorkflowRequest. */
@@ -381,7 +448,7 @@ declare namespace mesg {
             constructor(properties?: api.IDeleteWorkflowRequest);
 
             /** DeleteWorkflowRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a DeleteWorkflowResponse. */
@@ -402,7 +469,7 @@ declare namespace mesg {
         interface IGetWorkflowRequest {
 
             /** GetWorkflowRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a GetWorkflowRequest. */
@@ -415,7 +482,7 @@ declare namespace mesg {
             constructor(properties?: api.IGetWorkflowRequest);
 
             /** GetWorkflowRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a ListWorkflowRequest. */

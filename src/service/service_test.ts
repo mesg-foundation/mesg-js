@@ -4,7 +4,7 @@ import Service from './service'
 import Api, { API } from '../api/mock'
 import { encode } from '../util/encoder';
 
-const token = "token"
+const token = Buffer.from("token")
 
 function newService({
   definition = {},

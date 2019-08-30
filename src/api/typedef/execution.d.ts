@@ -20,19 +20,19 @@ declare namespace mesg {
         interface IExecution {
 
             /** Execution hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** Execution parentHash */
-            parentHash?: (string|null);
+            parentHash?: (Uint8Array|null);
 
             /** Execution eventHash */
-            eventHash?: (string|null);
+            eventHash?: (Uint8Array|null);
 
             /** Execution status */
             status?: (types.Status|null);
 
             /** Execution instanceHash */
-            instanceHash?: (string|null);
+            instanceHash?: (Uint8Array|null);
 
             /** Execution taskKey */
             taskKey?: (string|null);
@@ -50,7 +50,7 @@ declare namespace mesg {
             tags?: (string[]|null);
 
             /** Execution workflowHash */
-            workflowHash?: (string|null);
+            workflowHash?: (Uint8Array|null);
 
             /** Execution stepID */
             stepID?: (string|null);
@@ -66,19 +66,19 @@ declare namespace mesg {
             constructor(properties?: types.IExecution);
 
             /** Execution hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** Execution parentHash. */
-            public parentHash: string;
+            public parentHash: Uint8Array;
 
             /** Execution eventHash. */
-            public eventHash: string;
+            public eventHash: Uint8Array;
 
             /** Execution status. */
             public status: types.Status;
 
             /** Execution instanceHash. */
-            public instanceHash: string;
+            public instanceHash: Uint8Array;
 
             /** Execution taskKey. */
             public taskKey: string;
@@ -96,7 +96,7 @@ declare namespace mesg {
             public tags: string[];
 
             /** Execution workflowHash. */
-            public workflowHash: string;
+            public workflowHash: Uint8Array;
 
             /** Execution stepID. */
             public stepID: string;
@@ -315,7 +315,7 @@ declare namespace mesg {
         interface ICreateExecutionRequest {
 
             /** CreateExecutionRequest instanceHash */
-            instanceHash?: (string|null);
+            instanceHash?: (Uint8Array|null);
 
             /** CreateExecutionRequest taskKey */
             taskKey?: (string|null);
@@ -337,7 +337,7 @@ declare namespace mesg {
             constructor(properties?: api.ICreateExecutionRequest);
 
             /** CreateExecutionRequest instanceHash. */
-            public instanceHash: string;
+            public instanceHash: Uint8Array;
 
             /** CreateExecutionRequest taskKey. */
             public taskKey: string;
@@ -353,7 +353,7 @@ declare namespace mesg {
         interface ICreateExecutionResponse {
 
             /** CreateExecutionResponse hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a CreateExecutionResponse. */
@@ -366,14 +366,14 @@ declare namespace mesg {
             constructor(properties?: api.ICreateExecutionResponse);
 
             /** CreateExecutionResponse hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a GetExecutionRequest. */
         interface IGetExecutionRequest {
 
             /** GetExecutionRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
         }
 
         /** Represents a GetExecutionRequest. */
@@ -386,7 +386,7 @@ declare namespace mesg {
             constructor(properties?: api.IGetExecutionRequest);
 
             /** GetExecutionRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
         }
 
         /** Properties of a StreamExecutionRequest. */
@@ -418,7 +418,7 @@ declare namespace mesg {
                 statuses?: (types.Status[]|null);
 
                 /** Filter instanceHash */
-                instanceHash?: (string|null);
+                instanceHash?: (Uint8Array|null);
 
                 /** Filter taskKey */
                 taskKey?: (string|null);
@@ -440,7 +440,7 @@ declare namespace mesg {
                 public statuses: types.Status[];
 
                 /** Filter instanceHash. */
-                public instanceHash: string;
+                public instanceHash: Uint8Array;
 
                 /** Filter taskKey. */
                 public taskKey: string;
@@ -454,7 +454,7 @@ declare namespace mesg {
         interface IUpdateExecutionRequest {
 
             /** UpdateExecutionRequest hash */
-            hash?: (string|null);
+            hash?: (Uint8Array|null);
 
             /** UpdateExecutionRequest outputs */
             outputs?: (google.protobuf.IStruct|null);
@@ -473,7 +473,7 @@ declare namespace mesg {
             constructor(properties?: api.IUpdateExecutionRequest);
 
             /** UpdateExecutionRequest hash. */
-            public hash: string;
+            public hash: Uint8Array;
 
             /** UpdateExecutionRequest outputs. */
             public outputs?: (google.protobuf.IStruct|null);

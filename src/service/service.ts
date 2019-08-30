@@ -1,8 +1,8 @@
-import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs, Execution } from '../api';
+import { API, ExecutionStatus, ExecutionStreamOutputs, EventCreateOutputs, Execution, hash } from '../api';
 import { decode, encode } from '../util/encoder'
 
 type Options = {
-  token: string
+  token: hash
   definition: any
   API: API
 }
@@ -11,7 +11,7 @@ class Service {
   // api gives access to low level gRPC calls.
   private API: API
 
-  private token: string
+  private token: hash
   private definition: any
   private tasks: Tasks
 
