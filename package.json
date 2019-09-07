@@ -4,10 +4,10 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "build": "rimraf ./lib && tsc && ncp ./src/protobuf/ ./lib/protobuf/ && ncp src/api/typedef lib/api/typedef",
+    "build": "rimraf ./lib && tsc && ncp ./src/protobuf/ ./lib/protobuf/ && ncp ./src/gogo/ ./lib/gogo/ && ncp src/api/typedef lib/api/typedef",
     "prepublishOnly": "npm run test && npm run build",
     "test": "ts-node ./node_modules/tape/bin/tape 'src/**/*_test.ts'",
-    "coverage": "rimraf ./istanbul && tsc --project tsconfig-istanbul.json && ncp ./src/protobuf/ ./istanbul/protobuf && istanbul cover -x 'istanbul/**/*_test.js' --report html ./node_modules/.bin/tape 'istanbul/**/*_test.js'",
+    "coverage": "rimraf ./istanbul && tsc --project tsconfig-istanbul.json && ncp ./src/protobuf/ ./istanbul/protobuf && ncp ./src/gogo/ ./istanbul/gogo/ && istanbul cover -x 'istanbul/**/*_test.js' --report html ./node_modules/.bin/tape 'istanbul/**/*_test.js'",
     "dev": "nodemon -e ts src --exec 'npm run test'",
     "ts-node": "ts-node"
   },
