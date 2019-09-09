@@ -16,11 +16,11 @@ This library can be used from an Application or a Service.
   - [Task](#task)
   - [Event](#event)
 - [Application](#application)
+  - [Resolve SID](#resolve-sid)
   - [Listen events](#listen-events)
   - [Listen results](#listen-results)
   - [Execute task](#execute-task)
   - [Execute task and wait result](#execute-task-and-wait-result)
-  - [Resolve SID](#resolve-sid)
 - [Community](#community)
 - [Contribute](#contribute)
 
@@ -89,14 +89,29 @@ const mesg = application()
 
 By default, the library connects to the MESG Engine from the endpoint `localhost:50052`.
 
+## Resolve SID
+
+Instead of hard-coding `instanceHash` in your application's env, your application can resolve dynamically using the service's SID.
+
+```javascript
+const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
+
+const result = await mesg.executeTaskAndWaitResult({
+  instanceHash,
+  .....
+})
+```
+
 ## Listen events
 
 Listen events from a service.
 
 ```javascript
+const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
+
 mesg.listenEvent({
   filter: {
-    instanceHash: 'EVENT_INSTANCE_HASH',
+    instanceHash: instanceHash,
     key: 'EVENT_KEY' // optional
   }
 })
@@ -110,9 +125,11 @@ mesg.listenEvent({
 Listen results from a service.
 
 ```javascript
+const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
+
 mesg.listenResult({
   filter: {
-    instanceHash: 'RESULT_INSTANCE_HASH',
+    instanceHash: instanceHash,
     taskKey: 'TASK_KEY_FILTER', // optional
     tags: ['TAG_FILTER'] // optional
   }
@@ -131,8 +148,10 @@ mesg.listenResult({
 Execute task on a service.
 
 ```javascript
+const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
+
 const execution = await mesg.executeTask({
-  instanceHash: 'TASK_INSTANCE_HASH',
+  instanceHash: instanceHash,
   taskKey: 'TASK_KEY',
   inputs: mesg.encodeData({ key: 'INPUT_DATA' }),
   tags: ['ASSOCIATE_TAG'] // optional
@@ -146,8 +165,10 @@ Execute task on a service and wait for its result.
 This can be considered as a shortcut for using both `executeTask()` and `listenResult()` at same time.
 
 ```javascript
+const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
+
 const result = await mesg.executeTaskAndWaitResult({
-  instanceHash: 'TASK_INSTANCE_HASH',
+  instanceHash: instanceHash,
   taskKey: 'TASK_KEY',
   inputs: mesg.encodeData({ key: 'INPUT_DATA' }),
   tags: ['ASSOCIATE_TAG'] // optional
@@ -157,19 +178,6 @@ if (result.error) {
   throw new Error(result.error)
 }
 console.log('a result received:', mesg.decodeData(result.outputs))
-```
-
-## Resolve SID
-
-Instead of hard-coding `instanceHash` in your application's env, your application can resolve dynamically using the service's SID.
-
-```javascript
-const instanceHash = await mesg.resolve('SID_OF_THE_SERVICE')
-
-const result = await mesg.executeTaskAndWaitResult({
-  instanceHash,
-  .....
-})
 ```
 
 # Community
