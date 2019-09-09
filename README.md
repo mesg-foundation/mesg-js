@@ -12,15 +12,15 @@ This library can be used from an Application or a Service.
 # Contents
 
 - [Installation](#installation)
+- [Service](#service)
+  - [Task](#task)
+  - [Event](#event)
 - [Application](#application)
   - [Listen events](#listen-events)
   - [Listen results](#listen-results)
   - [Execute task](#execute-task)
   - [Execute task and wait result](#execute-task-and-wait-result)
   - [Resolve SID](#resolve-sid)
-- [Service](#service)
-  - [Task](#task)
-  - [Event](#event)
 - [Community](#community)
 - [Contribute](#contribute)
 
@@ -28,6 +28,51 @@ This library can be used from an Application or a Service.
 
 ```bash
 npm i mesg-js
+```
+
+# Service
+
+Require mesg-js as a service:
+
+```javascript
+const { service } = require('mesg-js')
+
+const mesg = service()
+```
+
+## Task
+
+The service have to call `mesg.listenTask` to start listening for task to execute by passing an object containing the tasks' key and function.
+
+```javascript
+mesg.listenTask({
+  'TASK_1_KEY': (inputs) => {
+    // Function of the task 1
+    // Can directly throw error
+    if (inputs.foo === undefined) {
+      throw new Error('foo is undefined')
+    }
+    // Return an object
+    return { foo: inputs.a + 'bar' }
+  }, 
+  'TASK_2_KEY': async (inputs) => {
+    // Function of the task 2
+    // Return an Promise containing an object
+    const response = await fetch('...')
+    return response.json()
+  },
+})
+```
+
+The task functions accept `inputs` as parameter and returns the `outputs` as object or Promise of object.
+The task function can throw an Error in case of error. The lib will catch it and send it to the MESG Engine.
+
+## Event
+
+To emit an event, the service should call the `mesg.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
+
+```javascript
+mesg.emitEvent('EVENT_KEY', { foo: 'bar' })
 ```
 
 # Application
@@ -125,51 +170,6 @@ const result = await mesg.executeTaskAndWaitResult({
   instanceHash,
   .....
 })
-```
-
-# Service
-
-Require mesg-js as a service:
-
-```javascript
-const { service } = require('mesg-js')
-
-const mesg = service()
-```
-
-## Task
-
-The service have to call `mesg.listenTask` to start listening for task to execute by passing an object containing the tasks' key and function.
-
-```javascript
-mesg.listenTask({
-  'TASK_1_KEY': (inputs) => {
-    // Function of the task 1
-    // Can directly throw error
-    if (inputs.foo === undefined) {
-      throw new Error('foo is undefined')
-    }
-    // Return an object
-    return { foo: inputs.a + 'bar' }
-  }, 
-  'TASK_2_KEY': async (inputs) => {
-    // Function of the task 2
-    // Return an Promise containing an object
-    const response = await fetch('...')
-    return response.json()
-  },
-})
-```
-
-The task functions accept `inputs` as parameter and returns the `outputs` as object or Promise of object.
-The task function can throw an Error in case of error. The lib will catch it and send it to the MESG Engine.
-
-## Event
-
-To emit an event, the service should call the `mesg.emitEvent` function with the event's key and event's data as parameters. This function returns a `Promise`.
-
-```javascript
-mesg.emitEvent('EVENT_KEY', { foo: 'bar' })
 ```
 
 # Community
