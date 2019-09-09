@@ -12,7 +12,7 @@
 
 #### Added
 
-- [#125](https://github.com/mesg-foundation/mesg-js/pull/125) Add process API.
+- [#121](https://github.com/mesg-foundation/mesg-js/pull/121) Add process API. [#125](https://github.com/mesg-foundation/mesg-js/pull/125).
 - [#126](https://github.com/mesg-foundation/mesg-js/pull/126) Update API with gogo proto [#127](https://github.com/mesg-foundation/mesg-js/pull/127).
 
 #### Changed
