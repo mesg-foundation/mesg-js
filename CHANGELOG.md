@@ -10,14 +10,14 @@
 
 ## [v4.3.0](https://github.com/mesg-foundation/mesg-js/compare/v4.3.0)
 
+#### Breaking Changes
+
+- [#124](https://github.com/mesg-foundation/mesg-js/pull/124) Switch from string to byte for hashes. You can use the function `decode` from [`lib/util/base58`](https://github.com/mesg-foundation/mesg-js/blob/v4.3.0/src/util/base58.ts) to convert the hashes from string.
+
 #### Added
 
 - [#121](https://github.com/mesg-foundation/mesg-js/pull/121) Add process API. [#125](https://github.com/mesg-foundation/mesg-js/pull/125).
 - [#126](https://github.com/mesg-foundation/mesg-js/pull/126) Update API with gogo proto [#127](https://github.com/mesg-foundation/mesg-js/pull/127).
-
-#### Changed
-
-- [#124](https://github.com/mesg-foundation/mesg-js/pull/124) Switch from string to byte for hashes.
 
 ## [v4.2.1](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.2.1)
 
