@@ -12,12 +12,12 @@
 
 #### Added
 
-- [#125](https://github.com/mesg-foundation/mesg-js/pull/125) Add process API
-- [#126](https://github.com/mesg-foundation/mesg-js/pull/126) Update API with gogo proto [#127](https://github.com/mesg-foundation/mesg-js/pull/127)
+- [#125](https://github.com/mesg-foundation/mesg-js/pull/125) Add process API.
+- [#126](https://github.com/mesg-foundation/mesg-js/pull/126) Update API with gogo proto [#127](https://github.com/mesg-foundation/mesg-js/pull/127).
 
 #### Changed
 
-- [#124](https://github.com/mesg-foundation/mesg-js/pull/124) Switch from string to byte for hashes
+- [#124](https://github.com/mesg-foundation/mesg-js/pull/124) Switch from string to byte for hashes.
 
 ## [v4.2.1](https://github.com/mesg-foundation/mesg-js/releases/tag/v4.2.1)
 
