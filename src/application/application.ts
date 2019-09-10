@@ -1,5 +1,5 @@
 import * as uuidv4 from 'uuid/v4'
-import { google } from "../api/typedef/execution";
+import { mesg } from "../api/typedef/execution";
 import { decode, encode } from '../util/encoder'
 import { checkStreamReady, errNoStatus, Stream } from '../util/grpc';
 import { API, ExecutionCreateInputs, ExecutionCreateOutputs, EventStreamInputs, Event, ExecutionStreamInputs, Execution, ExecutionStatus, hash } from '../api';
@@ -17,7 +17,7 @@ class Application {
     this.api = api;
   }
 
-  decodeData(data: google.protobuf.IStruct) {
+  decodeData(data: mesg.protobuf.IStruct) {
     return decode(data)
   }
 
