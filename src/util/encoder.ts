@@ -1,7 +1,6 @@
 import { mesg } from "../api/typedef/execution";
 
-const encodeField = (data, key) => {
-  const value = data[key]
+export const encodeField = (value) => {
   switch (Object.prototype.toString.call(value)) {
     case '[object Null]':
     case '[object Undefined]':
@@ -12,7 +11,7 @@ const encodeField = (data, key) => {
       }}
     case '[object Array]':
       return { listValue: {
-        values: value.map((_, i) => encodeField(value, i))
+        values: value.map((_, i) => encodeField(value[i]))
       }}
     case '[object Number]':
       return { numberValue: value }
@@ -31,7 +30,7 @@ const encodeField = (data, key) => {
 
 const encodeFields = data => Object.keys(data || {}).reduce((prev, next) => ({
   ...prev,
-  [next]: encodeField(data, next)
+  [next]: encodeField(data[next])
 }), {})
 
 export const encode = (data: { [key: string]: any }): mesg.protobuf.IStruct => {
@@ -40,7 +39,7 @@ export const encode = (data: { [key: string]: any }): mesg.protobuf.IStruct => {
   }
 }
 
-const decodeField = (field: mesg.protobuf.IValue) => {
+export const decodeField = (field: mesg.protobuf.IValue) => {
   const kind = ['list', 'struct', 'string', 'number', 'bool']
     .find(x => field[`${x}Value`] !== undefined) || 'null'
   const value = field[`${kind}Value`]
