@@ -8,6 +8,12 @@
 #### Fixed
 #### Removed
 
+## [v4.3.1](https://github.com/mesg-foundation/mesg-js/compare/v4.3.1)
+
+#### Changed
+
+- ([#130](https://github.com/mesg-foundation/mesg-js/pull/130)) Use MESG struct instead of proto.
+
 ## [v4.3.0](https://github.com/mesg-foundation/mesg-js/compare/v4.3.0)
 
 #### Breaking Changes
