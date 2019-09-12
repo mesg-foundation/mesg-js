@@ -1,6 +1,7 @@
 import { createClient } from '../util/grpc'
 import {
   API,
+  AccountCreateInputs, AccountGetInputs, AccountListInputs, AccountDeleteInputs, AccountCreateOutputs, AccountGetOutputs, AccountListOutputs, AccountDeleteOutputs,
   EventCreateInputs, EventCreateOutputs, EventStreamInputs,
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
@@ -12,6 +13,7 @@ import {
 const promisify = (client, method) => request => new Promise((resolve, reject) => client[method](request, (err, res) => err ? reject(err) : resolve(res)))
 
 export default (endpoint: string): API => {
+  const account = createClient('Account', 'protobuf/api/account.proto', endpoint)
   const event = createClient('Event', 'protobuf/api/event.proto', endpoint)
   const execution = createClient('Execution', 'protobuf/api/execution.proto', endpoint)
   const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
@@ -19,6 +21,12 @@ export default (endpoint: string): API => {
   const process = createClient('Process', 'protobuf/api/process.proto', endpoint)
   const core = createClient('Core', 'protobuf/api/core.proto', endpoint)
   return {
+    account: {
+      get: promisify(account, 'Get') as (request: AccountGetInputs) => AccountGetOutputs,
+      list: promisify(account, 'List') as (request: AccountListInputs) => AccountListOutputs,
+      create: promisify(account, 'Create') as (request: AccountCreateInputs) => AccountCreateOutputs,
+      delete: promisify(account, 'Delete') as (request: AccountDeleteInputs) => AccountDeleteOutputs
+    },
     event: {
       create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
       stream: (request: EventStreamInputs) => event.Stream(request)

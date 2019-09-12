@@ -1,4 +1,5 @@
 import { Stream } from '../util/grpc'
+import * as AccountType from './typedef/account'
 import * as EventType from './typedef/event'
 import * as ExecutionType from './typedef/execution'
 import * as InstanceType from './typedef/instance'
@@ -15,6 +16,9 @@ export const ExecutionStatus = {
   FAILED: 4
 }
 
+
+export type Account = AccountType.types.IAccount
+
 export type Event = EventType.types.IEvent
 
 export type Execution = ExecutionType.types.IExecution
@@ -24,6 +28,18 @@ export type Instance = InstanceType.types.IInstance
 export type Service = ServiceType.types.IService
 
 export type Process = ProcessType.types.IProcess
+
+export type AccountGetInputs = AccountType.api.IGetAccountRequest
+export type AccountGetOutputs = Promise<Account>
+
+export type AccountListInputs = AccountType.api.IListAccountRequest
+export type AccountListOutputs = Promise<AccountType.api.ListAccountResponse>
+
+export type AccountCreateInputs = AccountType.api.ICreateAccountRequest
+export type AccountCreateOutputs = Promise<AccountType.api.ICreateAccountResponse>
+
+export type AccountDeleteInputs = AccountType.api.IDeleteAccountRequest
+export type AccountDeleteOutputs = Promise<AccountType.api.IDeleteAccountResponse>
 
 export type EventCreateInputs = EventType.api.ICreateEventRequest
 export type EventCreateOutputs = Promise<EventType.api.ICreateEventResponse>
@@ -82,6 +98,12 @@ export type ProcessDeleteOutputs = Promise<ProcessType.api.IDeleteProcessRespons
 export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
 
 export type API = {
+  account: {
+    get: (request: AccountGetInputs) => AccountGetOutputs
+    list: (request: AccountListInputs) => AccountListOutputs
+    create: (request: AccountCreateInputs) => AccountCreateOutputs
+    delete: (request: AccountDeleteInputs) => AccountDeleteOutputs
+  },
   event: {
     create: (request: EventCreateInputs) => EventCreateOutputs
     stream: (request: EventStreamInputs) => EventStreamOutputs
