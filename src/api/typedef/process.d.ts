@@ -228,6 +228,9 @@ declare namespace mesg {
 
                         /** Output ref */
                         ref?: (types.Process.Node.Map.Output.IReference|null);
+
+                        /** Output constant */
+                        constant?: (mesg.protobuf.IValue|null);
                     }
 
                     /** Represents an Output. */
@@ -245,8 +248,11 @@ declare namespace mesg {
                         /** Output ref. */
                         public ref?: (types.Process.Node.Map.Output.IReference|null);
 
+                        /** Output constant. */
+                        public constant?: (mesg.protobuf.IValue|null);
+
                         /** Output value. */
-                        public value?: "ref";
+                        public value?: ("ref"|"constant");
                     }
 
                     namespace Output {
@@ -1697,6 +1703,112 @@ declare namespace mesg {
                     /** Annotation end. */
                     public end: number;
                 }
+            }
+        }
+    }
+
+    /** Namespace mesg. */
+    namespace mesg {
+
+        /** Namespace protobuf. */
+        namespace protobuf {
+
+            /** Properties of a Struct. */
+            interface IStruct {
+
+                /** Struct fields */
+                fields?: ({ [k: string]: mesg.protobuf.IValue }|null);
+            }
+
+            /** Represents a Struct. */
+            class Struct implements IStruct {
+
+                /**
+                 * Constructs a new Struct.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IStruct);
+
+                /** Struct fields. */
+                public fields: { [k: string]: mesg.protobuf.IValue };
+            }
+
+            /** Properties of a Value. */
+            interface IValue {
+
+                /** Value nullValue */
+                nullValue?: (mesg.protobuf.NullValue|null);
+
+                /** Value numberValue */
+                numberValue?: (number|null);
+
+                /** Value stringValue */
+                stringValue?: (string|null);
+
+                /** Value boolValue */
+                boolValue?: (boolean|null);
+
+                /** Value structValue */
+                structValue?: (mesg.protobuf.IStruct|null);
+
+                /** Value listValue */
+                listValue?: (mesg.protobuf.IListValue|null);
+            }
+
+            /** Represents a Value. */
+            class Value implements IValue {
+
+                /**
+                 * Constructs a new Value.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IValue);
+
+                /** Value nullValue. */
+                public nullValue: mesg.protobuf.NullValue;
+
+                /** Value numberValue. */
+                public numberValue: number;
+
+                /** Value stringValue. */
+                public stringValue: string;
+
+                /** Value boolValue. */
+                public boolValue: boolean;
+
+                /** Value structValue. */
+                public structValue?: (mesg.protobuf.IStruct|null);
+
+                /** Value listValue. */
+                public listValue?: (mesg.protobuf.IListValue|null);
+
+                /** Value kind. */
+                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
+            }
+
+            /** NullValue enum. */
+            enum NullValue {
+                NULL_VALUE = 0
+            }
+
+            /** Properties of a ListValue. */
+            interface IListValue {
+
+                /** ListValue values */
+                values?: (mesg.protobuf.IValue[]|null);
+            }
+
+            /** Represents a ListValue. */
+            class ListValue implements IListValue {
+
+                /**
+                 * Constructs a new ListValue.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IListValue);
+
+                /** ListValue values. */
+                public values: mesg.protobuf.IValue[];
             }
         }
     }
