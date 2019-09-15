@@ -15,69 +15,69 @@ export const ExecutionStatus = {
   FAILED: 4
 }
 
-export type Event = EventType.types.IEvent
+export type Event = EventType.mesg.types.IEvent
 
-export type Execution = ExecutionType.types.IExecution
+export type Execution = ExecutionType.mesg.types.IExecution
 
-export type Instance = InstanceType.types.IInstance
+export type Instance = InstanceType.mesg.types.IInstance
 
-export type Service = ServiceType.types.IService
+export type Service = ServiceType.mesg.types.IService
 
-export type Process = ProcessType.types.IProcess
+export type Process = ProcessType.mesg.types.IProcess
 
-export type EventCreateInputs = EventType.api.ICreateEventRequest
-export type EventCreateOutputs = Promise<EventType.api.ICreateEventResponse>
+export type EventCreateInputs = EventType.mesg.api.ICreateEventRequest
+export type EventCreateOutputs = Promise<EventType.mesg.api.ICreateEventResponse>
 
-export type EventStreamInputs = EventType.api.StreamEventRequest
+export type EventStreamInputs = EventType.mesg.api.StreamEventRequest
 export type EventStreamOutputs = Stream<Event>
 
-export type ExecutionGetInputs = ExecutionType.api.IGetExecutionRequest
+export type ExecutionGetInputs = ExecutionType.mesg.api.IGetExecutionRequest
 export type ExecutionGetOutputs = Promise<Execution>
 
-export type ExecutionStreamInputs = ExecutionType.api.IStreamExecutionRequest
+export type ExecutionStreamInputs = ExecutionType.mesg.api.IStreamExecutionRequest
 export type ExecutionStreamOutputs = Stream<Execution>
 
-export type ExecutionCreateInputs = ExecutionType.api.ICreateExecutionRequest
-export type ExecutionCreateOutputs = Promise<ExecutionType.api.ICreateExecutionResponse>
+export type ExecutionCreateInputs = ExecutionType.mesg.api.ICreateExecutionRequest
+export type ExecutionCreateOutputs = Promise<ExecutionType.mesg.api.ICreateExecutionResponse>
 
-export type ExecutionUpdateInputs = ExecutionType.api.IUpdateExecutionRequest
-export type ExecutionUpdateOutputs = Promise<ExecutionType.api.IUpdateExecutionResponse>
+export type ExecutionUpdateInputs = ExecutionType.mesg.api.IUpdateExecutionRequest
+export type ExecutionUpdateOutputs = Promise<ExecutionType.mesg.api.IUpdateExecutionResponse>
 
-export type InstanceGetInputs = InstanceType.api.IGetInstanceRequest
+export type InstanceGetInputs = InstanceType.mesg.api.IGetInstanceRequest
 export type InstanceGetOutputs = Promise<Instance>
 
-export type InstanceListInputs = InstanceType.api.IListInstancesRequest
-export type InstanceListOutputs = Promise<InstanceType.api.IListInstancesResponse>
+export type InstanceListInputs = InstanceType.mesg.api.IListInstancesRequest
+export type InstanceListOutputs = Promise<InstanceType.mesg.api.IListInstancesResponse>
 
-export type InstanceCreateInputs = InstanceType.api.ICreateInstanceRequest
-export type InstanceCreateOutputs = Promise<InstanceType.api.ICreateInstanceResponse>
+export type InstanceCreateInputs = InstanceType.mesg.api.ICreateInstanceRequest
+export type InstanceCreateOutputs = Promise<InstanceType.mesg.api.ICreateInstanceResponse>
 
-export type InstanceDeleteInputs = InstanceType.api.IDeleteInstanceRequest
-export type InstanceDeleteOutputs = Promise<InstanceType.api.IDeleteInstanceResponse>
+export type InstanceDeleteInputs = InstanceType.mesg.api.IDeleteInstanceRequest
+export type InstanceDeleteOutputs = Promise<InstanceType.mesg.api.IDeleteInstanceResponse>
 
-export type ServiceGetInputs = ServiceType.api.IGetServiceRequest
+export type ServiceGetInputs = ServiceType.mesg.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
 
-export type ServiceListInputs = ServiceType.api.IListServiceRequest
-export type ServiceListOutputs = Promise<ServiceType.api.IListServiceResponse>
+export type ServiceListInputs = ServiceType.mesg.api.IListServiceRequest
+export type ServiceListOutputs = Promise<ServiceType.mesg.api.IListServiceResponse>
 
-export type ServiceCreateInputs = ServiceType.api.ICreateServiceRequest
-export type ServiceCreateOutputs = Promise<ServiceType.api.ICreateServiceResponse>
+export type ServiceCreateInputs = ServiceType.mesg.api.ICreateServiceRequest
+export type ServiceCreateOutputs = Promise<ServiceType.mesg.api.ICreateServiceResponse>
 
-export type ServiceDeleteInputs = ServiceType.api.IDeleteServiceRequest
-export type ServiceDeleteOutputs = Promise<ServiceType.api.IDeleteServiceResponse>
+export type ServiceDeleteInputs = ServiceType.mesg.api.IDeleteServiceRequest
+export type ServiceDeleteOutputs = Promise<ServiceType.mesg.api.IDeleteServiceResponse>
 
-export type ProcessGetInputs = ProcessType.api.IGetProcessRequest
+export type ProcessGetInputs = ProcessType.mesg.api.IGetProcessRequest
 export type ProcessGetOutputs = Promise<Process>
 
-export type ProcessListInputs = ProcessType.api.IListProcessRequest
-export type ProcessListOutputs = Promise<ProcessType.api.IListProcessResponse>
+export type ProcessListInputs = ProcessType.mesg.api.IListProcessRequest
+export type ProcessListOutputs = Promise<ProcessType.mesg.api.IListProcessResponse>
 
-export type ProcessCreateInputs = ProcessType.api.ICreateProcessRequest
-export type ProcessCreateOutputs = Promise<ProcessType.api.ICreateProcessResponse>
+export type ProcessCreateInputs = ProcessType.mesg.api.ICreateProcessRequest
+export type ProcessCreateOutputs = Promise<ProcessType.mesg.api.ICreateProcessResponse>
 
-export type ProcessDeleteInputs = ProcessType.api.IDeleteProcessRequest
-export type ProcessDeleteOutputs = Promise<ProcessType.api.IDeleteProcessResponse>
+export type ProcessDeleteInputs = ProcessType.mesg.api.IDeleteProcessRequest
+export type ProcessDeleteOutputs = Promise<ProcessType.mesg.api.IDeleteProcessResponse>
 
 export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
 
