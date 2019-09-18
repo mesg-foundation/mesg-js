@@ -4,33 +4,286 @@ export = mesg;
 declare namespace mesg {
 
 
-    /** Namespace types. */
-    namespace types {
+    /** Namespace mesg. */
+    namespace mesg {
 
-        /** Properties of an Account. */
-        interface IAccount {
+        /** Namespace types. */
+        namespace types {
 
-            /** Account name */
-            name?: (string|null);
+            /** Properties of an Account. */
+            interface IAccount {
 
-            /** Account address */
-            address?: (string|null);
+                /** Account name */
+                name?: (string|null);
+
+                /** Account address */
+                address?: (string|null);
+            }
+
+            /** Represents an Account. */
+            class Account implements IAccount {
+
+                /**
+                 * Constructs a new Account.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.types.IAccount);
+
+                /** Account name. */
+                public name: string;
+
+                /** Account address. */
+                public address: string;
+            }
         }
 
-        /** Represents an Account. */
-        class Account implements IAccount {
+        /** Namespace api. */
+        namespace api {
 
-            /**
-             * Constructs a new Account.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: types.IAccount);
+            /** Represents an Account */
+            class Account extends $protobuf.rpc.Service {
 
-            /** Account name. */
-            public name: string;
+                /**
+                 * Constructs a new Account service.
+                 * @param rpcImpl RPC implementation
+                 * @param [requestDelimited=false] Whether requests are length-delimited
+                 * @param [responseDelimited=false] Whether responses are length-delimited
+                 */
+                constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
 
-            /** Account address. */
-            public address: string;
+                /**
+                 * Calls Get.
+                 * @param request GetAccountRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Account
+                 */
+                public get(request: mesg.api.IGetAccountRequest, callback: mesg.api.Account.GetCallback): void;
+
+                /**
+                 * Calls Get.
+                 * @param request GetAccountRequest message or plain object
+                 * @returns Promise
+                 */
+                public get(request: mesg.api.IGetAccountRequest): Promise<mesg.types.Account>;
+
+                /**
+                 * Calls List.
+                 * @param request ListAccountRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListAccountResponse
+                 */
+                public list(request: mesg.api.IListAccountRequest, callback: mesg.api.Account.ListCallback): void;
+
+                /**
+                 * Calls List.
+                 * @param request ListAccountRequest message or plain object
+                 * @returns Promise
+                 */
+                public list(request: mesg.api.IListAccountRequest): Promise<mesg.api.ListAccountResponse>;
+
+                /**
+                 * Calls Create.
+                 * @param request CreateAccountRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and CreateAccountResponse
+                 */
+                public create(request: mesg.api.ICreateAccountRequest, callback: mesg.api.Account.CreateCallback): void;
+
+                /**
+                 * Calls Create.
+                 * @param request CreateAccountRequest message or plain object
+                 * @returns Promise
+                 */
+                public create(request: mesg.api.ICreateAccountRequest): Promise<mesg.api.CreateAccountResponse>;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteAccountRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and DeleteAccountResponse
+                 */
+                public delete(request: mesg.api.IDeleteAccountRequest, callback: mesg.api.Account.DeleteCallback): void;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteAccountRequest message or plain object
+                 * @returns Promise
+                 */
+                public delete(request: mesg.api.IDeleteAccountRequest): Promise<mesg.api.DeleteAccountResponse>;
+            }
+
+            namespace Account {
+
+                /**
+                 * Callback as used by {@link mesg.api.Account#get}.
+                 * @param error Error, if any
+                 * @param [response] Account
+                 */
+                type GetCallback = (error: (Error|null), response?: mesg.types.Account) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Account#list}.
+                 * @param error Error, if any
+                 * @param [response] ListAccountResponse
+                 */
+                type ListCallback = (error: (Error|null), response?: mesg.api.ListAccountResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Account#create}.
+                 * @param error Error, if any
+                 * @param [response] CreateAccountResponse
+                 */
+                type CreateCallback = (error: (Error|null), response?: mesg.api.CreateAccountResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Account#delete_}.
+                 * @param error Error, if any
+                 * @param [response] DeleteAccountResponse
+                 */
+                type DeleteCallback = (error: (Error|null), response?: mesg.api.DeleteAccountResponse) => void;
+            }
+
+            /** Properties of a GetAccountRequest. */
+            interface IGetAccountRequest {
+
+                /** GetAccountRequest name */
+                name?: (string|null);
+            }
+
+            /** Represents a GetAccountRequest. */
+            class GetAccountRequest implements IGetAccountRequest {
+
+                /**
+                 * Constructs a new GetAccountRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IGetAccountRequest);
+
+                /** GetAccountRequest name. */
+                public name: string;
+            }
+
+            /** Properties of a ListAccountRequest. */
+            interface IListAccountRequest {
+            }
+
+            /** Represents a ListAccountRequest. */
+            class ListAccountRequest implements IListAccountRequest {
+
+                /**
+                 * Constructs a new ListAccountRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IListAccountRequest);
+            }
+
+            /** Properties of a ListAccountResponse. */
+            interface IListAccountResponse {
+
+                /** ListAccountResponse accounts */
+                accounts?: (mesg.types.IAccount[]|null);
+            }
+
+            /** Represents a ListAccountResponse. */
+            class ListAccountResponse implements IListAccountResponse {
+
+                /**
+                 * Constructs a new ListAccountResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IListAccountResponse);
+
+                /** ListAccountResponse accounts. */
+                public accounts: mesg.types.IAccount[];
+            }
+
+            /** Properties of a CreateAccountRequest. */
+            interface ICreateAccountRequest {
+
+                /** CreateAccountRequest name */
+                name?: (string|null);
+
+                /** CreateAccountRequest password */
+                password?: (string|null);
+            }
+
+            /** Represents a CreateAccountRequest. */
+            class CreateAccountRequest implements ICreateAccountRequest {
+
+                /**
+                 * Constructs a new CreateAccountRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateAccountRequest);
+
+                /** CreateAccountRequest name. */
+                public name: string;
+
+                /** CreateAccountRequest password. */
+                public password: string;
+            }
+
+            /** Properties of a CreateAccountResponse. */
+            interface ICreateAccountResponse {
+
+                /** CreateAccountResponse address */
+                address?: (string|null);
+
+                /** CreateAccountResponse mnemonic */
+                mnemonic?: (string|null);
+            }
+
+            /** Represents a CreateAccountResponse. */
+            class CreateAccountResponse implements ICreateAccountResponse {
+
+                /**
+                 * Constructs a new CreateAccountResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateAccountResponse);
+
+                /** CreateAccountResponse address. */
+                public address: string;
+
+                /** CreateAccountResponse mnemonic. */
+                public mnemonic: string;
+            }
+
+            /** Properties of a DeleteAccountRequest. */
+            interface IDeleteAccountRequest {
+
+                /** DeleteAccountRequest name */
+                name?: (string|null);
+
+                /** DeleteAccountRequest password */
+                password?: (string|null);
+            }
+
+            /** Represents a DeleteAccountRequest. */
+            class DeleteAccountRequest implements IDeleteAccountRequest {
+
+                /**
+                 * Constructs a new DeleteAccountRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteAccountRequest);
+
+                /** DeleteAccountRequest name. */
+                public name: string;
+
+                /** DeleteAccountRequest password. */
+                public password: string;
+            }
+
+            /** Properties of a DeleteAccountResponse. */
+            interface IDeleteAccountResponse {
+            }
+
+            /** Represents a DeleteAccountResponse. */
+            class DeleteAccountResponse implements IDeleteAccountResponse {
+
+                /**
+                 * Constructs a new DeleteAccountResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteAccountResponse);
+            }
         }
     }
 
@@ -1354,255 +1607,6 @@ declare namespace mesg {
                     public end: number;
                 }
             }
-        }
-    }
-
-    /** Namespace api. */
-    namespace api {
-
-        /** Represents an Account */
-        class Account extends $protobuf.rpc.Service {
-
-            /**
-             * Constructs a new Account service.
-             * @param rpcImpl RPC implementation
-             * @param [requestDelimited=false] Whether requests are length-delimited
-             * @param [responseDelimited=false] Whether responses are length-delimited
-             */
-            constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
-
-            /**
-             * Calls Get.
-             * @param request GetAccountRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and Account
-             */
-            public get(request: api.IGetAccountRequest, callback: api.Account.GetCallback): void;
-
-            /**
-             * Calls Get.
-             * @param request GetAccountRequest message or plain object
-             * @returns Promise
-             */
-            public get(request: api.IGetAccountRequest): Promise<types.Account>;
-
-            /**
-             * Calls List.
-             * @param request ListAccountRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and ListAccountResponse
-             */
-            public list(request: api.IListAccountRequest, callback: api.Account.ListCallback): void;
-
-            /**
-             * Calls List.
-             * @param request ListAccountRequest message or plain object
-             * @returns Promise
-             */
-            public list(request: api.IListAccountRequest): Promise<api.ListAccountResponse>;
-
-            /**
-             * Calls Create.
-             * @param request CreateAccountRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and CreateAccountResponse
-             */
-            public create(request: api.ICreateAccountRequest, callback: api.Account.CreateCallback): void;
-
-            /**
-             * Calls Create.
-             * @param request CreateAccountRequest message or plain object
-             * @returns Promise
-             */
-            public create(request: api.ICreateAccountRequest): Promise<api.CreateAccountResponse>;
-
-            /**
-             * Calls Delete.
-             * @param request DeleteAccountRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and DeleteAccountResponse
-             */
-            public delete(request: api.IDeleteAccountRequest, callback: api.Account.DeleteCallback): void;
-
-            /**
-             * Calls Delete.
-             * @param request DeleteAccountRequest message or plain object
-             * @returns Promise
-             */
-            public delete(request: api.IDeleteAccountRequest): Promise<api.DeleteAccountResponse>;
-        }
-
-        namespace Account {
-
-            /**
-             * Callback as used by {@link api.Account#get}.
-             * @param error Error, if any
-             * @param [response] Account
-             */
-            type GetCallback = (error: (Error|null), response?: types.Account) => void;
-
-            /**
-             * Callback as used by {@link api.Account#list}.
-             * @param error Error, if any
-             * @param [response] ListAccountResponse
-             */
-            type ListCallback = (error: (Error|null), response?: api.ListAccountResponse) => void;
-
-            /**
-             * Callback as used by {@link api.Account#create}.
-             * @param error Error, if any
-             * @param [response] CreateAccountResponse
-             */
-            type CreateCallback = (error: (Error|null), response?: api.CreateAccountResponse) => void;
-
-            /**
-             * Callback as used by {@link api.Account#delete_}.
-             * @param error Error, if any
-             * @param [response] DeleteAccountResponse
-             */
-            type DeleteCallback = (error: (Error|null), response?: api.DeleteAccountResponse) => void;
-        }
-
-        /** Properties of a GetAccountRequest. */
-        interface IGetAccountRequest {
-
-            /** GetAccountRequest name */
-            name?: (string|null);
-        }
-
-        /** Represents a GetAccountRequest. */
-        class GetAccountRequest implements IGetAccountRequest {
-
-            /**
-             * Constructs a new GetAccountRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IGetAccountRequest);
-
-            /** GetAccountRequest name. */
-            public name: string;
-        }
-
-        /** Properties of a ListAccountRequest. */
-        interface IListAccountRequest {
-        }
-
-        /** Represents a ListAccountRequest. */
-        class ListAccountRequest implements IListAccountRequest {
-
-            /**
-             * Constructs a new ListAccountRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IListAccountRequest);
-        }
-
-        /** Properties of a ListAccountResponse. */
-        interface IListAccountResponse {
-
-            /** ListAccountResponse accounts */
-            accounts?: (types.IAccount[]|null);
-        }
-
-        /** Represents a ListAccountResponse. */
-        class ListAccountResponse implements IListAccountResponse {
-
-            /**
-             * Constructs a new ListAccountResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IListAccountResponse);
-
-            /** ListAccountResponse accounts. */
-            public accounts: types.IAccount[];
-        }
-
-        /** Properties of a CreateAccountRequest. */
-        interface ICreateAccountRequest {
-
-            /** CreateAccountRequest name */
-            name?: (string|null);
-
-            /** CreateAccountRequest password */
-            password?: (string|null);
-        }
-
-        /** Represents a CreateAccountRequest. */
-        class CreateAccountRequest implements ICreateAccountRequest {
-
-            /**
-             * Constructs a new CreateAccountRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateAccountRequest);
-
-            /** CreateAccountRequest name. */
-            public name: string;
-
-            /** CreateAccountRequest password. */
-            public password: string;
-        }
-
-        /** Properties of a CreateAccountResponse. */
-        interface ICreateAccountResponse {
-
-            /** CreateAccountResponse address */
-            address?: (string|null);
-
-            /** CreateAccountResponse mnemonic */
-            mnemonic?: (string|null);
-        }
-
-        /** Represents a CreateAccountResponse. */
-        class CreateAccountResponse implements ICreateAccountResponse {
-
-            /**
-             * Constructs a new CreateAccountResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateAccountResponse);
-
-            /** CreateAccountResponse address. */
-            public address: string;
-
-            /** CreateAccountResponse mnemonic. */
-            public mnemonic: string;
-        }
-
-        /** Properties of a DeleteAccountRequest. */
-        interface IDeleteAccountRequest {
-
-            /** DeleteAccountRequest name */
-            name?: (string|null);
-
-            /** DeleteAccountRequest password */
-            password?: (string|null);
-        }
-
-        /** Represents a DeleteAccountRequest. */
-        class DeleteAccountRequest implements IDeleteAccountRequest {
-
-            /**
-             * Constructs a new DeleteAccountRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IDeleteAccountRequest);
-
-            /** DeleteAccountRequest name. */
-            public name: string;
-
-            /** DeleteAccountRequest password. */
-            public password: string;
-        }
-
-        /** Properties of a DeleteAccountResponse. */
-        interface IDeleteAccountResponse {
-        }
-
-        /** Represents a DeleteAccountResponse. */
-        class DeleteAccountResponse implements IDeleteAccountResponse {
-
-            /**
-             * Constructs a new DeleteAccountResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IDeleteAccountResponse);
         }
     }
 }
