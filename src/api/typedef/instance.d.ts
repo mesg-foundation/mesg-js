@@ -67,17 +67,17 @@ declare namespace mesg {
 
                 /**
                  * Calls List.
-                 * @param request ListInstancesRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListInstancesResponse
+                 * @param request ListInstanceRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListInstanceResponse
                  */
-                public list(request: mesg.api.IListInstancesRequest, callback: mesg.api.Instance.ListCallback): void;
+                public list(request: mesg.api.IListInstanceRequest, callback: mesg.api.Instance.ListCallback): void;
 
                 /**
                  * Calls List.
-                 * @param request ListInstancesRequest message or plain object
+                 * @param request ListInstanceRequest message or plain object
                  * @returns Promise
                  */
-                public list(request: mesg.api.IListInstancesRequest): Promise<mesg.api.ListInstancesResponse>;
+                public list(request: mesg.api.IListInstanceRequest): Promise<mesg.api.ListInstanceResponse>;
 
                 /**
                  * Calls Create.
@@ -120,9 +120,9 @@ declare namespace mesg {
                 /**
                  * Callback as used by {@link mesg.api.Instance#list}.
                  * @param error Error, if any
-                 * @param [response] ListInstancesResponse
+                 * @param [response] ListInstanceResponse
                  */
-                type ListCallback = (error: (Error|null), response?: mesg.api.ListInstancesResponse) => void;
+                type ListCallback = (error: (Error|null), response?: mesg.api.ListInstanceResponse) => void;
 
                 /**
                  * Callback as used by {@link mesg.api.Instance#create}.
@@ -159,43 +159,43 @@ declare namespace mesg {
                 public hash: Uint8Array;
             }
 
-            /** Properties of a ListInstancesRequest. */
-            interface IListInstancesRequest {
+            /** Properties of a ListInstanceRequest. */
+            interface IListInstanceRequest {
 
-                /** ListInstancesRequest serviceHash */
+                /** ListInstanceRequest serviceHash */
                 serviceHash?: (Uint8Array|null);
             }
 
-            /** Represents a ListInstancesRequest. */
-            class ListInstancesRequest implements IListInstancesRequest {
+            /** Represents a ListInstanceRequest. */
+            class ListInstanceRequest implements IListInstanceRequest {
 
                 /**
-                 * Constructs a new ListInstancesRequest.
+                 * Constructs a new ListInstanceRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IListInstancesRequest);
+                constructor(properties?: mesg.api.IListInstanceRequest);
 
-                /** ListInstancesRequest serviceHash. */
+                /** ListInstanceRequest serviceHash. */
                 public serviceHash: Uint8Array;
             }
 
-            /** Properties of a ListInstancesResponse. */
-            interface IListInstancesResponse {
+            /** Properties of a ListInstanceResponse. */
+            interface IListInstanceResponse {
 
-                /** ListInstancesResponse instances */
+                /** ListInstanceResponse instances */
                 instances?: (mesg.types.IInstance[]|null);
             }
 
-            /** Represents a ListInstancesResponse. */
-            class ListInstancesResponse implements IListInstancesResponse {
+            /** Represents a ListInstanceResponse. */
+            class ListInstanceResponse implements IListInstanceResponse {
 
                 /**
-                 * Constructs a new ListInstancesResponse.
+                 * Constructs a new ListInstanceResponse.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IListInstancesResponse);
+                constructor(properties?: mesg.api.IListInstanceResponse);
 
-                /** ListInstancesResponse instances. */
+                /** ListInstanceResponse instances. */
                 public instances: mesg.types.IInstance[];
             }
 

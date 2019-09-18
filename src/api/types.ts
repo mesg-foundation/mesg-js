@@ -46,8 +46,8 @@ export type ExecutionUpdateOutputs = Promise<ExecutionType.mesg.api.IUpdateExecu
 export type InstanceGetInputs = InstanceType.mesg.api.IGetInstanceRequest
 export type InstanceGetOutputs = Promise<Instance>
 
-export type InstanceListInputs = InstanceType.mesg.api.IListInstancesRequest
-export type InstanceListOutputs = Promise<InstanceType.mesg.api.IListInstancesResponse>
+export type InstanceListInputs = InstanceType.mesg.api.IListInstanceRequest
+export type InstanceListOutputs = Promise<InstanceType.mesg.api.IListInstanceResponse>
 
 export type InstanceCreateInputs = InstanceType.mesg.api.ICreateInstanceRequest
 export type InstanceCreateOutputs = Promise<InstanceType.mesg.api.ICreateInstanceResponse>
