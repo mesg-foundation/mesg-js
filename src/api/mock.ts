@@ -24,6 +24,12 @@ export const streams = {
 }
 
 export default (endpoint: string): API => ({
+  account: {
+    get() { return Promise.resolve({ }) },
+    list() { return Promise.resolve({ accounts: [] }) },
+    create() { return Promise.resolve({ name: "name", mnemonic: "mnemonic" }) },
+    delete() { return Promise.resolve({}) },
+  },
   event: {
     create() { return Promise.resolve({ hash }) },
     stream() { return streams.event },
