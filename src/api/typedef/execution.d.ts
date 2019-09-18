@@ -4,102 +4,499 @@ export = mesg;
 declare namespace mesg {
 
 
-    /** Namespace types. */
-    namespace types {
+    /** Namespace mesg. */
+    namespace mesg {
 
-        /** Status enum. */
-        enum Status {
-            Unknown = 0,
-            Created = 1,
-            InProgress = 2,
-            Completed = 3,
-            Failed = 4
+        /** Namespace types. */
+        namespace types {
+
+            /** Status enum. */
+            enum Status {
+                Unknown = 0,
+                Created = 1,
+                InProgress = 2,
+                Completed = 3,
+                Failed = 4
+            }
+
+            /** Properties of an Execution. */
+            interface IExecution {
+
+                /** Execution hash */
+                hash?: (Uint8Array|null);
+
+                /** Execution parentHash */
+                parentHash?: (Uint8Array|null);
+
+                /** Execution eventHash */
+                eventHash?: (Uint8Array|null);
+
+                /** Execution status */
+                status?: (mesg.types.Status|null);
+
+                /** Execution instanceHash */
+                instanceHash?: (Uint8Array|null);
+
+                /** Execution taskKey */
+                taskKey?: (string|null);
+
+                /** Execution inputs */
+                inputs?: (mesg.protobuf.IStruct|null);
+
+                /** Execution outputs */
+                outputs?: (mesg.protobuf.IStruct|null);
+
+                /** Execution error */
+                error?: (string|null);
+
+                /** Execution tags */
+                tags?: (string[]|null);
+
+                /** Execution processHash */
+                processHash?: (Uint8Array|null);
+
+                /** Execution stepID */
+                stepID?: (string|null);
+            }
+
+            /** Represents an Execution. */
+            class Execution implements IExecution {
+
+                /**
+                 * Constructs a new Execution.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.types.IExecution);
+
+                /** Execution hash. */
+                public hash: Uint8Array;
+
+                /** Execution parentHash. */
+                public parentHash: Uint8Array;
+
+                /** Execution eventHash. */
+                public eventHash: Uint8Array;
+
+                /** Execution status. */
+                public status: mesg.types.Status;
+
+                /** Execution instanceHash. */
+                public instanceHash: Uint8Array;
+
+                /** Execution taskKey. */
+                public taskKey: string;
+
+                /** Execution inputs. */
+                public inputs?: (mesg.protobuf.IStruct|null);
+
+                /** Execution outputs. */
+                public outputs?: (mesg.protobuf.IStruct|null);
+
+                /** Execution error. */
+                public error: string;
+
+                /** Execution tags. */
+                public tags: string[];
+
+                /** Execution processHash. */
+                public processHash: Uint8Array;
+
+                /** Execution stepID. */
+                public stepID: string;
+            }
         }
 
-        /** Properties of an Execution. */
-        interface IExecution {
+        /** Namespace protobuf. */
+        namespace protobuf {
 
-            /** Execution hash */
-            hash?: (Uint8Array|null);
+            /** Properties of a Struct. */
+            interface IStruct {
 
-            /** Execution parentHash */
-            parentHash?: (Uint8Array|null);
+                /** Struct fields */
+                fields?: ({ [k: string]: mesg.protobuf.IValue }|null);
+            }
 
-            /** Execution eventHash */
-            eventHash?: (Uint8Array|null);
+            /** Represents a Struct. */
+            class Struct implements IStruct {
 
-            /** Execution status */
-            status?: (types.Status|null);
+                /**
+                 * Constructs a new Struct.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IStruct);
 
-            /** Execution instanceHash */
-            instanceHash?: (Uint8Array|null);
+                /** Struct fields. */
+                public fields: { [k: string]: mesg.protobuf.IValue };
+            }
 
-            /** Execution taskKey */
-            taskKey?: (string|null);
+            /** Properties of a Value. */
+            interface IValue {
 
-            /** Execution inputs */
-            inputs?: (mesg.protobuf.IStruct|null);
+                /** Value nullValue */
+                nullValue?: (mesg.protobuf.NullValue|null);
 
-            /** Execution outputs */
-            outputs?: (mesg.protobuf.IStruct|null);
+                /** Value numberValue */
+                numberValue?: (number|null);
 
-            /** Execution error */
-            error?: (string|null);
+                /** Value stringValue */
+                stringValue?: (string|null);
 
-            /** Execution tags */
-            tags?: (string[]|null);
+                /** Value boolValue */
+                boolValue?: (boolean|null);
 
-            /** Execution processHash */
-            processHash?: (Uint8Array|null);
+                /** Value structValue */
+                structValue?: (mesg.protobuf.IStruct|null);
 
-            /** Execution stepID */
-            stepID?: (string|null);
+                /** Value listValue */
+                listValue?: (mesg.protobuf.IListValue|null);
+            }
+
+            /** Represents a Value. */
+            class Value implements IValue {
+
+                /**
+                 * Constructs a new Value.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IValue);
+
+                /** Value nullValue. */
+                public nullValue: mesg.protobuf.NullValue;
+
+                /** Value numberValue. */
+                public numberValue: number;
+
+                /** Value stringValue. */
+                public stringValue: string;
+
+                /** Value boolValue. */
+                public boolValue: boolean;
+
+                /** Value structValue. */
+                public structValue?: (mesg.protobuf.IStruct|null);
+
+                /** Value listValue. */
+                public listValue?: (mesg.protobuf.IListValue|null);
+
+                /** Value kind. */
+                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
+            }
+
+            /** NullValue enum. */
+            enum NullValue {
+                NULL_VALUE = 0
+            }
+
+            /** Properties of a ListValue. */
+            interface IListValue {
+
+                /** ListValue values */
+                values?: (mesg.protobuf.IValue[]|null);
+            }
+
+            /** Represents a ListValue. */
+            class ListValue implements IListValue {
+
+                /**
+                 * Constructs a new ListValue.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IListValue);
+
+                /** ListValue values. */
+                public values: mesg.protobuf.IValue[];
+            }
         }
 
-        /** Represents an Execution. */
-        class Execution implements IExecution {
+        /** Namespace api. */
+        namespace api {
 
-            /**
-             * Constructs a new Execution.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: types.IExecution);
+            /** Represents an Execution */
+            class Execution extends $protobuf.rpc.Service {
 
-            /** Execution hash. */
-            public hash: Uint8Array;
+                /**
+                 * Constructs a new Execution service.
+                 * @param rpcImpl RPC implementation
+                 * @param [requestDelimited=false] Whether requests are length-delimited
+                 * @param [responseDelimited=false] Whether responses are length-delimited
+                 */
+                constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
 
-            /** Execution parentHash. */
-            public parentHash: Uint8Array;
+                /**
+                 * Calls Create.
+                 * @param request CreateExecutionRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and CreateExecutionResponse
+                 */
+                public create(request: mesg.api.ICreateExecutionRequest, callback: mesg.api.Execution.CreateCallback): void;
 
-            /** Execution eventHash. */
-            public eventHash: Uint8Array;
+                /**
+                 * Calls Create.
+                 * @param request CreateExecutionRequest message or plain object
+                 * @returns Promise
+                 */
+                public create(request: mesg.api.ICreateExecutionRequest): Promise<mesg.api.CreateExecutionResponse>;
 
-            /** Execution status. */
-            public status: types.Status;
+                /**
+                 * Calls Get.
+                 * @param request GetExecutionRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Execution
+                 */
+                public get(request: mesg.api.IGetExecutionRequest, callback: mesg.api.Execution.GetCallback): void;
 
-            /** Execution instanceHash. */
-            public instanceHash: Uint8Array;
+                /**
+                 * Calls Get.
+                 * @param request GetExecutionRequest message or plain object
+                 * @returns Promise
+                 */
+                public get(request: mesg.api.IGetExecutionRequest): Promise<mesg.types.Execution>;
 
-            /** Execution taskKey. */
-            public taskKey: string;
+                /**
+                 * Calls Stream.
+                 * @param request StreamExecutionRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Execution
+                 */
+                public stream(request: mesg.api.IStreamExecutionRequest, callback: mesg.api.Execution.StreamCallback): void;
 
-            /** Execution inputs. */
-            public inputs?: (mesg.protobuf.IStruct|null);
+                /**
+                 * Calls Stream.
+                 * @param request StreamExecutionRequest message or plain object
+                 * @returns Promise
+                 */
+                public stream(request: mesg.api.IStreamExecutionRequest): Promise<mesg.types.Execution>;
 
-            /** Execution outputs. */
-            public outputs?: (mesg.protobuf.IStruct|null);
+                /**
+                 * Calls Update.
+                 * @param request UpdateExecutionRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and UpdateExecutionResponse
+                 */
+                public update(request: mesg.api.IUpdateExecutionRequest, callback: mesg.api.Execution.UpdateCallback): void;
 
-            /** Execution error. */
-            public error: string;
+                /**
+                 * Calls Update.
+                 * @param request UpdateExecutionRequest message or plain object
+                 * @returns Promise
+                 */
+                public update(request: mesg.api.IUpdateExecutionRequest): Promise<mesg.api.UpdateExecutionResponse>;
+            }
 
-            /** Execution tags. */
-            public tags: string[];
+            namespace Execution {
 
-            /** Execution processHash. */
-            public processHash: Uint8Array;
+                /**
+                 * Callback as used by {@link mesg.api.Execution#create}.
+                 * @param error Error, if any
+                 * @param [response] CreateExecutionResponse
+                 */
+                type CreateCallback = (error: (Error|null), response?: mesg.api.CreateExecutionResponse) => void;
 
-            /** Execution stepID. */
-            public stepID: string;
+                /**
+                 * Callback as used by {@link mesg.api.Execution#get}.
+                 * @param error Error, if any
+                 * @param [response] Execution
+                 */
+                type GetCallback = (error: (Error|null), response?: mesg.types.Execution) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Execution#stream}.
+                 * @param error Error, if any
+                 * @param [response] Execution
+                 */
+                type StreamCallback = (error: (Error|null), response?: mesg.types.Execution) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Execution#update}.
+                 * @param error Error, if any
+                 * @param [response] UpdateExecutionResponse
+                 */
+                type UpdateCallback = (error: (Error|null), response?: mesg.api.UpdateExecutionResponse) => void;
+            }
+
+            /** Properties of a CreateExecutionRequest. */
+            interface ICreateExecutionRequest {
+
+                /** CreateExecutionRequest instanceHash */
+                instanceHash?: (Uint8Array|null);
+
+                /** CreateExecutionRequest taskKey */
+                taskKey?: (string|null);
+
+                /** CreateExecutionRequest inputs */
+                inputs?: (mesg.protobuf.IStruct|null);
+
+                /** CreateExecutionRequest tags */
+                tags?: (string[]|null);
+            }
+
+            /** Represents a CreateExecutionRequest. */
+            class CreateExecutionRequest implements ICreateExecutionRequest {
+
+                /**
+                 * Constructs a new CreateExecutionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateExecutionRequest);
+
+                /** CreateExecutionRequest instanceHash. */
+                public instanceHash: Uint8Array;
+
+                /** CreateExecutionRequest taskKey. */
+                public taskKey: string;
+
+                /** CreateExecutionRequest inputs. */
+                public inputs?: (mesg.protobuf.IStruct|null);
+
+                /** CreateExecutionRequest tags. */
+                public tags: string[];
+            }
+
+            /** Properties of a CreateExecutionResponse. */
+            interface ICreateExecutionResponse {
+
+                /** CreateExecutionResponse hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a CreateExecutionResponse. */
+            class CreateExecutionResponse implements ICreateExecutionResponse {
+
+                /**
+                 * Constructs a new CreateExecutionResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateExecutionResponse);
+
+                /** CreateExecutionResponse hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a GetExecutionRequest. */
+            interface IGetExecutionRequest {
+
+                /** GetExecutionRequest hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a GetExecutionRequest. */
+            class GetExecutionRequest implements IGetExecutionRequest {
+
+                /**
+                 * Constructs a new GetExecutionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IGetExecutionRequest);
+
+                /** GetExecutionRequest hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a StreamExecutionRequest. */
+            interface IStreamExecutionRequest {
+
+                /** StreamExecutionRequest filter */
+                filter?: (mesg.api.StreamExecutionRequest.IFilter|null);
+            }
+
+            /** Represents a StreamExecutionRequest. */
+            class StreamExecutionRequest implements IStreamExecutionRequest {
+
+                /**
+                 * Constructs a new StreamExecutionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IStreamExecutionRequest);
+
+                /** StreamExecutionRequest filter. */
+                public filter?: (mesg.api.StreamExecutionRequest.IFilter|null);
+            }
+
+            namespace StreamExecutionRequest {
+
+                /** Properties of a Filter. */
+                interface IFilter {
+
+                    /** Filter statuses */
+                    statuses?: (mesg.types.Status[]|null);
+
+                    /** Filter instanceHash */
+                    instanceHash?: (Uint8Array|null);
+
+                    /** Filter taskKey */
+                    taskKey?: (string|null);
+
+                    /** Filter tags */
+                    tags?: (string[]|null);
+                }
+
+                /** Represents a Filter. */
+                class Filter implements IFilter {
+
+                    /**
+                     * Constructs a new Filter.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: mesg.api.StreamExecutionRequest.IFilter);
+
+                    /** Filter statuses. */
+                    public statuses: mesg.types.Status[];
+
+                    /** Filter instanceHash. */
+                    public instanceHash: Uint8Array;
+
+                    /** Filter taskKey. */
+                    public taskKey: string;
+
+                    /** Filter tags. */
+                    public tags: string[];
+                }
+            }
+
+            /** Properties of an UpdateExecutionRequest. */
+            interface IUpdateExecutionRequest {
+
+                /** UpdateExecutionRequest hash */
+                hash?: (Uint8Array|null);
+
+                /** UpdateExecutionRequest outputs */
+                outputs?: (mesg.protobuf.IStruct|null);
+
+                /** UpdateExecutionRequest error */
+                error?: (string|null);
+            }
+
+            /** Represents an UpdateExecutionRequest. */
+            class UpdateExecutionRequest implements IUpdateExecutionRequest {
+
+                /**
+                 * Constructs a new UpdateExecutionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IUpdateExecutionRequest);
+
+                /** UpdateExecutionRequest hash. */
+                public hash: Uint8Array;
+
+                /** UpdateExecutionRequest outputs. */
+                public outputs?: (mesg.protobuf.IStruct|null);
+
+                /** UpdateExecutionRequest error. */
+                public error: string;
+
+                /** UpdateExecutionRequest result. */
+                public result?: ("outputs"|"error");
+            }
+
+            /** Properties of an UpdateExecutionResponse. */
+            interface IUpdateExecutionResponse {
+            }
+
+            /** Represents an UpdateExecutionResponse. */
+            class UpdateExecutionResponse implements IUpdateExecutionResponse {
+
+                /**
+                 * Constructs a new UpdateExecutionResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IUpdateExecutionResponse);
+            }
         }
     }
 
@@ -1423,403 +1820,6 @@ declare namespace mesg {
                     public end: number;
                 }
             }
-        }
-    }
-
-    /** Namespace mesg. */
-    namespace mesg {
-
-        /** Namespace protobuf. */
-        namespace protobuf {
-
-            /** Properties of a Struct. */
-            interface IStruct {
-
-                /** Struct fields */
-                fields?: ({ [k: string]: mesg.protobuf.IValue }|null);
-            }
-
-            /** Represents a Struct. */
-            class Struct implements IStruct {
-
-                /**
-                 * Constructs a new Struct.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IStruct);
-
-                /** Struct fields. */
-                public fields: { [k: string]: mesg.protobuf.IValue };
-            }
-
-            /** Properties of a Value. */
-            interface IValue {
-
-                /** Value nullValue */
-                nullValue?: (mesg.protobuf.NullValue|null);
-
-                /** Value numberValue */
-                numberValue?: (number|null);
-
-                /** Value stringValue */
-                stringValue?: (string|null);
-
-                /** Value boolValue */
-                boolValue?: (boolean|null);
-
-                /** Value structValue */
-                structValue?: (mesg.protobuf.IStruct|null);
-
-                /** Value listValue */
-                listValue?: (mesg.protobuf.IListValue|null);
-            }
-
-            /** Represents a Value. */
-            class Value implements IValue {
-
-                /**
-                 * Constructs a new Value.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IValue);
-
-                /** Value nullValue. */
-                public nullValue: mesg.protobuf.NullValue;
-
-                /** Value numberValue. */
-                public numberValue: number;
-
-                /** Value stringValue. */
-                public stringValue: string;
-
-                /** Value boolValue. */
-                public boolValue: boolean;
-
-                /** Value structValue. */
-                public structValue?: (mesg.protobuf.IStruct|null);
-
-                /** Value listValue. */
-                public listValue?: (mesg.protobuf.IListValue|null);
-
-                /** Value kind. */
-                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
-            }
-
-            /** NullValue enum. */
-            enum NullValue {
-                NULL_VALUE = 0
-            }
-
-            /** Properties of a ListValue. */
-            interface IListValue {
-
-                /** ListValue values */
-                values?: (mesg.protobuf.IValue[]|null);
-            }
-
-            /** Represents a ListValue. */
-            class ListValue implements IListValue {
-
-                /**
-                 * Constructs a new ListValue.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IListValue);
-
-                /** ListValue values. */
-                public values: mesg.protobuf.IValue[];
-            }
-        }
-    }
-
-    /** Namespace api. */
-    namespace api {
-
-        /** Represents an Execution */
-        class Execution extends $protobuf.rpc.Service {
-
-            /**
-             * Constructs a new Execution service.
-             * @param rpcImpl RPC implementation
-             * @param [requestDelimited=false] Whether requests are length-delimited
-             * @param [responseDelimited=false] Whether responses are length-delimited
-             */
-            constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
-
-            /**
-             * Calls Create.
-             * @param request CreateExecutionRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and CreateExecutionResponse
-             */
-            public create(request: api.ICreateExecutionRequest, callback: api.Execution.CreateCallback): void;
-
-            /**
-             * Calls Create.
-             * @param request CreateExecutionRequest message or plain object
-             * @returns Promise
-             */
-            public create(request: api.ICreateExecutionRequest): Promise<api.CreateExecutionResponse>;
-
-            /**
-             * Calls Get.
-             * @param request GetExecutionRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and Execution
-             */
-            public get(request: api.IGetExecutionRequest, callback: api.Execution.GetCallback): void;
-
-            /**
-             * Calls Get.
-             * @param request GetExecutionRequest message or plain object
-             * @returns Promise
-             */
-            public get(request: api.IGetExecutionRequest): Promise<types.Execution>;
-
-            /**
-             * Calls Stream.
-             * @param request StreamExecutionRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and Execution
-             */
-            public stream(request: api.IStreamExecutionRequest, callback: api.Execution.StreamCallback): void;
-
-            /**
-             * Calls Stream.
-             * @param request StreamExecutionRequest message or plain object
-             * @returns Promise
-             */
-            public stream(request: api.IStreamExecutionRequest): Promise<types.Execution>;
-
-            /**
-             * Calls Update.
-             * @param request UpdateExecutionRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and UpdateExecutionResponse
-             */
-            public update(request: api.IUpdateExecutionRequest, callback: api.Execution.UpdateCallback): void;
-
-            /**
-             * Calls Update.
-             * @param request UpdateExecutionRequest message or plain object
-             * @returns Promise
-             */
-            public update(request: api.IUpdateExecutionRequest): Promise<api.UpdateExecutionResponse>;
-        }
-
-        namespace Execution {
-
-            /**
-             * Callback as used by {@link api.Execution#create}.
-             * @param error Error, if any
-             * @param [response] CreateExecutionResponse
-             */
-            type CreateCallback = (error: (Error|null), response?: api.CreateExecutionResponse) => void;
-
-            /**
-             * Callback as used by {@link api.Execution#get}.
-             * @param error Error, if any
-             * @param [response] Execution
-             */
-            type GetCallback = (error: (Error|null), response?: types.Execution) => void;
-
-            /**
-             * Callback as used by {@link api.Execution#stream}.
-             * @param error Error, if any
-             * @param [response] Execution
-             */
-            type StreamCallback = (error: (Error|null), response?: types.Execution) => void;
-
-            /**
-             * Callback as used by {@link api.Execution#update}.
-             * @param error Error, if any
-             * @param [response] UpdateExecutionResponse
-             */
-            type UpdateCallback = (error: (Error|null), response?: api.UpdateExecutionResponse) => void;
-        }
-
-        /** Properties of a CreateExecutionRequest. */
-        interface ICreateExecutionRequest {
-
-            /** CreateExecutionRequest instanceHash */
-            instanceHash?: (Uint8Array|null);
-
-            /** CreateExecutionRequest taskKey */
-            taskKey?: (string|null);
-
-            /** CreateExecutionRequest inputs */
-            inputs?: (mesg.protobuf.IStruct|null);
-
-            /** CreateExecutionRequest tags */
-            tags?: (string[]|null);
-        }
-
-        /** Represents a CreateExecutionRequest. */
-        class CreateExecutionRequest implements ICreateExecutionRequest {
-
-            /**
-             * Constructs a new CreateExecutionRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateExecutionRequest);
-
-            /** CreateExecutionRequest instanceHash. */
-            public instanceHash: Uint8Array;
-
-            /** CreateExecutionRequest taskKey. */
-            public taskKey: string;
-
-            /** CreateExecutionRequest inputs. */
-            public inputs?: (mesg.protobuf.IStruct|null);
-
-            /** CreateExecutionRequest tags. */
-            public tags: string[];
-        }
-
-        /** Properties of a CreateExecutionResponse. */
-        interface ICreateExecutionResponse {
-
-            /** CreateExecutionResponse hash */
-            hash?: (Uint8Array|null);
-        }
-
-        /** Represents a CreateExecutionResponse. */
-        class CreateExecutionResponse implements ICreateExecutionResponse {
-
-            /**
-             * Constructs a new CreateExecutionResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateExecutionResponse);
-
-            /** CreateExecutionResponse hash. */
-            public hash: Uint8Array;
-        }
-
-        /** Properties of a GetExecutionRequest. */
-        interface IGetExecutionRequest {
-
-            /** GetExecutionRequest hash */
-            hash?: (Uint8Array|null);
-        }
-
-        /** Represents a GetExecutionRequest. */
-        class GetExecutionRequest implements IGetExecutionRequest {
-
-            /**
-             * Constructs a new GetExecutionRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IGetExecutionRequest);
-
-            /** GetExecutionRequest hash. */
-            public hash: Uint8Array;
-        }
-
-        /** Properties of a StreamExecutionRequest. */
-        interface IStreamExecutionRequest {
-
-            /** StreamExecutionRequest filter */
-            filter?: (api.StreamExecutionRequest.IFilter|null);
-        }
-
-        /** Represents a StreamExecutionRequest. */
-        class StreamExecutionRequest implements IStreamExecutionRequest {
-
-            /**
-             * Constructs a new StreamExecutionRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IStreamExecutionRequest);
-
-            /** StreamExecutionRequest filter. */
-            public filter?: (api.StreamExecutionRequest.IFilter|null);
-        }
-
-        namespace StreamExecutionRequest {
-
-            /** Properties of a Filter. */
-            interface IFilter {
-
-                /** Filter statuses */
-                statuses?: (types.Status[]|null);
-
-                /** Filter instanceHash */
-                instanceHash?: (Uint8Array|null);
-
-                /** Filter taskKey */
-                taskKey?: (string|null);
-
-                /** Filter tags */
-                tags?: (string[]|null);
-            }
-
-            /** Represents a Filter. */
-            class Filter implements IFilter {
-
-                /**
-                 * Constructs a new Filter.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: api.StreamExecutionRequest.IFilter);
-
-                /** Filter statuses. */
-                public statuses: types.Status[];
-
-                /** Filter instanceHash. */
-                public instanceHash: Uint8Array;
-
-                /** Filter taskKey. */
-                public taskKey: string;
-
-                /** Filter tags. */
-                public tags: string[];
-            }
-        }
-
-        /** Properties of an UpdateExecutionRequest. */
-        interface IUpdateExecutionRequest {
-
-            /** UpdateExecutionRequest hash */
-            hash?: (Uint8Array|null);
-
-            /** UpdateExecutionRequest outputs */
-            outputs?: (mesg.protobuf.IStruct|null);
-
-            /** UpdateExecutionRequest error */
-            error?: (string|null);
-        }
-
-        /** Represents an UpdateExecutionRequest. */
-        class UpdateExecutionRequest implements IUpdateExecutionRequest {
-
-            /**
-             * Constructs a new UpdateExecutionRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IUpdateExecutionRequest);
-
-            /** UpdateExecutionRequest hash. */
-            public hash: Uint8Array;
-
-            /** UpdateExecutionRequest outputs. */
-            public outputs?: (mesg.protobuf.IStruct|null);
-
-            /** UpdateExecutionRequest error. */
-            public error: string;
-
-            /** UpdateExecutionRequest result. */
-            public result?: ("outputs"|"error");
-        }
-
-        /** Properties of an UpdateExecutionResponse. */
-        interface IUpdateExecutionResponse {
-        }
-
-        /** Represents an UpdateExecutionResponse. */
-        class UpdateExecutionResponse implements IUpdateExecutionResponse {
-
-            /**
-             * Constructs a new UpdateExecutionResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IUpdateExecutionResponse);
         }
     }
 }

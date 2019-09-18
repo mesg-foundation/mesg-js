@@ -4,382 +4,731 @@ export = mesg;
 declare namespace mesg {
 
 
-    /** Namespace types. */
-    namespace types {
+    /** Namespace mesg. */
+    namespace mesg {
 
-        /** Properties of a Process. */
-        interface IProcess {
+        /** Namespace types. */
+        namespace types {
 
-            /** Process hash */
-            hash?: (Uint8Array|null);
+            /** Properties of a Process. */
+            interface IProcess {
 
-            /** Process key */
-            key?: (string|null);
+                /** Process hash */
+                hash?: (Uint8Array|null);
 
-            /** Process nodes */
-            nodes?: (types.Process.INode[]|null);
+                /** Process key */
+                key?: (string|null);
 
-            /** Process edges */
-            edges?: (types.Process.IEdge[]|null);
-        }
+                /** Process nodes */
+                nodes?: (mesg.types.Process.INode[]|null);
 
-        /** Represents a Process. */
-        class Process implements IProcess {
-
-            /**
-             * Constructs a new Process.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: types.IProcess);
-
-            /** Process hash. */
-            public hash: Uint8Array;
-
-            /** Process key. */
-            public key: string;
-
-            /** Process nodes. */
-            public nodes: types.Process.INode[];
-
-            /** Process edges. */
-            public edges: types.Process.IEdge[];
-        }
-
-        namespace Process {
-
-            /** Properties of a Node. */
-            interface INode {
-
-                /** Node result */
-                result?: (types.Process.Node.IResult|null);
-
-                /** Node event */
-                event?: (types.Process.Node.IEvent|null);
-
-                /** Node task */
-                task?: (types.Process.Node.ITask|null);
-
-                /** Node map */
-                map?: (types.Process.Node.IMap|null);
-
-                /** Node filter */
-                filter?: (types.Process.Node.IFilter|null);
+                /** Process edges */
+                edges?: (mesg.types.Process.IEdge[]|null);
             }
 
-            /** Represents a Node. */
-            class Node implements INode {
+            /** Represents a Process. */
+            class Process implements IProcess {
 
                 /**
-                 * Constructs a new Node.
+                 * Constructs a new Process.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: types.Process.INode);
+                constructor(properties?: mesg.types.IProcess);
 
-                /** Node result. */
-                public result?: (types.Process.Node.IResult|null);
+                /** Process hash. */
+                public hash: Uint8Array;
 
-                /** Node event. */
-                public event?: (types.Process.Node.IEvent|null);
+                /** Process key. */
+                public key: string;
 
-                /** Node task. */
-                public task?: (types.Process.Node.ITask|null);
+                /** Process nodes. */
+                public nodes: mesg.types.Process.INode[];
 
-                /** Node map. */
-                public map?: (types.Process.Node.IMap|null);
-
-                /** Node filter. */
-                public filter?: (types.Process.Node.IFilter|null);
-
-                /** Node type. */
-                public type?: ("result"|"event"|"task"|"map"|"filter");
+                /** Process edges. */
+                public edges: mesg.types.Process.IEdge[];
             }
 
-            namespace Node {
+            namespace Process {
 
-                /** Properties of a Result. */
-                interface IResult {
+                /** Properties of a Node. */
+                interface INode {
 
-                    /** Result key */
-                    key?: (string|null);
+                    /** Node result */
+                    result?: (mesg.types.Process.Node.IResult|null);
 
-                    /** Result instanceHash */
-                    instanceHash?: (Uint8Array|null);
+                    /** Node event */
+                    event?: (mesg.types.Process.Node.IEvent|null);
 
-                    /** Result taskKey */
-                    taskKey?: (string|null);
+                    /** Node task */
+                    task?: (mesg.types.Process.Node.ITask|null);
+
+                    /** Node map */
+                    map?: (mesg.types.Process.Node.IMap|null);
+
+                    /** Node filter */
+                    filter?: (mesg.types.Process.Node.IFilter|null);
                 }
 
-                /** Represents a Result. */
-                class Result implements IResult {
+                /** Represents a Node. */
+                class Node implements INode {
 
                     /**
-                     * Constructs a new Result.
+                     * Constructs a new Node.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: types.Process.Node.IResult);
+                    constructor(properties?: mesg.types.Process.INode);
 
-                    /** Result key. */
-                    public key: string;
+                    /** Node result. */
+                    public result?: (mesg.types.Process.Node.IResult|null);
 
-                    /** Result instanceHash. */
-                    public instanceHash: Uint8Array;
+                    /** Node event. */
+                    public event?: (mesg.types.Process.Node.IEvent|null);
 
-                    /** Result taskKey. */
-                    public taskKey: string;
+                    /** Node task. */
+                    public task?: (mesg.types.Process.Node.ITask|null);
+
+                    /** Node map. */
+                    public map?: (mesg.types.Process.Node.IMap|null);
+
+                    /** Node filter. */
+                    public filter?: (mesg.types.Process.Node.IFilter|null);
+
+                    /** Node type. */
+                    public type?: ("result"|"event"|"task"|"map"|"filter");
                 }
 
-                /** Properties of an Event. */
-                interface IEvent {
+                namespace Node {
 
-                    /** Event key */
-                    key?: (string|null);
+                    /** Properties of a Result. */
+                    interface IResult {
 
-                    /** Event instanceHash */
-                    instanceHash?: (Uint8Array|null);
-
-                    /** Event eventKey */
-                    eventKey?: (string|null);
-                }
-
-                /** Represents an Event. */
-                class Event implements IEvent {
-
-                    /**
-                     * Constructs a new Event.
-                     * @param [properties] Properties to set
-                     */
-                    constructor(properties?: types.Process.Node.IEvent);
-
-                    /** Event key. */
-                    public key: string;
-
-                    /** Event instanceHash. */
-                    public instanceHash: Uint8Array;
-
-                    /** Event eventKey. */
-                    public eventKey: string;
-                }
-
-                /** Properties of a Task. */
-                interface ITask {
-
-                    /** Task key */
-                    key?: (string|null);
-
-                    /** Task instanceHash */
-                    instanceHash?: (Uint8Array|null);
-
-                    /** Task taskKey */
-                    taskKey?: (string|null);
-                }
-
-                /** Represents a Task. */
-                class Task implements ITask {
-
-                    /**
-                     * Constructs a new Task.
-                     * @param [properties] Properties to set
-                     */
-                    constructor(properties?: types.Process.Node.ITask);
-
-                    /** Task key. */
-                    public key: string;
-
-                    /** Task instanceHash. */
-                    public instanceHash: Uint8Array;
-
-                    /** Task taskKey. */
-                    public taskKey: string;
-                }
-
-                /** Properties of a Map. */
-                interface IMap {
-
-                    /** Map key */
-                    key?: (string|null);
-
-                    /** Map outputs */
-                    outputs?: (types.Process.Node.Map.IOutput[]|null);
-                }
-
-                /** Represents a Map. */
-                class Map implements IMap {
-
-                    /**
-                     * Constructs a new Map.
-                     * @param [properties] Properties to set
-                     */
-                    constructor(properties?: types.Process.Node.IMap);
-
-                    /** Map key. */
-                    public key: string;
-
-                    /** Map outputs. */
-                    public outputs: types.Process.Node.Map.IOutput[];
-                }
-
-                namespace Map {
-
-                    /** Properties of an Output. */
-                    interface IOutput {
-
-                        /** Output key */
+                        /** Result key */
                         key?: (string|null);
 
-                        /** Output ref */
-                        ref?: (types.Process.Node.Map.Output.IReference|null);
+                        /** Result instanceHash */
+                        instanceHash?: (Uint8Array|null);
 
-                        /** Output constant */
-                        constant?: (mesg.protobuf.IValue|null);
+                        /** Result taskKey */
+                        taskKey?: (string|null);
                     }
 
-                    /** Represents an Output. */
-                    class Output implements IOutput {
+                    /** Represents a Result. */
+                    class Result implements IResult {
 
                         /**
-                         * Constructs a new Output.
+                         * Constructs a new Result.
                          * @param [properties] Properties to set
                          */
-                        constructor(properties?: types.Process.Node.Map.IOutput);
+                        constructor(properties?: mesg.types.Process.Node.IResult);
 
-                        /** Output key. */
+                        /** Result key. */
                         public key: string;
 
-                        /** Output ref. */
-                        public ref?: (types.Process.Node.Map.Output.IReference|null);
+                        /** Result instanceHash. */
+                        public instanceHash: Uint8Array;
 
-                        /** Output constant. */
-                        public constant?: (mesg.protobuf.IValue|null);
-
-                        /** Output value. */
-                        public value?: ("ref"|"constant");
+                        /** Result taskKey. */
+                        public taskKey: string;
                     }
 
-                    namespace Output {
+                    /** Properties of an Event. */
+                    interface IEvent {
 
-                        /** Properties of a Reference. */
-                        interface IReference {
+                        /** Event key */
+                        key?: (string|null);
 
-                            /** Reference nodeKey */
-                            nodeKey?: (string|null);
+                        /** Event instanceHash */
+                        instanceHash?: (Uint8Array|null);
 
-                            /** Reference key */
+                        /** Event eventKey */
+                        eventKey?: (string|null);
+                    }
+
+                    /** Represents an Event. */
+                    class Event implements IEvent {
+
+                        /**
+                         * Constructs a new Event.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: mesg.types.Process.Node.IEvent);
+
+                        /** Event key. */
+                        public key: string;
+
+                        /** Event instanceHash. */
+                        public instanceHash: Uint8Array;
+
+                        /** Event eventKey. */
+                        public eventKey: string;
+                    }
+
+                    /** Properties of a Task. */
+                    interface ITask {
+
+                        /** Task key */
+                        key?: (string|null);
+
+                        /** Task instanceHash */
+                        instanceHash?: (Uint8Array|null);
+
+                        /** Task taskKey */
+                        taskKey?: (string|null);
+                    }
+
+                    /** Represents a Task. */
+                    class Task implements ITask {
+
+                        /**
+                         * Constructs a new Task.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: mesg.types.Process.Node.ITask);
+
+                        /** Task key. */
+                        public key: string;
+
+                        /** Task instanceHash. */
+                        public instanceHash: Uint8Array;
+
+                        /** Task taskKey. */
+                        public taskKey: string;
+                    }
+
+                    /** Properties of a Map. */
+                    interface IMap {
+
+                        /** Map key */
+                        key?: (string|null);
+
+                        /** Map outputs */
+                        outputs?: (mesg.types.Process.Node.Map.IOutput[]|null);
+                    }
+
+                    /** Represents a Map. */
+                    class Map implements IMap {
+
+                        /**
+                         * Constructs a new Map.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: mesg.types.Process.Node.IMap);
+
+                        /** Map key. */
+                        public key: string;
+
+                        /** Map outputs. */
+                        public outputs: mesg.types.Process.Node.Map.IOutput[];
+                    }
+
+                    namespace Map {
+
+                        /** Properties of an Output. */
+                        interface IOutput {
+
+                            /** Output key */
                             key?: (string|null);
+
+                            /** Output ref */
+                            ref?: (mesg.types.Process.Node.Map.Output.IReference|null);
+
+                            /** Output constant */
+                            constant?: (mesg.protobuf.IValue|null);
                         }
 
-                        /** Represents a Reference. */
-                        class Reference implements IReference {
+                        /** Represents an Output. */
+                        class Output implements IOutput {
 
                             /**
-                             * Constructs a new Reference.
+                             * Constructs a new Output.
                              * @param [properties] Properties to set
                              */
-                            constructor(properties?: types.Process.Node.Map.Output.IReference);
+                            constructor(properties?: mesg.types.Process.Node.Map.IOutput);
 
-                            /** Reference nodeKey. */
-                            public nodeKey: string;
-
-                            /** Reference key. */
+                            /** Output key. */
                             public key: string;
+
+                            /** Output ref. */
+                            public ref?: (mesg.types.Process.Node.Map.Output.IReference|null);
+
+                            /** Output constant. */
+                            public constant?: (mesg.protobuf.IValue|null);
+
+                            /** Output value. */
+                            public value?: ("ref"|"constant");
+                        }
+
+                        namespace Output {
+
+                            /** Properties of a Reference. */
+                            interface IReference {
+
+                                /** Reference nodeKey */
+                                nodeKey?: (string|null);
+
+                                /** Reference key */
+                                key?: (string|null);
+                            }
+
+                            /** Represents a Reference. */
+                            class Reference implements IReference {
+
+                                /**
+                                 * Constructs a new Reference.
+                                 * @param [properties] Properties to set
+                                 */
+                                constructor(properties?: mesg.types.Process.Node.Map.Output.IReference);
+
+                                /** Reference nodeKey. */
+                                public nodeKey: string;
+
+                                /** Reference key. */
+                                public key: string;
+                            }
                         }
                     }
-                }
 
-                /** Properties of a Filter. */
-                interface IFilter {
+                    /** Properties of a Filter. */
+                    interface IFilter {
 
-                    /** Filter key */
-                    key?: (string|null);
-
-                    /** Filter conditions */
-                    conditions?: (types.Process.Node.Filter.ICondition[]|null);
-                }
-
-                /** Represents a Filter. */
-                class Filter implements IFilter {
-
-                    /**
-                     * Constructs a new Filter.
-                     * @param [properties] Properties to set
-                     */
-                    constructor(properties?: types.Process.Node.IFilter);
-
-                    /** Filter key. */
-                    public key: string;
-
-                    /** Filter conditions. */
-                    public conditions: types.Process.Node.Filter.ICondition[];
-                }
-
-                namespace Filter {
-
-                    /** Properties of a Condition. */
-                    interface ICondition {
-
-                        /** Condition key */
+                        /** Filter key */
                         key?: (string|null);
 
-                        /** Condition predicate */
-                        predicate?: (types.Process.Node.Filter.Condition.Predicate|null);
-
-                        /** Condition value */
-                        value?: (string|null);
+                        /** Filter conditions */
+                        conditions?: (mesg.types.Process.Node.Filter.ICondition[]|null);
                     }
 
-                    /** Represents a Condition. */
-                    class Condition implements ICondition {
+                    /** Represents a Filter. */
+                    class Filter implements IFilter {
 
                         /**
-                         * Constructs a new Condition.
+                         * Constructs a new Filter.
                          * @param [properties] Properties to set
                          */
-                        constructor(properties?: types.Process.Node.Filter.ICondition);
+                        constructor(properties?: mesg.types.Process.Node.IFilter);
 
-                        /** Condition key. */
+                        /** Filter key. */
                         public key: string;
 
-                        /** Condition predicate. */
-                        public predicate: types.Process.Node.Filter.Condition.Predicate;
-
-                        /** Condition value. */
-                        public value: string;
+                        /** Filter conditions. */
+                        public conditions: mesg.types.Process.Node.Filter.ICondition[];
                     }
 
-                    namespace Condition {
+                    namespace Filter {
 
-                        /** Predicate enum. */
-                        enum Predicate {
-                            Unknown = 0,
-                            EQ = 1
+                        /** Properties of a Condition. */
+                        interface ICondition {
+
+                            /** Condition key */
+                            key?: (string|null);
+
+                            /** Condition predicate */
+                            predicate?: (mesg.types.Process.Node.Filter.Condition.Predicate|null);
+
+                            /** Condition value */
+                            value?: (string|null);
+                        }
+
+                        /** Represents a Condition. */
+                        class Condition implements ICondition {
+
+                            /**
+                             * Constructs a new Condition.
+                             * @param [properties] Properties to set
+                             */
+                            constructor(properties?: mesg.types.Process.Node.Filter.ICondition);
+
+                            /** Condition key. */
+                            public key: string;
+
+                            /** Condition predicate. */
+                            public predicate: mesg.types.Process.Node.Filter.Condition.Predicate;
+
+                            /** Condition value. */
+                            public value: string;
+                        }
+
+                        namespace Condition {
+
+                            /** Predicate enum. */
+                            enum Predicate {
+                                Unknown = 0,
+                                EQ = 1
+                            }
                         }
                     }
                 }
+
+                /** Properties of an Edge. */
+                interface IEdge {
+
+                    /** Edge src */
+                    src?: (string|null);
+
+                    /** Edge dst */
+                    dst?: (string|null);
+                }
+
+                /** Represents an Edge. */
+                class Edge implements IEdge {
+
+                    /**
+                     * Constructs a new Edge.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: mesg.types.Process.IEdge);
+
+                    /** Edge src. */
+                    public src: string;
+
+                    /** Edge dst. */
+                    public dst: string;
+                }
+            }
+        }
+
+        /** Namespace protobuf. */
+        namespace protobuf {
+
+            /** Properties of a Struct. */
+            interface IStruct {
+
+                /** Struct fields */
+                fields?: ({ [k: string]: mesg.protobuf.IValue }|null);
             }
 
-            /** Properties of an Edge. */
-            interface IEdge {
-
-                /** Edge src */
-                src?: (string|null);
-
-                /** Edge dst */
-                dst?: (string|null);
-            }
-
-            /** Represents an Edge. */
-            class Edge implements IEdge {
+            /** Represents a Struct. */
+            class Struct implements IStruct {
 
                 /**
-                 * Constructs a new Edge.
+                 * Constructs a new Struct.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: types.Process.IEdge);
+                constructor(properties?: mesg.protobuf.IStruct);
 
-                /** Edge src. */
-                public src: string;
+                /** Struct fields. */
+                public fields: { [k: string]: mesg.protobuf.IValue };
+            }
 
-                /** Edge dst. */
-                public dst: string;
+            /** Properties of a Value. */
+            interface IValue {
+
+                /** Value nullValue */
+                nullValue?: (mesg.protobuf.NullValue|null);
+
+                /** Value numberValue */
+                numberValue?: (number|null);
+
+                /** Value stringValue */
+                stringValue?: (string|null);
+
+                /** Value boolValue */
+                boolValue?: (boolean|null);
+
+                /** Value structValue */
+                structValue?: (mesg.protobuf.IStruct|null);
+
+                /** Value listValue */
+                listValue?: (mesg.protobuf.IListValue|null);
+            }
+
+            /** Represents a Value. */
+            class Value implements IValue {
+
+                /**
+                 * Constructs a new Value.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IValue);
+
+                /** Value nullValue. */
+                public nullValue: mesg.protobuf.NullValue;
+
+                /** Value numberValue. */
+                public numberValue: number;
+
+                /** Value stringValue. */
+                public stringValue: string;
+
+                /** Value boolValue. */
+                public boolValue: boolean;
+
+                /** Value structValue. */
+                public structValue?: (mesg.protobuf.IStruct|null);
+
+                /** Value listValue. */
+                public listValue?: (mesg.protobuf.IListValue|null);
+
+                /** Value kind. */
+                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
+            }
+
+            /** NullValue enum. */
+            enum NullValue {
+                NULL_VALUE = 0
+            }
+
+            /** Properties of a ListValue. */
+            interface IListValue {
+
+                /** ListValue values */
+                values?: (mesg.protobuf.IValue[]|null);
+            }
+
+            /** Represents a ListValue. */
+            class ListValue implements IListValue {
+
+                /**
+                 * Constructs a new ListValue.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.protobuf.IListValue);
+
+                /** ListValue values. */
+                public values: mesg.protobuf.IValue[];
+            }
+        }
+
+        /** Namespace api. */
+        namespace api {
+
+            /** Represents a Process */
+            class Process extends $protobuf.rpc.Service {
+
+                /**
+                 * Constructs a new Process service.
+                 * @param rpcImpl RPC implementation
+                 * @param [requestDelimited=false] Whether requests are length-delimited
+                 * @param [responseDelimited=false] Whether responses are length-delimited
+                 */
+                constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
+
+                /**
+                 * Calls Create.
+                 * @param request CreateProcessRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and CreateProcessResponse
+                 */
+                public create(request: mesg.api.ICreateProcessRequest, callback: mesg.api.Process.CreateCallback): void;
+
+                /**
+                 * Calls Create.
+                 * @param request CreateProcessRequest message or plain object
+                 * @returns Promise
+                 */
+                public create(request: mesg.api.ICreateProcessRequest): Promise<mesg.api.CreateProcessResponse>;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteProcessRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and DeleteProcessResponse
+                 */
+                public delete(request: mesg.api.IDeleteProcessRequest, callback: mesg.api.Process.DeleteCallback): void;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteProcessRequest message or plain object
+                 * @returns Promise
+                 */
+                public delete(request: mesg.api.IDeleteProcessRequest): Promise<mesg.api.DeleteProcessResponse>;
+
+                /**
+                 * Calls Get.
+                 * @param request GetProcessRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Process
+                 */
+                public get(request: mesg.api.IGetProcessRequest, callback: mesg.api.Process.GetCallback): void;
+
+                /**
+                 * Calls Get.
+                 * @param request GetProcessRequest message or plain object
+                 * @returns Promise
+                 */
+                public get(request: mesg.api.IGetProcessRequest): Promise<mesg.types.Process>;
+
+                /**
+                 * Calls List.
+                 * @param request ListProcessRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListProcessResponse
+                 */
+                public list(request: mesg.api.IListProcessRequest, callback: mesg.api.Process.ListCallback): void;
+
+                /**
+                 * Calls List.
+                 * @param request ListProcessRequest message or plain object
+                 * @returns Promise
+                 */
+                public list(request: mesg.api.IListProcessRequest): Promise<mesg.api.ListProcessResponse>;
+            }
+
+            namespace Process {
+
+                /**
+                 * Callback as used by {@link mesg.api.Process#create}.
+                 * @param error Error, if any
+                 * @param [response] CreateProcessResponse
+                 */
+                type CreateCallback = (error: (Error|null), response?: mesg.api.CreateProcessResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Process#delete_}.
+                 * @param error Error, if any
+                 * @param [response] DeleteProcessResponse
+                 */
+                type DeleteCallback = (error: (Error|null), response?: mesg.api.DeleteProcessResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Process#get}.
+                 * @param error Error, if any
+                 * @param [response] Process
+                 */
+                type GetCallback = (error: (Error|null), response?: mesg.types.Process) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Process#list}.
+                 * @param error Error, if any
+                 * @param [response] ListProcessResponse
+                 */
+                type ListCallback = (error: (Error|null), response?: mesg.api.ListProcessResponse) => void;
+            }
+
+            /** Properties of a CreateProcessRequest. */
+            interface ICreateProcessRequest {
+
+                /** CreateProcessRequest key */
+                key?: (string|null);
+
+                /** CreateProcessRequest nodes */
+                nodes?: (mesg.types.Process.INode[]|null);
+
+                /** CreateProcessRequest edges */
+                edges?: (mesg.types.Process.IEdge[]|null);
+            }
+
+            /** Represents a CreateProcessRequest. */
+            class CreateProcessRequest implements ICreateProcessRequest {
+
+                /**
+                 * Constructs a new CreateProcessRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateProcessRequest);
+
+                /** CreateProcessRequest key. */
+                public key: string;
+
+                /** CreateProcessRequest nodes. */
+                public nodes: mesg.types.Process.INode[];
+
+                /** CreateProcessRequest edges. */
+                public edges: mesg.types.Process.IEdge[];
+            }
+
+            /** Properties of a CreateProcessResponse. */
+            interface ICreateProcessResponse {
+
+                /** CreateProcessResponse hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a CreateProcessResponse. */
+            class CreateProcessResponse implements ICreateProcessResponse {
+
+                /**
+                 * Constructs a new CreateProcessResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateProcessResponse);
+
+                /** CreateProcessResponse hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a DeleteProcessRequest. */
+            interface IDeleteProcessRequest {
+
+                /** DeleteProcessRequest hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a DeleteProcessRequest. */
+            class DeleteProcessRequest implements IDeleteProcessRequest {
+
+                /**
+                 * Constructs a new DeleteProcessRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteProcessRequest);
+
+                /** DeleteProcessRequest hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a DeleteProcessResponse. */
+            interface IDeleteProcessResponse {
+            }
+
+            /** Represents a DeleteProcessResponse. */
+            class DeleteProcessResponse implements IDeleteProcessResponse {
+
+                /**
+                 * Constructs a new DeleteProcessResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteProcessResponse);
+            }
+
+            /** Properties of a GetProcessRequest. */
+            interface IGetProcessRequest {
+
+                /** GetProcessRequest hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a GetProcessRequest. */
+            class GetProcessRequest implements IGetProcessRequest {
+
+                /**
+                 * Constructs a new GetProcessRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IGetProcessRequest);
+
+                /** GetProcessRequest hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a ListProcessRequest. */
+            interface IListProcessRequest {
+            }
+
+            /** Represents a ListProcessRequest. */
+            class ListProcessRequest implements IListProcessRequest {
+
+                /**
+                 * Constructs a new ListProcessRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IListProcessRequest);
+            }
+
+            /** Properties of a ListProcessResponse. */
+            interface IListProcessResponse {
+
+                /** ListProcessResponse processes */
+                processes?: (mesg.types.IProcess[]|null);
+            }
+
+            /** Represents a ListProcessResponse. */
+            class ListProcessResponse implements IListProcessResponse {
+
+                /**
+                 * Constructs a new ListProcessResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IListProcessResponse);
+
+                /** ListProcessResponse processes. */
+                public processes: mesg.types.IProcess[];
             }
         }
     }
@@ -1704,355 +2053,6 @@ declare namespace mesg {
                     public end: number;
                 }
             }
-        }
-    }
-
-    /** Namespace mesg. */
-    namespace mesg {
-
-        /** Namespace protobuf. */
-        namespace protobuf {
-
-            /** Properties of a Struct. */
-            interface IStruct {
-
-                /** Struct fields */
-                fields?: ({ [k: string]: mesg.protobuf.IValue }|null);
-            }
-
-            /** Represents a Struct. */
-            class Struct implements IStruct {
-
-                /**
-                 * Constructs a new Struct.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IStruct);
-
-                /** Struct fields. */
-                public fields: { [k: string]: mesg.protobuf.IValue };
-            }
-
-            /** Properties of a Value. */
-            interface IValue {
-
-                /** Value nullValue */
-                nullValue?: (mesg.protobuf.NullValue|null);
-
-                /** Value numberValue */
-                numberValue?: (number|null);
-
-                /** Value stringValue */
-                stringValue?: (string|null);
-
-                /** Value boolValue */
-                boolValue?: (boolean|null);
-
-                /** Value structValue */
-                structValue?: (mesg.protobuf.IStruct|null);
-
-                /** Value listValue */
-                listValue?: (mesg.protobuf.IListValue|null);
-            }
-
-            /** Represents a Value. */
-            class Value implements IValue {
-
-                /**
-                 * Constructs a new Value.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IValue);
-
-                /** Value nullValue. */
-                public nullValue: mesg.protobuf.NullValue;
-
-                /** Value numberValue. */
-                public numberValue: number;
-
-                /** Value stringValue. */
-                public stringValue: string;
-
-                /** Value boolValue. */
-                public boolValue: boolean;
-
-                /** Value structValue. */
-                public structValue?: (mesg.protobuf.IStruct|null);
-
-                /** Value listValue. */
-                public listValue?: (mesg.protobuf.IListValue|null);
-
-                /** Value kind. */
-                public kind?: ("nullValue"|"numberValue"|"stringValue"|"boolValue"|"structValue"|"listValue");
-            }
-
-            /** NullValue enum. */
-            enum NullValue {
-                NULL_VALUE = 0
-            }
-
-            /** Properties of a ListValue. */
-            interface IListValue {
-
-                /** ListValue values */
-                values?: (mesg.protobuf.IValue[]|null);
-            }
-
-            /** Represents a ListValue. */
-            class ListValue implements IListValue {
-
-                /**
-                 * Constructs a new ListValue.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.protobuf.IListValue);
-
-                /** ListValue values. */
-                public values: mesg.protobuf.IValue[];
-            }
-        }
-    }
-
-    /** Namespace api. */
-    namespace api {
-
-        /** Represents a Process */
-        class Process extends $protobuf.rpc.Service {
-
-            /**
-             * Constructs a new Process service.
-             * @param rpcImpl RPC implementation
-             * @param [requestDelimited=false] Whether requests are length-delimited
-             * @param [responseDelimited=false] Whether responses are length-delimited
-             */
-            constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
-
-            /**
-             * Calls Create.
-             * @param request CreateProcessRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and CreateProcessResponse
-             */
-            public create(request: api.ICreateProcessRequest, callback: api.Process.CreateCallback): void;
-
-            /**
-             * Calls Create.
-             * @param request CreateProcessRequest message or plain object
-             * @returns Promise
-             */
-            public create(request: api.ICreateProcessRequest): Promise<api.CreateProcessResponse>;
-
-            /**
-             * Calls Delete.
-             * @param request DeleteProcessRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and DeleteProcessResponse
-             */
-            public delete(request: api.IDeleteProcessRequest, callback: api.Process.DeleteCallback): void;
-
-            /**
-             * Calls Delete.
-             * @param request DeleteProcessRequest message or plain object
-             * @returns Promise
-             */
-            public delete(request: api.IDeleteProcessRequest): Promise<api.DeleteProcessResponse>;
-
-            /**
-             * Calls Get.
-             * @param request GetProcessRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and Process
-             */
-            public get(request: api.IGetProcessRequest, callback: api.Process.GetCallback): void;
-
-            /**
-             * Calls Get.
-             * @param request GetProcessRequest message or plain object
-             * @returns Promise
-             */
-            public get(request: api.IGetProcessRequest): Promise<types.Process>;
-
-            /**
-             * Calls List.
-             * @param request ListProcessRequest message or plain object
-             * @param callback Node-style callback called with the error, if any, and ListProcessResponse
-             */
-            public list(request: api.IListProcessRequest, callback: api.Process.ListCallback): void;
-
-            /**
-             * Calls List.
-             * @param request ListProcessRequest message or plain object
-             * @returns Promise
-             */
-            public list(request: api.IListProcessRequest): Promise<api.ListProcessResponse>;
-        }
-
-        namespace Process {
-
-            /**
-             * Callback as used by {@link api.Process#create}.
-             * @param error Error, if any
-             * @param [response] CreateProcessResponse
-             */
-            type CreateCallback = (error: (Error|null), response?: api.CreateProcessResponse) => void;
-
-            /**
-             * Callback as used by {@link api.Process#delete_}.
-             * @param error Error, if any
-             * @param [response] DeleteProcessResponse
-             */
-            type DeleteCallback = (error: (Error|null), response?: api.DeleteProcessResponse) => void;
-
-            /**
-             * Callback as used by {@link api.Process#get}.
-             * @param error Error, if any
-             * @param [response] Process
-             */
-            type GetCallback = (error: (Error|null), response?: types.Process) => void;
-
-            /**
-             * Callback as used by {@link api.Process#list}.
-             * @param error Error, if any
-             * @param [response] ListProcessResponse
-             */
-            type ListCallback = (error: (Error|null), response?: api.ListProcessResponse) => void;
-        }
-
-        /** Properties of a CreateProcessRequest. */
-        interface ICreateProcessRequest {
-
-            /** CreateProcessRequest key */
-            key?: (string|null);
-
-            /** CreateProcessRequest nodes */
-            nodes?: (types.Process.INode[]|null);
-
-            /** CreateProcessRequest edges */
-            edges?: (types.Process.IEdge[]|null);
-        }
-
-        /** Represents a CreateProcessRequest. */
-        class CreateProcessRequest implements ICreateProcessRequest {
-
-            /**
-             * Constructs a new CreateProcessRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateProcessRequest);
-
-            /** CreateProcessRequest key. */
-            public key: string;
-
-            /** CreateProcessRequest nodes. */
-            public nodes: types.Process.INode[];
-
-            /** CreateProcessRequest edges. */
-            public edges: types.Process.IEdge[];
-        }
-
-        /** Properties of a CreateProcessResponse. */
-        interface ICreateProcessResponse {
-
-            /** CreateProcessResponse hash */
-            hash?: (Uint8Array|null);
-        }
-
-        /** Represents a CreateProcessResponse. */
-        class CreateProcessResponse implements ICreateProcessResponse {
-
-            /**
-             * Constructs a new CreateProcessResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.ICreateProcessResponse);
-
-            /** CreateProcessResponse hash. */
-            public hash: Uint8Array;
-        }
-
-        /** Properties of a DeleteProcessRequest. */
-        interface IDeleteProcessRequest {
-
-            /** DeleteProcessRequest hash */
-            hash?: (Uint8Array|null);
-        }
-
-        /** Represents a DeleteProcessRequest. */
-        class DeleteProcessRequest implements IDeleteProcessRequest {
-
-            /**
-             * Constructs a new DeleteProcessRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IDeleteProcessRequest);
-
-            /** DeleteProcessRequest hash. */
-            public hash: Uint8Array;
-        }
-
-        /** Properties of a DeleteProcessResponse. */
-        interface IDeleteProcessResponse {
-        }
-
-        /** Represents a DeleteProcessResponse. */
-        class DeleteProcessResponse implements IDeleteProcessResponse {
-
-            /**
-             * Constructs a new DeleteProcessResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IDeleteProcessResponse);
-        }
-
-        /** Properties of a GetProcessRequest. */
-        interface IGetProcessRequest {
-
-            /** GetProcessRequest hash */
-            hash?: (Uint8Array|null);
-        }
-
-        /** Represents a GetProcessRequest. */
-        class GetProcessRequest implements IGetProcessRequest {
-
-            /**
-             * Constructs a new GetProcessRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IGetProcessRequest);
-
-            /** GetProcessRequest hash. */
-            public hash: Uint8Array;
-        }
-
-        /** Properties of a ListProcessRequest. */
-        interface IListProcessRequest {
-        }
-
-        /** Represents a ListProcessRequest. */
-        class ListProcessRequest implements IListProcessRequest {
-
-            /**
-             * Constructs a new ListProcessRequest.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IListProcessRequest);
-        }
-
-        /** Properties of a ListProcessResponse. */
-        interface IListProcessResponse {
-
-            /** ListProcessResponse processes */
-            processes?: (types.IProcess[]|null);
-        }
-
-        /** Represents a ListProcessResponse. */
-        class ListProcessResponse implements IListProcessResponse {
-
-            /**
-             * Constructs a new ListProcessResponse.
-             * @param [properties] Properties to set
-             */
-            constructor(properties?: api.IListProcessResponse);
-
-            /** ListProcessResponse processes. */
-            public processes: types.IProcess[];
         }
     }
 }

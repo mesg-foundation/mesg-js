@@ -10,7 +10,7 @@ function createClient(serviceName: string, filePath: string, endpoint: string){
   });
   const packageObject = grpc.loadPackageDefinition(packageDefinition);
 
-  const clientConstructor = packageObject.api[serviceName];
+  const clientConstructor = packageObject.mesg['api'][serviceName];
   return new clientConstructor(
     endpoint,
     grpc.credentials.createInsecure()
