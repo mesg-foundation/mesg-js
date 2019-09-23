@@ -8,6 +8,18 @@
 #### Fixed
 #### Removed
 
+## [v4.4.0](https://github.com/mesg-foundation/mesg-js/compare/v4.4.0)
+
+#### Added
+
+- ([#132](https://github.com/mesg-foundation/mesg-js/pull/132)) Add support for constants for map.
+- ([#133](https://github.com/mesg-foundation/mesg-js/pull/133)) Add account api.
+- ([#135](https://github.com/mesg-foundation/mesg-js/pull/135)) New api namespace, prefix all the API with mesg to avoid conflicts.
+
+#### Changed
+
+- ([#136](https://github.com/mesg-foundation/mesg-js/pull/136)) Normalize naming of the api (everything singular).
+
 ## [v4.3.1](https://github.com/mesg-foundation/mesg-js/compare/v4.3.1)
 
 #### Changed
