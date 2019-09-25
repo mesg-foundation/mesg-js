@@ -16,6 +16,10 @@ export const ExecutionStatus = {
   FAILED: 4
 }
 
+export type Credential = {
+  username: string
+  passphrase: string
+}
 
 export type Account = AccountType.mesg.types.IAccount
 
@@ -99,38 +103,38 @@ export type InfoOutputs = Promise<{ version: string, services: { sid: string, ha
 
 export type API = {
   account: {
-    get: (request: AccountGetInputs) => AccountGetOutputs
-    list: (request: AccountListInputs) => AccountListOutputs
-    create: (request: AccountCreateInputs) => AccountCreateOutputs
-    delete: (request: AccountDeleteInputs) => AccountDeleteOutputs
+    get: (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs
+    list: (request: AccountListInputs, credential?: Credential) => AccountListOutputs
+    create: (request: AccountCreateInputs, credential?: Credential) => AccountCreateOutputs
+    delete: (request: AccountDeleteInputs, credential?: Credential) => AccountDeleteOutputs
   },
   event: {
-    create: (request: EventCreateInputs) => EventCreateOutputs
-    stream: (request: EventStreamInputs) => EventStreamOutputs
+    create: (request: EventCreateInputs, credential?: Credential) => EventCreateOutputs
+    stream: (request: EventStreamInputs, credential?: Credential) => EventStreamOutputs
   }
   execution: {
-    get: (request: ExecutionGetInputs) => ExecutionGetOutputs
-    stream: (request: ExecutionStreamInputs) => ExecutionStreamOutputs
-    create: (request: ExecutionCreateInputs) => ExecutionCreateOutputs
-    update: (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs
+    get: (request: ExecutionGetInputs, credential?: Credential) => ExecutionGetOutputs
+    stream: (request: ExecutionStreamInputs, credential?: Credential) => ExecutionStreamOutputs
+    create: (request: ExecutionCreateInputs, credential?: Credential) => ExecutionCreateOutputs
+    update: (request: ExecutionUpdateInputs, credential?: Credential) => ExecutionUpdateOutputs
   }
   instance: {
-    get: (request: InstanceGetInputs) => InstanceGetOutputs
-    list: (request: InstanceListInputs) => InstanceListOutputs
-    create: (request: InstanceCreateInputs) => InstanceCreateOutputs
-    delete: (request: InstanceDeleteInputs) => InstanceDeleteOutputs
+    get: (request: InstanceGetInputs, credential?: Credential) => InstanceGetOutputs
+    list: (request: InstanceListInputs, credential?: Credential) => InstanceListOutputs
+    create: (request: InstanceCreateInputs, credential?: Credential) => InstanceCreateOutputs
+    delete: (request: InstanceDeleteInputs, credential?: Credential) => InstanceDeleteOutputs
   }
   service: {
-    get: (request: ServiceGetInputs) => ServiceGetOutputs
-    list: (request: ServiceListInputs) => ServiceListOutputs
-    create: (request: ServiceCreateInputs) => ServiceCreateOutputs
-    delete: (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+    get: (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs
+    list: (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs
+    create: (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs
+    delete: (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs
   },
   process: {
-    get: (request: ProcessGetInputs) => ProcessGetOutputs
-    list: (request: ProcessListInputs) => ProcessListOutputs
-    create: (request: ProcessCreateInputs) => ProcessCreateOutputs
-    delete: (request: ProcessDeleteInputs) => ProcessDeleteOutputs
+    get: (request: ProcessGetInputs, credential?: Credential) => ProcessGetOutputs
+    list: (request: ProcessListInputs, credential?: Credential) => ProcessListOutputs
+    create: (request: ProcessCreateInputs, credential?: Credential) => ProcessCreateOutputs
+    delete: (request: ProcessDeleteInputs, credential?: Credential) => ProcessDeleteOutputs
   },
   core: {
     info: () => InfoOutputs

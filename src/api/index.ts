@@ -1,3 +1,4 @@
+import { Metadata } from 'grpc'
 import { createClient } from '../util/grpc'
 import {
   API,
@@ -7,10 +8,18 @@ import {
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
   ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs,
   ProcessCreateInputs, ProcessGetInputs, ProcessListInputs, ProcessDeleteInputs, ProcessCreateOutputs, ProcessGetOutputs, ProcessListOutputs, ProcessDeleteOutputs,
-  InfoOutputs
+  InfoOutputs,
+  Credential
 } from './types'
 
-const promisify = (client, method) => request => new Promise((resolve, reject) => client[method](request, (err, res) => err ? reject(err) : resolve(res)))
+const promisify = (client, method) => (request, credential?: Credential) => {
+  const metadata = new Metadata()
+  if (credential) {
+    metadata.set('credential_username', credential.username)
+    metadata.set('credential_passphrase', credential.passphrase)
+  }
+  return new Promise((resolve, reject) => client[method](request, metadata, (err, res) => err ? reject(err) : resolve(res)))
+}
 
 export default (endpoint: string): API => {
   const account = createClient('Account', 'protobuf/api/account.proto', endpoint)
@@ -22,38 +31,38 @@ export default (endpoint: string): API => {
   const core = createClient('Core', 'protobuf/api/core.proto', endpoint)
   return {
     account: {
-      get: promisify(account, 'Get') as (request: AccountGetInputs) => AccountGetOutputs,
-      list: promisify(account, 'List') as (request: AccountListInputs) => AccountListOutputs,
-      create: promisify(account, 'Create') as (request: AccountCreateInputs) => AccountCreateOutputs,
-      delete: promisify(account, 'Delete') as (request: AccountDeleteInputs) => AccountDeleteOutputs
+      get: promisify(account, 'Get') as (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs,
+      list: promisify(account, 'List') as (request: AccountListInputs, credential?: Credential) => AccountListOutputs,
+      create: promisify(account, 'Create') as (request: AccountCreateInputs, credential?: Credential) => AccountCreateOutputs,
+      delete: promisify(account, 'Delete') as (request: AccountDeleteInputs, credential?: Credential) => AccountDeleteOutputs
     },
     event: {
-      create: promisify(event, 'Create') as (request: EventCreateInputs) => EventCreateOutputs,
-      stream: (request: EventStreamInputs) => event.Stream(request)
+      create: promisify(event, 'Create') as (request: EventCreateInputs, credential?: Credential) => EventCreateOutputs,
+      stream: (request: EventStreamInputs, credential?: Credential) => event.Stream(request)
     },
     execution: {
-      create: promisify(execution, 'Create') as (request: ExecutionCreateInputs) => ExecutionCreateOutputs,
-      get: promisify(execution, 'Get') as (request: ExecutionGetInputs) => ExecutionGetOutputs,
-      update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs) => ExecutionUpdateOutputs,
-      stream: (request: ExecutionStreamInputs) => execution.Stream(request)
+      create: promisify(execution, 'Create') as (request: ExecutionCreateInputs, credential?: Credential) => ExecutionCreateOutputs,
+      get: promisify(execution, 'Get') as (request: ExecutionGetInputs, credential?: Credential) => ExecutionGetOutputs,
+      update: promisify(execution, 'Update') as (request: ExecutionUpdateInputs, credential?: Credential) => ExecutionUpdateOutputs,
+      stream: (request: ExecutionStreamInputs, credential?: Credential) => execution.Stream(request)
     },
     instance: {
-      create: promisify(instance, 'Create') as (request: InstanceCreateInputs) => InstanceCreateOutputs,
-      get: promisify(instance, 'Get') as (request: InstanceGetInputs) => InstanceGetOutputs,
-      list: promisify(instance, 'List') as (request: InstanceListInputs) => InstanceListOutputs,
-      delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs) => InstanceDeleteOutputs
+      create: promisify(instance, 'Create') as (request: InstanceCreateInputs, credential?: Credential) => InstanceCreateOutputs,
+      get: promisify(instance, 'Get') as (request: InstanceGetInputs, credential?: Credential) => InstanceGetOutputs,
+      list: promisify(instance, 'List') as (request: InstanceListInputs, credential?: Credential) => InstanceListOutputs,
+      delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs, credential?: Credential) => InstanceDeleteOutputs
     },
     service: {
-      create: promisify(service, 'Create') as (request: ServiceCreateInputs) => ServiceCreateOutputs,
-      get: promisify(service, 'Get') as (request: ServiceGetInputs) => ServiceGetOutputs,
-      list: promisify(service, 'List') as (request: ServiceListInputs) => ServiceListOutputs,
-      delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs) => ServiceDeleteOutputs
+      create: promisify(service, 'Create') as (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs,
+      get: promisify(service, 'Get') as (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs,
+      list: promisify(service, 'List') as (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs,
+      delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs
     },
     process: {
-      create: promisify(process, 'Create') as (request: ProcessCreateInputs) => ProcessCreateOutputs,
-      get: promisify(process, 'Get') as (request: ProcessGetInputs) => ProcessGetOutputs,
-      list: promisify(process, 'List') as (request: ProcessListInputs) => ProcessListOutputs,
-      delete: promisify(process, 'Delete') as (request: ProcessDeleteInputs) => ProcessDeleteOutputs
+      create: promisify(process, 'Create') as (request: ProcessCreateInputs, credential?: Credential) => ProcessCreateOutputs,
+      get: promisify(process, 'Get') as (request: ProcessGetInputs, credential?: Credential) => ProcessGetOutputs,
+      list: promisify(process, 'List') as (request: ProcessListInputs, credential?: Credential) => ProcessListOutputs,
+      delete: promisify(process, 'Delete') as (request: ProcessDeleteInputs, credential?: Credential) => ProcessDeleteOutputs
     },
     core: {
       info: promisify(core, 'Info') as () => InfoOutputs
