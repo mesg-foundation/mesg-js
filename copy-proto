@@ -29,4 +29,3 @@ do
   npx pbts --path ./src -o "./src/api/typedef/$ressource.d.ts" --name mesg "./src/api/typedef/$ressource.js"
   rm "./src/api/typedef/$ressource.js"
 done
-curl -so "./src/protobuf/api/core.proto" "$PROTO_PATH/coreapi/api.proto"

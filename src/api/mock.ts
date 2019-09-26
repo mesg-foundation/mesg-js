@@ -57,9 +57,6 @@ export default (endpoint: string): API => ({
     get() { return Promise.resolve({ }) },
     list() { return Promise.resolve({ processes: [] }) },
     delete() { return Promise.resolve({}) },
-  },
-  core: {
-    info() { return Promise.resolve({ version: '0', services: [] }) }
   }
 })
 
