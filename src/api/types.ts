@@ -99,8 +99,6 @@ export type ProcessCreateOutputs = Promise<ProcessType.mesg.api.ICreateProcessRe
 export type ProcessDeleteInputs = ProcessType.mesg.api.IDeleteProcessRequest
 export type ProcessDeleteOutputs = Promise<ProcessType.mesg.api.IDeleteProcessResponse>
 
-export type InfoOutputs = Promise<{ version: string, services: { sid: string, hash: hash, url: string, key: string }[] }>
-
 export type API = {
   account: {
     get: (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs
@@ -135,8 +133,5 @@ export type API = {
     list: (request: ProcessListInputs, credential?: Credential) => ProcessListOutputs
     create: (request: ProcessCreateInputs, credential?: Credential) => ProcessCreateOutputs
     delete: (request: ProcessDeleteInputs, credential?: Credential) => ProcessDeleteOutputs
-  },
-  core: {
-    info: () => InfoOutputs
   }
 }
