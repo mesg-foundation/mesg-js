@@ -10,41 +10,50 @@ declare namespace mesg {
         /** Namespace types. */
         namespace types {
 
-            /** Properties of an Account. */
-            interface IAccount {
+            /** Properties of an Ownership. */
+            interface IOwnership {
 
-                /** Account name */
-                name?: (string|null);
+                /** Ownership hash */
+                hash?: (Uint8Array|null);
 
-                /** Account address */
-                address?: (string|null);
+                /** Ownership owner */
+                owner?: (string|null);
+
+                /** Ownership serviceHash */
+                serviceHash?: (Uint8Array|null);
             }
 
-            /** Represents an Account. */
-            class Account implements IAccount {
+            /** Represents an Ownership. */
+            class Ownership implements IOwnership {
 
                 /**
-                 * Constructs a new Account.
+                 * Constructs a new Ownership.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.types.IAccount);
+                constructor(properties?: mesg.types.IOwnership);
 
-                /** Account name. */
-                public name: string;
+                /** Ownership hash. */
+                public hash: Uint8Array;
 
-                /** Account address. */
-                public address: string;
+                /** Ownership owner. */
+                public owner: string;
+
+                /** Ownership serviceHash. */
+                public serviceHash: Uint8Array;
+
+                /** Ownership resource. */
+                public resource?: "serviceHash";
             }
         }
 
         /** Namespace api. */
         namespace api {
 
-            /** Represents an Account */
-            class Account extends $protobuf.rpc.Service {
+            /** Represents an Ownership */
+            class Ownership extends $protobuf.rpc.Service {
 
                 /**
-                 * Constructs a new Account service.
+                 * Constructs a new Ownership service.
                  * @param rpcImpl RPC implementation
                  * @param [requestDelimited=false] Whether requests are length-delimited
                  * @param [responseDelimited=false] Whether responses are length-delimited
@@ -52,225 +61,62 @@ declare namespace mesg {
                 constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
 
                 /**
-                 * Calls Get.
-                 * @param request GetAccountRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and Account
+                 * Calls List.
+                 * @param request ListOwnershipRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListOwnershipResponse
                  */
-                public get(request: mesg.api.IGetAccountRequest, callback: mesg.api.Account.GetCallback): void;
-
-                /**
-                 * Calls Get.
-                 * @param request GetAccountRequest message or plain object
-                 * @returns Promise
-                 */
-                public get(request: mesg.api.IGetAccountRequest): Promise<mesg.types.Account>;
+                public list(request: mesg.api.IListOwnershipRequest, callback: mesg.api.Ownership.ListCallback): void;
 
                 /**
                  * Calls List.
-                 * @param request ListAccountRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListAccountResponse
-                 */
-                public list(request: mesg.api.IListAccountRequest, callback: mesg.api.Account.ListCallback): void;
-
-                /**
-                 * Calls List.
-                 * @param request ListAccountRequest message or plain object
+                 * @param request ListOwnershipRequest message or plain object
                  * @returns Promise
                  */
-                public list(request: mesg.api.IListAccountRequest): Promise<mesg.api.ListAccountResponse>;
-
-                /**
-                 * Calls Create.
-                 * @param request CreateAccountRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and CreateAccountResponse
-                 */
-                public create(request: mesg.api.ICreateAccountRequest, callback: mesg.api.Account.CreateCallback): void;
-
-                /**
-                 * Calls Create.
-                 * @param request CreateAccountRequest message or plain object
-                 * @returns Promise
-                 */
-                public create(request: mesg.api.ICreateAccountRequest): Promise<mesg.api.CreateAccountResponse>;
-
-                /**
-                 * Calls Delete.
-                 * @param request DeleteAccountRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and DeleteAccountResponse
-                 */
-                public delete(request: mesg.api.IDeleteAccountRequest, callback: mesg.api.Account.DeleteCallback): void;
-
-                /**
-                 * Calls Delete.
-                 * @param request DeleteAccountRequest message or plain object
-                 * @returns Promise
-                 */
-                public delete(request: mesg.api.IDeleteAccountRequest): Promise<mesg.api.DeleteAccountResponse>;
+                public list(request: mesg.api.IListOwnershipRequest): Promise<mesg.api.ListOwnershipResponse>;
             }
 
-            namespace Account {
+            namespace Ownership {
 
                 /**
-                 * Callback as used by {@link mesg.api.Account#get}.
+                 * Callback as used by {@link mesg.api.Ownership#list}.
                  * @param error Error, if any
-                 * @param [response] Account
+                 * @param [response] ListOwnershipResponse
                  */
-                type GetCallback = (error: (Error|null), response?: mesg.types.Account) => void;
-
-                /**
-                 * Callback as used by {@link mesg.api.Account#list}.
-                 * @param error Error, if any
-                 * @param [response] ListAccountResponse
-                 */
-                type ListCallback = (error: (Error|null), response?: mesg.api.ListAccountResponse) => void;
-
-                /**
-                 * Callback as used by {@link mesg.api.Account#create}.
-                 * @param error Error, if any
-                 * @param [response] CreateAccountResponse
-                 */
-                type CreateCallback = (error: (Error|null), response?: mesg.api.CreateAccountResponse) => void;
-
-                /**
-                 * Callback as used by {@link mesg.api.Account#delete_}.
-                 * @param error Error, if any
-                 * @param [response] DeleteAccountResponse
-                 */
-                type DeleteCallback = (error: (Error|null), response?: mesg.api.DeleteAccountResponse) => void;
+                type ListCallback = (error: (Error|null), response?: mesg.api.ListOwnershipResponse) => void;
             }
 
-            /** Properties of a GetAccountRequest. */
-            interface IGetAccountRequest {
-
-                /** GetAccountRequest name */
-                name?: (string|null);
+            /** Properties of a ListOwnershipRequest. */
+            interface IListOwnershipRequest {
             }
 
-            /** Represents a GetAccountRequest. */
-            class GetAccountRequest implements IGetAccountRequest {
+            /** Represents a ListOwnershipRequest. */
+            class ListOwnershipRequest implements IListOwnershipRequest {
 
                 /**
-                 * Constructs a new GetAccountRequest.
+                 * Constructs a new ListOwnershipRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IGetAccountRequest);
-
-                /** GetAccountRequest name. */
-                public name: string;
+                constructor(properties?: mesg.api.IListOwnershipRequest);
             }
 
-            /** Properties of a ListAccountRequest. */
-            interface IListAccountRequest {
+            /** Properties of a ListOwnershipResponse. */
+            interface IListOwnershipResponse {
+
+                /** ListOwnershipResponse ownerships */
+                ownerships?: (mesg.types.IOwnership[]|null);
             }
 
-            /** Represents a ListAccountRequest. */
-            class ListAccountRequest implements IListAccountRequest {
+            /** Represents a ListOwnershipResponse. */
+            class ListOwnershipResponse implements IListOwnershipResponse {
 
                 /**
-                 * Constructs a new ListAccountRequest.
+                 * Constructs a new ListOwnershipResponse.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IListAccountRequest);
-            }
+                constructor(properties?: mesg.api.IListOwnershipResponse);
 
-            /** Properties of a ListAccountResponse. */
-            interface IListAccountResponse {
-
-                /** ListAccountResponse accounts */
-                accounts?: (mesg.types.IAccount[]|null);
-            }
-
-            /** Represents a ListAccountResponse. */
-            class ListAccountResponse implements IListAccountResponse {
-
-                /**
-                 * Constructs a new ListAccountResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.IListAccountResponse);
-
-                /** ListAccountResponse accounts. */
-                public accounts: mesg.types.IAccount[];
-            }
-
-            /** Properties of a CreateAccountRequest. */
-            interface ICreateAccountRequest {
-
-                /** CreateAccountRequest name */
-                name?: (string|null);
-
-                /** CreateAccountRequest password */
-                password?: (string|null);
-            }
-
-            /** Represents a CreateAccountRequest. */
-            class CreateAccountRequest implements ICreateAccountRequest {
-
-                /**
-                 * Constructs a new CreateAccountRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.ICreateAccountRequest);
-
-                /** CreateAccountRequest name. */
-                public name: string;
-
-                /** CreateAccountRequest password. */
-                public password: string;
-            }
-
-            /** Properties of a CreateAccountResponse. */
-            interface ICreateAccountResponse {
-
-                /** CreateAccountResponse address */
-                address?: (string|null);
-
-                /** CreateAccountResponse mnemonic */
-                mnemonic?: (string|null);
-            }
-
-            /** Represents a CreateAccountResponse. */
-            class CreateAccountResponse implements ICreateAccountResponse {
-
-                /**
-                 * Constructs a new CreateAccountResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.ICreateAccountResponse);
-
-                /** CreateAccountResponse address. */
-                public address: string;
-
-                /** CreateAccountResponse mnemonic. */
-                public mnemonic: string;
-            }
-
-            /** Properties of a DeleteAccountRequest. */
-            interface IDeleteAccountRequest {
-            }
-
-            /** Represents a DeleteAccountRequest. */
-            class DeleteAccountRequest implements IDeleteAccountRequest {
-
-                /**
-                 * Constructs a new DeleteAccountRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.IDeleteAccountRequest);
-            }
-
-            /** Properties of a DeleteAccountResponse. */
-            interface IDeleteAccountResponse {
-            }
-
-            /** Represents a DeleteAccountResponse. */
-            class DeleteAccountResponse implements IDeleteAccountResponse {
-
-                /**
-                 * Constructs a new DeleteAccountResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.IDeleteAccountResponse);
+                /** ListOwnershipResponse ownerships. */
+                public ownerships: mesg.types.IOwnership[];
             }
         }
     }

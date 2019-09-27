@@ -57,6 +57,9 @@ export default (endpoint: string): API => ({
     get() { return Promise.resolve({ }) },
     list() { return Promise.resolve({ processes: [] }) },
     delete() { return Promise.resolve({}) },
+  },
+  ownership: {
+    list() { return Promise.resolve({ ownerships: [] }) },
   }
 })
 

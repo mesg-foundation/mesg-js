@@ -5,6 +5,7 @@ import * as ExecutionType from './typedef/execution'
 import * as InstanceType from './typedef/instance'
 import * as ServiceType from './typedef/service'
 import * as ProcessType from './typedef/process'
+import * as OwnershipType from './typedef/ownership'
 
 export type hash = Uint8Array
 
@@ -32,6 +33,8 @@ export type Instance = InstanceType.mesg.types.IInstance
 export type Service = ServiceType.mesg.types.IService
 
 export type Process = ProcessType.mesg.types.IProcess
+
+export type Ownership = OwnershipType.mesg.types.IOwnership
 
 export type AccountGetInputs = AccountType.mesg.api.IGetAccountRequest
 export type AccountGetOutputs = Promise<Account>
@@ -99,6 +102,9 @@ export type ProcessCreateOutputs = Promise<ProcessType.mesg.api.ICreateProcessRe
 export type ProcessDeleteInputs = ProcessType.mesg.api.IDeleteProcessRequest
 export type ProcessDeleteOutputs = Promise<ProcessType.mesg.api.IDeleteProcessResponse>
 
+export type OwnershipListInputs = OwnershipType.mesg.api.IListOwnershipRequest
+export type OwnershipListOutputs = Promise<OwnershipType.mesg.api.IListOwnershipResponse>
+
 export type API = {
   account: {
     get: (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs
@@ -133,5 +139,8 @@ export type API = {
     list: (request: ProcessListInputs, credential?: Credential) => ProcessListOutputs
     create: (request: ProcessCreateInputs, credential?: Credential) => ProcessCreateOutputs
     delete: (request: ProcessDeleteInputs, credential?: Credential) => ProcessDeleteOutputs
+  },
+  ownership: {
+    list: (request: OwnershipListInputs, credential?: Credential) => OwnershipListOutputs
   }
 }
