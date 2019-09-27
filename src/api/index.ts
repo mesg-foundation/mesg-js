@@ -8,6 +8,7 @@ import {
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
   ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs,
   ProcessCreateInputs, ProcessGetInputs, ProcessListInputs, ProcessDeleteInputs, ProcessCreateOutputs, ProcessGetOutputs, ProcessListOutputs, ProcessDeleteOutputs,
+  OwnershipListInputs, OwnershipListOutputs,
   Credential
 } from './types'
 
@@ -27,6 +28,7 @@ export default (endpoint: string): API => {
   const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
   const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
   const process = createClient('Process', 'protobuf/api/process.proto', endpoint)
+  const ownership = createClient('Ownership', 'protobuf/api/ownership.proto', endpoint)
   return {
     account: {
       get: promisify(account, 'Get') as (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs,
@@ -61,6 +63,9 @@ export default (endpoint: string): API => {
       get: promisify(process, 'Get') as (request: ProcessGetInputs, credential?: Credential) => ProcessGetOutputs,
       list: promisify(process, 'List') as (request: ProcessListInputs, credential?: Credential) => ProcessListOutputs,
       delete: promisify(process, 'Delete') as (request: ProcessDeleteInputs, credential?: Credential) => ProcessDeleteOutputs
+    },
+    ownership: {
+      list: promisify(ownership, 'List') as (request: OwnershipListInputs, credential?: Credential) => OwnershipListOutputs,
     }
   }
 }
