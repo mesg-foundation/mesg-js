@@ -642,6 +642,9 @@ declare namespace mesg {
 
                 /** ExistsServiceResponse exists */
                 exists?: (boolean|null);
+
+                /** ExistsServiceResponse hash */
+                hash?: (Uint8Array|null);
             }
 
             /** Represents an ExistsServiceResponse. */
@@ -655,6 +658,9 @@ declare namespace mesg {
 
                 /** ExistsServiceResponse exists. */
                 public exists: boolean;
+
+                /** ExistsServiceResponse hash. */
+                public hash: Uint8Array;
             }
         }
     }
