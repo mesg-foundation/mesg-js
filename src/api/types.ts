@@ -81,6 +81,9 @@ export type InstanceDeleteOutputs = Promise<InstanceType.mesg.api.IDeleteInstanc
 export type ServiceGetInputs = ServiceType.mesg.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
 
+export type ServiceExistsInputs = ServiceType.mesg.api.ICreateServiceRequest
+export type ServiceExistsOutputs = Promise<ServiceType.mesg.api.IExistsServiceResponse>
+
 export type ServiceListInputs = ServiceType.mesg.api.IListServiceRequest
 export type ServiceListOutputs = Promise<ServiceType.mesg.api.IListServiceResponse>
 
@@ -130,6 +133,7 @@ export type API = {
   }
   service: {
     get: (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs
+    exists: (request: ServiceCreateInputs, credential?: Credential) => ServiceExistsOutputs
     list: (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs
     create: (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs
     delete: (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs

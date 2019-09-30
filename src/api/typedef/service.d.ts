@@ -407,6 +407,20 @@ declare namespace mesg {
                  * @returns Promise
                  */
                 public list(request: mesg.api.IListServiceRequest): Promise<mesg.api.ListServiceResponse>;
+
+                /**
+                 * Calls Exists.
+                 * @param request CreateServiceRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ExistsServiceResponse
+                 */
+                public exists(request: mesg.api.ICreateServiceRequest, callback: mesg.api.Service.ExistsCallback): void;
+
+                /**
+                 * Calls Exists.
+                 * @param request CreateServiceRequest message or plain object
+                 * @returns Promise
+                 */
+                public exists(request: mesg.api.ICreateServiceRequest): Promise<mesg.api.ExistsServiceResponse>;
             }
 
             namespace Service {
@@ -438,6 +452,13 @@ declare namespace mesg {
                  * @param [response] ListServiceResponse
                  */
                 type ListCallback = (error: (Error|null), response?: mesg.api.ListServiceResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Service#exists}.
+                 * @param error Error, if any
+                 * @param [response] ExistsServiceResponse
+                 */
+                type ExistsCallback = (error: (Error|null), response?: mesg.api.ExistsServiceResponse) => void;
             }
 
             /** Properties of a CreateServiceRequest. */
@@ -614,6 +635,26 @@ declare namespace mesg {
 
                 /** ListServiceResponse services. */
                 public services: mesg.types.IService[];
+            }
+
+            /** Properties of an ExistsServiceResponse. */
+            interface IExistsServiceResponse {
+
+                /** ExistsServiceResponse exists */
+                exists?: (boolean|null);
+            }
+
+            /** Represents an ExistsServiceResponse. */
+            class ExistsServiceResponse implements IExistsServiceResponse {
+
+                /**
+                 * Constructs a new ExistsServiceResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IExistsServiceResponse);
+
+                /** ExistsServiceResponse exists. */
+                public exists: boolean;
             }
         }
     }

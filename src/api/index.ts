@@ -6,7 +6,7 @@ import {
   EventCreateInputs, EventCreateOutputs, EventStreamInputs,
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
-  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs,
+  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs, ServiceExistsOutputs,
   ProcessCreateInputs, ProcessGetInputs, ProcessListInputs, ProcessDeleteInputs, ProcessCreateOutputs, ProcessGetOutputs, ProcessListOutputs, ProcessDeleteOutputs,
   OwnershipListInputs, OwnershipListOutputs,
   Credential
@@ -55,6 +55,7 @@ export default (endpoint: string): API => {
     service: {
       create: promisify(service, 'Create') as (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs,
       get: promisify(service, 'Get') as (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs,
+      exists: promisify(service, 'Exists') as (request: ServiceCreateInputs, credential?: Credential) => ServiceExistsOutputs,
       list: promisify(service, 'List') as (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs,
       delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs
     },

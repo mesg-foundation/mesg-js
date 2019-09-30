@@ -49,6 +49,7 @@ export default (endpoint: string): API => ({
   service: {
     create() { return Promise.resolve({ hash }) },
     get() { return Promise.resolve({ sid: 'xxx', source: 'xxx' }) },
+    exists() { return Promise.resolve({ exists: true }) },
     list() { return Promise.resolve({ services: [] }) },
     delete() { return Promise.resolve({}) },
   },
