@@ -81,6 +81,9 @@ export type InstanceDeleteOutputs = Promise<InstanceType.mesg.api.IDeleteInstanc
 export type ServiceGetInputs = ServiceType.mesg.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
 
+export type ServiceHashInputs = ServiceType.mesg.api.ICreateServiceRequest
+export type ServiceHashOutputs = Promise<ServiceType.mesg.api.IHashServiceResponse>
+
 export type ServiceExistsInputs = ServiceType.mesg.api.ICreateServiceRequest
 export type ServiceExistsOutputs = Promise<ServiceType.mesg.api.IExistsServiceResponse>
 
@@ -89,9 +92,6 @@ export type ServiceListOutputs = Promise<ServiceType.mesg.api.IListServiceRespon
 
 export type ServiceCreateInputs = ServiceType.mesg.api.ICreateServiceRequest
 export type ServiceCreateOutputs = Promise<ServiceType.mesg.api.ICreateServiceResponse>
-
-export type ServiceDeleteInputs = ServiceType.mesg.api.IDeleteServiceRequest
-export type ServiceDeleteOutputs = Promise<ServiceType.mesg.api.IDeleteServiceResponse>
 
 export type ProcessGetInputs = ProcessType.mesg.api.IGetProcessRequest
 export type ProcessGetOutputs = Promise<Process>
@@ -133,10 +133,10 @@ export type API = {
   }
   service: {
     get: (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs
-    exists: (request: ServiceCreateInputs, credential?: Credential) => ServiceExistsOutputs
+    hash: (request: ServiceHashInputs, credential?: Credential) => ServiceHashOutputs
+    exists: (request: ServiceExistsInputs, credential?: Credential) => ServiceExistsOutputs
     list: (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs
     create: (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs
-    delete: (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs
   },
   process: {
     get: (request: ProcessGetInputs, credential?: Credential) => ProcessGetOutputs

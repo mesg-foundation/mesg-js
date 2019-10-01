@@ -6,10 +6,13 @@ import {
   EventCreateInputs, EventCreateOutputs, EventStreamInputs,
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
   InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
-  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceDeleteInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceDeleteOutputs, ServiceExistsOutputs,
+  ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceExistsOutputs,
   ProcessCreateInputs, ProcessGetInputs, ProcessListInputs, ProcessDeleteInputs, ProcessCreateOutputs, ProcessGetOutputs, ProcessListOutputs, ProcessDeleteOutputs,
   OwnershipListInputs, OwnershipListOutputs,
-  Credential
+  Credential,
+  ServiceExistsInputs,
+  ServiceHashInputs,
+  ServiceHashOutputs
 } from './types'
 
 const promisify = (client, method) => (request, credential?: Credential) => {
@@ -55,9 +58,9 @@ export default (endpoint: string): API => {
     service: {
       create: promisify(service, 'Create') as (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs,
       get: promisify(service, 'Get') as (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs,
-      exists: promisify(service, 'Exists') as (request: ServiceCreateInputs, credential?: Credential) => ServiceExistsOutputs,
+      exists: promisify(service, 'Exists') as (request: ServiceExistsInputs, credential?: Credential) => ServiceExistsOutputs,
+      hash: promisify(service, 'Hash') as (request: ServiceHashInputs, credential?: Credential) => ServiceHashOutputs,
       list: promisify(service, 'List') as (request: ServiceListInputs, credential?: Credential) => ServiceListOutputs,
-      delete: promisify(service, 'Delete') as (request: ServiceDeleteInputs, credential?: Credential) => ServiceDeleteOutputs
     },
     process: {
       create: promisify(process, 'Create') as (request: ProcessCreateInputs, credential?: Credential) => ProcessCreateOutputs,
