@@ -84,7 +84,7 @@ export type ServiceGetOutputs = Promise<Service>
 export type ServiceHashInputs = ServiceType.mesg.api.ICreateServiceRequest
 export type ServiceHashOutputs = Promise<ServiceType.mesg.api.IHashServiceResponse>
 
-export type ServiceExistsInputs = ServiceType.mesg.api.ICreateServiceRequest
+export type ServiceExistsInputs = ServiceType.mesg.api.IExistsServiceRequest
 export type ServiceExistsOutputs = Promise<ServiceType.mesg.api.IExistsServiceResponse>
 
 export type ServiceListInputs = ServiceType.mesg.api.IListServiceRequest
