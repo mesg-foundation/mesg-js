@@ -367,20 +367,6 @@ declare namespace mesg {
                 public create(request: mesg.api.ICreateServiceRequest): Promise<mesg.api.CreateServiceResponse>;
 
                 /**
-                 * Calls Delete.
-                 * @param request DeleteServiceRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and DeleteServiceResponse
-                 */
-                public delete(request: mesg.api.IDeleteServiceRequest, callback: mesg.api.Service.DeleteCallback): void;
-
-                /**
-                 * Calls Delete.
-                 * @param request DeleteServiceRequest message or plain object
-                 * @returns Promise
-                 */
-                public delete(request: mesg.api.IDeleteServiceRequest): Promise<mesg.api.DeleteServiceResponse>;
-
-                /**
                  * Calls Get.
                  * @param request GetServiceRequest message or plain object
                  * @param callback Node-style callback called with the error, if any, and Service
@@ -407,6 +393,34 @@ declare namespace mesg {
                  * @returns Promise
                  */
                 public list(request: mesg.api.IListServiceRequest): Promise<mesg.api.ListServiceResponse>;
+
+                /**
+                 * Calls Exists.
+                 * @param request ExistsServiceRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ExistsServiceResponse
+                 */
+                public exists(request: mesg.api.IExistsServiceRequest, callback: mesg.api.Service.ExistsCallback): void;
+
+                /**
+                 * Calls Exists.
+                 * @param request ExistsServiceRequest message or plain object
+                 * @returns Promise
+                 */
+                public exists(request: mesg.api.IExistsServiceRequest): Promise<mesg.api.ExistsServiceResponse>;
+
+                /**
+                 * Calls Hash.
+                 * @param request CreateServiceRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and HashServiceResponse
+                 */
+                public hash(request: mesg.api.ICreateServiceRequest, callback: mesg.api.Service.HashCallback): void;
+
+                /**
+                 * Calls Hash.
+                 * @param request CreateServiceRequest message or plain object
+                 * @returns Promise
+                 */
+                public hash(request: mesg.api.ICreateServiceRequest): Promise<mesg.api.HashServiceResponse>;
             }
 
             namespace Service {
@@ -417,13 +431,6 @@ declare namespace mesg {
                  * @param [response] CreateServiceResponse
                  */
                 type CreateCallback = (error: (Error|null), response?: mesg.api.CreateServiceResponse) => void;
-
-                /**
-                 * Callback as used by {@link mesg.api.Service#delete_}.
-                 * @param error Error, if any
-                 * @param [response] DeleteServiceResponse
-                 */
-                type DeleteCallback = (error: (Error|null), response?: mesg.api.DeleteServiceResponse) => void;
 
                 /**
                  * Callback as used by {@link mesg.api.Service#get}.
@@ -438,6 +445,20 @@ declare namespace mesg {
                  * @param [response] ListServiceResponse
                  */
                 type ListCallback = (error: (Error|null), response?: mesg.api.ListServiceResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Service#exists}.
+                 * @param error Error, if any
+                 * @param [response] ExistsServiceResponse
+                 */
+                type ExistsCallback = (error: (Error|null), response?: mesg.api.ExistsServiceResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Service#hash}.
+                 * @param error Error, if any
+                 * @param [response] HashServiceResponse
+                 */
+                type HashCallback = (error: (Error|null), response?: mesg.api.HashServiceResponse) => void;
             }
 
             /** Properties of a CreateServiceRequest. */
@@ -528,40 +549,6 @@ declare namespace mesg {
                 public hash: Uint8Array;
             }
 
-            /** Properties of a DeleteServiceRequest. */
-            interface IDeleteServiceRequest {
-
-                /** DeleteServiceRequest hash */
-                hash?: (Uint8Array|null);
-            }
-
-            /** Represents a DeleteServiceRequest. */
-            class DeleteServiceRequest implements IDeleteServiceRequest {
-
-                /**
-                 * Constructs a new DeleteServiceRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.IDeleteServiceRequest);
-
-                /** DeleteServiceRequest hash. */
-                public hash: Uint8Array;
-            }
-
-            /** Properties of a DeleteServiceResponse. */
-            interface IDeleteServiceResponse {
-            }
-
-            /** Represents a DeleteServiceResponse. */
-            class DeleteServiceResponse implements IDeleteServiceResponse {
-
-                /**
-                 * Constructs a new DeleteServiceResponse.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: mesg.api.IDeleteServiceResponse);
-            }
-
             /** Properties of a GetServiceRequest. */
             interface IGetServiceRequest {
 
@@ -614,6 +601,66 @@ declare namespace mesg {
 
                 /** ListServiceResponse services. */
                 public services: mesg.types.IService[];
+            }
+
+            /** Properties of an ExistsServiceRequest. */
+            interface IExistsServiceRequest {
+
+                /** ExistsServiceRequest hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents an ExistsServiceRequest. */
+            class ExistsServiceRequest implements IExistsServiceRequest {
+
+                /**
+                 * Constructs a new ExistsServiceRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IExistsServiceRequest);
+
+                /** ExistsServiceRequest hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of an ExistsServiceResponse. */
+            interface IExistsServiceResponse {
+
+                /** ExistsServiceResponse exists */
+                exists?: (boolean|null);
+            }
+
+            /** Represents an ExistsServiceResponse. */
+            class ExistsServiceResponse implements IExistsServiceResponse {
+
+                /**
+                 * Constructs a new ExistsServiceResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IExistsServiceResponse);
+
+                /** ExistsServiceResponse exists. */
+                public exists: boolean;
+            }
+
+            /** Properties of a HashServiceResponse. */
+            interface IHashServiceResponse {
+
+                /** HashServiceResponse hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a HashServiceResponse. */
+            class HashServiceResponse implements IHashServiceResponse {
+
+                /**
+                 * Constructs a new HashServiceResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IHashServiceResponse);
+
+                /** HashServiceResponse hash. */
+                public hash: Uint8Array;
             }
         }
     }

@@ -4,9 +4,14 @@
 
 #### Breaking Changes
 #### Added
+
+- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Add new `service.Hash` and `service.Exists` APIs
+
 #### Changed
 #### Fixed
 #### Removed
+
+- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove service.delete api
 
 ## [v4.4.0](https://github.com/mesg-foundation/mesg-js/compare/v4.4.0)
 
