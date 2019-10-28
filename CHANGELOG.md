@@ -1,17 +1,25 @@
 # Changelog
 
-## [Unreleased](https://github.com/mesg-foundation/mesg-js/compare/v3.0.0...master)
+## [Unreleased](https://github.com/mesg-foundation/mesg-js/compare/v5.0.0...master)
 
 #### Breaking Changes
 #### Added
-
-- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Add new `service.Hash` and `service.Exists` APIs
-
 #### Changed
 #### Fixed
 #### Removed
 
-- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove service.delete api
+## [v5.0.0](https://github.com/mesg-foundation/mesg-js/compare/v5.0.0)
+
+#### Breaking Changes
+
+- ([#141](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove `core` APIs.
+- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove `service.Delete` API.
+
+#### Added
+
+- ([#134](https://github.com/mesg-foundation/mesg-js/pull/134)) Add `credential` system.
+- ([#143](https://github.com/mesg-foundation/mesg-js/pull/142)) Add `ownership` APIs.
+- ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Add `service.Hash` and `service.Exists` APIs.
 
 ## [v4.4.0](https://github.com/mesg-foundation/mesg-js/compare/v4.4.0)
 
