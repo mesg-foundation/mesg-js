@@ -12,13 +12,13 @@
 
 #### Breaking Changes
 
-- ([#141](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove `core` APIs.
+- ([#141](https://github.com/mesg-foundation/mesg-js/pull/141)) Remove `core` APIs.
 - ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Remove `service.Delete` API.
 
 #### Added
 
 - ([#134](https://github.com/mesg-foundation/mesg-js/pull/134)) Add `credential` system.
-- ([#143](https://github.com/mesg-foundation/mesg-js/pull/142)) Add `ownership` APIs.
+- ([#142](https://github.com/mesg-foundation/mesg-js/pull/142)) Add `ownership` APIs.
 - ([#143](https://github.com/mesg-foundation/mesg-js/pull/143)) Add `service.Hash` and `service.Exists` APIs.
 
 ## [v4.4.0](https://github.com/mesg-foundation/mesg-js/compare/v4.4.0)
