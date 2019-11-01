@@ -6,6 +6,7 @@ import * as InstanceType from './typedef/instance'
 import * as ServiceType from './typedef/service'
 import * as ProcessType from './typedef/process'
 import * as OwnershipType from './typedef/ownership'
+import * as RunnerType from './typedef/runner'
 
 export type hash = Uint8Array
 
@@ -35,6 +36,8 @@ export type Service = ServiceType.mesg.types.IService
 export type Process = ProcessType.mesg.types.IProcess
 
 export type Ownership = OwnershipType.mesg.types.IOwnership
+
+export type Runner = RunnerType.mesg.types.IRunner
 
 export type AccountGetInputs = AccountType.mesg.api.IGetAccountRequest
 export type AccountGetOutputs = Promise<Account>
@@ -72,12 +75,6 @@ export type InstanceGetOutputs = Promise<Instance>
 export type InstanceListInputs = InstanceType.mesg.api.IListInstanceRequest
 export type InstanceListOutputs = Promise<InstanceType.mesg.api.IListInstanceResponse>
 
-export type InstanceCreateInputs = InstanceType.mesg.api.ICreateInstanceRequest
-export type InstanceCreateOutputs = Promise<InstanceType.mesg.api.ICreateInstanceResponse>
-
-export type InstanceDeleteInputs = InstanceType.mesg.api.IDeleteInstanceRequest
-export type InstanceDeleteOutputs = Promise<InstanceType.mesg.api.IDeleteInstanceResponse>
-
 export type ServiceGetInputs = ServiceType.mesg.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
 
@@ -108,6 +105,18 @@ export type ProcessDeleteOutputs = Promise<ProcessType.mesg.api.IDeleteProcessRe
 export type OwnershipListInputs = OwnershipType.mesg.api.IListOwnershipRequest
 export type OwnershipListOutputs = Promise<OwnershipType.mesg.api.IListOwnershipResponse>
 
+export type RunnerGetInputs = RunnerType.mesg.api.IGetRunnerRequest
+export type RunnerGetOutputs = Promise<Runner>
+
+export type RunnerListInputs = RunnerType.mesg.api.IListRunnerRequest
+export type RunnerListOutputs = Promise<RunnerType.mesg.api.IListRunnerResponse>
+
+export type RunnerCreateInputs = RunnerType.mesg.api.ICreateRunnerRequest
+export type RunnerCreateOutputs = Promise<RunnerType.mesg.api.ICreateRunnerResponse>
+
+export type RunnerDeleteInputs = RunnerType.mesg.api.IDeleteRunnerRequest
+export type RunnerDeleteOutputs = Promise<RunnerType.mesg.api.IDeleteRunnerResponse>
+
 export type API = {
   account: {
     get: (request: AccountGetInputs, credential?: Credential) => AccountGetOutputs
@@ -128,8 +137,6 @@ export type API = {
   instance: {
     get: (request: InstanceGetInputs, credential?: Credential) => InstanceGetOutputs
     list: (request: InstanceListInputs, credential?: Credential) => InstanceListOutputs
-    create: (request: InstanceCreateInputs, credential?: Credential) => InstanceCreateOutputs
-    delete: (request: InstanceDeleteInputs, credential?: Credential) => InstanceDeleteOutputs
   }
   service: {
     get: (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs
@@ -146,5 +153,11 @@ export type API = {
   },
   ownership: {
     list: (request: OwnershipListInputs, credential?: Credential) => OwnershipListOutputs
+  }
+  runner: {
+    get: (request: RunnerGetInputs, credential?: Credential) => RunnerGetOutputs
+    list: (request: RunnerListInputs, credential?: Credential) => RunnerListOutputs
+    create: (request: RunnerCreateInputs, credential?: Credential) => RunnerCreateOutputs
+    delete: (request: RunnerDeleteInputs, credential?: Credential) => RunnerDeleteOutputs
   }
 }

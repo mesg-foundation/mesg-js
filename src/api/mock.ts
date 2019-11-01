@@ -41,10 +41,8 @@ export default (endpoint: string): API => ({
     update() { return Promise.resolve({}) }
   },
   instance: {
-    create() { return Promise.resolve({ hash }) },
     get() { return Promise.resolve({ serviceHash: hash }) },
     list() { return Promise.resolve({ instances: [] }) },
-    delete() { return Promise.resolve({}) }
   },
   service: {
     create() { return Promise.resolve({ hash }) },
@@ -61,7 +59,13 @@ export default (endpoint: string): API => ({
   },
   ownership: {
     list() { return Promise.resolve({ ownerships: [] }) },
-  }
+  },
+  runner: {
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ }) },
+    list() { return Promise.resolve({ runners: [] }) },
+    delete() { return Promise.resolve({}) },
+  },
 })
 
 export * from './types' 
