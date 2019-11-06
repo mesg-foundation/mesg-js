@@ -41,9 +41,13 @@ export default (endpoint: string): API => ({
     update() { return Promise.resolve({}) }
   },
   instance: {
-    create() { return Promise.resolve({ hash }) },
-    get() { return Promise.resolve({ serviceHash: hash }) },
+    get() { return Promise.resolve({ hash: hash, serviceHash: hash, envHash: hash }) },
     list() { return Promise.resolve({ instances: [] }) },
+  },
+  runner: {
+    create() { return Promise.resolve({ hash }) },
+    get() { return Promise.resolve({ hash: hash, address: '', instanceHash: hash }) },
+    list() { return Promise.resolve({ runners: [] }) },
     delete() { return Promise.resolve({}) }
   },
   service: {

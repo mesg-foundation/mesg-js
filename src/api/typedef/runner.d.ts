@@ -10,47 +10,47 @@ declare namespace mesg {
         /** Namespace types. */
         namespace types {
 
-            /** Properties of an Instance. */
-            interface IInstance {
+            /** Properties of a Runner. */
+            interface IRunner {
 
-                /** Instance hash */
+                /** Runner hash */
                 hash?: (Uint8Array|null);
 
-                /** Instance serviceHash */
-                serviceHash?: (Uint8Array|null);
+                /** Runner address */
+                address?: (string|null);
 
-                /** Instance envHash */
-                envHash?: (Uint8Array|null);
+                /** Runner instanceHash */
+                instanceHash?: (Uint8Array|null);
             }
 
-            /** Represents an Instance. */
-            class Instance implements IInstance {
+            /** Represents a Runner. */
+            class Runner implements IRunner {
 
                 /**
-                 * Constructs a new Instance.
+                 * Constructs a new Runner.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.types.IInstance);
+                constructor(properties?: mesg.types.IRunner);
 
-                /** Instance hash. */
+                /** Runner hash. */
                 public hash: Uint8Array;
 
-                /** Instance serviceHash. */
-                public serviceHash: Uint8Array;
+                /** Runner address. */
+                public address: string;
 
-                /** Instance envHash. */
-                public envHash: Uint8Array;
+                /** Runner instanceHash. */
+                public instanceHash: Uint8Array;
             }
         }
 
         /** Namespace api. */
         namespace api {
 
-            /** Represents an Instance */
-            class Instance extends $protobuf.rpc.Service {
+            /** Represents a Runner */
+            class Runner extends $protobuf.rpc.Service {
 
                 /**
-                 * Constructs a new Instance service.
+                 * Constructs a new Runner service.
                  * @param rpcImpl RPC implementation
                  * @param [requestDelimited=false] Whether requests are length-delimited
                  * @param [responseDelimited=false] Whether responses are length-delimited
@@ -59,97 +59,142 @@ declare namespace mesg {
 
                 /**
                  * Calls Get.
-                 * @param request GetInstanceRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and Instance
+                 * @param request GetRunnerRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and Runner
                  */
-                public get(request: mesg.api.IGetInstanceRequest, callback: mesg.api.Instance.GetCallback): void;
+                public get(request: mesg.api.IGetRunnerRequest, callback: mesg.api.Runner.GetCallback): void;
 
                 /**
                  * Calls Get.
-                 * @param request GetInstanceRequest message or plain object
+                 * @param request GetRunnerRequest message or plain object
                  * @returns Promise
                  */
-                public get(request: mesg.api.IGetInstanceRequest): Promise<mesg.types.Instance>;
+                public get(request: mesg.api.IGetRunnerRequest): Promise<mesg.types.Runner>;
 
                 /**
                  * Calls List.
-                 * @param request ListInstanceRequest message or plain object
-                 * @param callback Node-style callback called with the error, if any, and ListInstanceResponse
+                 * @param request ListRunnerRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and ListRunnerResponse
                  */
-                public list(request: mesg.api.IListInstanceRequest, callback: mesg.api.Instance.ListCallback): void;
+                public list(request: mesg.api.IListRunnerRequest, callback: mesg.api.Runner.ListCallback): void;
 
                 /**
                  * Calls List.
-                 * @param request ListInstanceRequest message or plain object
+                 * @param request ListRunnerRequest message or plain object
                  * @returns Promise
                  */
-                public list(request: mesg.api.IListInstanceRequest): Promise<mesg.api.ListInstanceResponse>;
-            }
-
-            namespace Instance {
+                public list(request: mesg.api.IListRunnerRequest): Promise<mesg.api.ListRunnerResponse>;
 
                 /**
-                 * Callback as used by {@link mesg.api.Instance#get}.
-                 * @param error Error, if any
-                 * @param [response] Instance
+                 * Calls Create.
+                 * @param request CreateRunnerRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and CreateRunnerResponse
                  */
-                type GetCallback = (error: (Error|null), response?: mesg.types.Instance) => void;
+                public create(request: mesg.api.ICreateRunnerRequest, callback: mesg.api.Runner.CreateCallback): void;
 
                 /**
-                 * Callback as used by {@link mesg.api.Instance#list}.
-                 * @param error Error, if any
-                 * @param [response] ListInstanceResponse
+                 * Calls Create.
+                 * @param request CreateRunnerRequest message or plain object
+                 * @returns Promise
                  */
-                type ListCallback = (error: (Error|null), response?: mesg.api.ListInstanceResponse) => void;
+                public create(request: mesg.api.ICreateRunnerRequest): Promise<mesg.api.CreateRunnerResponse>;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteRunnerRequest message or plain object
+                 * @param callback Node-style callback called with the error, if any, and DeleteRunnerResponse
+                 */
+                public delete(request: mesg.api.IDeleteRunnerRequest, callback: mesg.api.Runner.DeleteCallback): void;
+
+                /**
+                 * Calls Delete.
+                 * @param request DeleteRunnerRequest message or plain object
+                 * @returns Promise
+                 */
+                public delete(request: mesg.api.IDeleteRunnerRequest): Promise<mesg.api.DeleteRunnerResponse>;
             }
 
-            /** Properties of a GetInstanceRequest. */
-            interface IGetInstanceRequest {
+            namespace Runner {
 
-                /** GetInstanceRequest hash */
+                /**
+                 * Callback as used by {@link mesg.api.Runner#get}.
+                 * @param error Error, if any
+                 * @param [response] Runner
+                 */
+                type GetCallback = (error: (Error|null), response?: mesg.types.Runner) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Runner#list}.
+                 * @param error Error, if any
+                 * @param [response] ListRunnerResponse
+                 */
+                type ListCallback = (error: (Error|null), response?: mesg.api.ListRunnerResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Runner#create}.
+                 * @param error Error, if any
+                 * @param [response] CreateRunnerResponse
+                 */
+                type CreateCallback = (error: (Error|null), response?: mesg.api.CreateRunnerResponse) => void;
+
+                /**
+                 * Callback as used by {@link mesg.api.Runner#delete_}.
+                 * @param error Error, if any
+                 * @param [response] DeleteRunnerResponse
+                 */
+                type DeleteCallback = (error: (Error|null), response?: mesg.api.DeleteRunnerResponse) => void;
+            }
+
+            /** Properties of a GetRunnerRequest. */
+            interface IGetRunnerRequest {
+
+                /** GetRunnerRequest hash */
                 hash?: (Uint8Array|null);
             }
 
-            /** Represents a GetInstanceRequest. */
-            class GetInstanceRequest implements IGetInstanceRequest {
+            /** Represents a GetRunnerRequest. */
+            class GetRunnerRequest implements IGetRunnerRequest {
 
                 /**
-                 * Constructs a new GetInstanceRequest.
+                 * Constructs a new GetRunnerRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IGetInstanceRequest);
+                constructor(properties?: mesg.api.IGetRunnerRequest);
 
-                /** GetInstanceRequest hash. */
+                /** GetRunnerRequest hash. */
                 public hash: Uint8Array;
             }
 
-            /** Properties of a ListInstanceRequest. */
-            interface IListInstanceRequest {
+            /** Properties of a ListRunnerRequest. */
+            interface IListRunnerRequest {
 
-                /** ListInstanceRequest filter */
-                filter?: (mesg.api.ListInstanceRequest.IFilter|null);
+                /** ListRunnerRequest filter */
+                filter?: (mesg.api.ListRunnerRequest.IFilter|null);
             }
 
-            /** Represents a ListInstanceRequest. */
-            class ListInstanceRequest implements IListInstanceRequest {
+            /** Represents a ListRunnerRequest. */
+            class ListRunnerRequest implements IListRunnerRequest {
 
                 /**
-                 * Constructs a new ListInstanceRequest.
+                 * Constructs a new ListRunnerRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IListInstanceRequest);
+                constructor(properties?: mesg.api.IListRunnerRequest);
 
-                /** ListInstanceRequest filter. */
-                public filter?: (mesg.api.ListInstanceRequest.IFilter|null);
+                /** ListRunnerRequest filter. */
+                public filter?: (mesg.api.ListRunnerRequest.IFilter|null);
             }
 
-            namespace ListInstanceRequest {
+            namespace ListRunnerRequest {
 
                 /** Properties of a Filter. */
                 interface IFilter {
 
-                    /** Filter serviceHash */
-                    serviceHash?: (Uint8Array|null);
+                    /** Filter instanceHash */
+                    instanceHash?: (Uint8Array|null);
+
+                    /** Filter address */
+                    address?: (string|null);
                 }
 
                 /** Represents a Filter. */
@@ -159,31 +204,120 @@ declare namespace mesg {
                      * Constructs a new Filter.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: mesg.api.ListInstanceRequest.IFilter);
+                    constructor(properties?: mesg.api.ListRunnerRequest.IFilter);
 
-                    /** Filter serviceHash. */
-                    public serviceHash: Uint8Array;
+                    /** Filter instanceHash. */
+                    public instanceHash: Uint8Array;
+
+                    /** Filter address. */
+                    public address: string;
                 }
             }
 
-            /** Properties of a ListInstanceResponse. */
-            interface IListInstanceResponse {
+            /** Properties of a ListRunnerResponse. */
+            interface IListRunnerResponse {
 
-                /** ListInstanceResponse instances */
-                instances?: (mesg.types.IInstance[]|null);
+                /** ListRunnerResponse runners */
+                runners?: (mesg.types.IRunner[]|null);
             }
 
-            /** Represents a ListInstanceResponse. */
-            class ListInstanceResponse implements IListInstanceResponse {
+            /** Represents a ListRunnerResponse. */
+            class ListRunnerResponse implements IListRunnerResponse {
 
                 /**
-                 * Constructs a new ListInstanceResponse.
+                 * Constructs a new ListRunnerResponse.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: mesg.api.IListInstanceResponse);
+                constructor(properties?: mesg.api.IListRunnerResponse);
 
-                /** ListInstanceResponse instances. */
-                public instances: mesg.types.IInstance[];
+                /** ListRunnerResponse runners. */
+                public runners: mesg.types.IRunner[];
+            }
+
+            /** Properties of a CreateRunnerRequest. */
+            interface ICreateRunnerRequest {
+
+                /** CreateRunnerRequest serviceHash */
+                serviceHash?: (Uint8Array|null);
+
+                /** CreateRunnerRequest env */
+                env?: (string[]|null);
+            }
+
+            /** Represents a CreateRunnerRequest. */
+            class CreateRunnerRequest implements ICreateRunnerRequest {
+
+                /**
+                 * Constructs a new CreateRunnerRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateRunnerRequest);
+
+                /** CreateRunnerRequest serviceHash. */
+                public serviceHash: Uint8Array;
+
+                /** CreateRunnerRequest env. */
+                public env: string[];
+            }
+
+            /** Properties of a CreateRunnerResponse. */
+            interface ICreateRunnerResponse {
+
+                /** CreateRunnerResponse hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a CreateRunnerResponse. */
+            class CreateRunnerResponse implements ICreateRunnerResponse {
+
+                /**
+                 * Constructs a new CreateRunnerResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.ICreateRunnerResponse);
+
+                /** CreateRunnerResponse hash. */
+                public hash: Uint8Array;
+            }
+
+            /** Properties of a DeleteRunnerRequest. */
+            interface IDeleteRunnerRequest {
+
+                /** DeleteRunnerRequest hash */
+                hash?: (Uint8Array|null);
+
+                /** DeleteRunnerRequest deleteData */
+                deleteData?: (boolean|null);
+            }
+
+            /** Represents a DeleteRunnerRequest. */
+            class DeleteRunnerRequest implements IDeleteRunnerRequest {
+
+                /**
+                 * Constructs a new DeleteRunnerRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteRunnerRequest);
+
+                /** DeleteRunnerRequest hash. */
+                public hash: Uint8Array;
+
+                /** DeleteRunnerRequest deleteData. */
+                public deleteData: boolean;
+            }
+
+            /** Properties of a DeleteRunnerResponse. */
+            interface IDeleteRunnerResponse {
+            }
+
+            /** Represents a DeleteRunnerResponse. */
+            class DeleteRunnerResponse implements IDeleteRunnerResponse {
+
+                /**
+                 * Constructs a new DeleteRunnerResponse.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: mesg.api.IDeleteRunnerResponse);
             }
         }
     }

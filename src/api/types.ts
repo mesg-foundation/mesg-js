@@ -3,6 +3,7 @@ import * as AccountType from './typedef/account'
 import * as EventType from './typedef/event'
 import * as ExecutionType from './typedef/execution'
 import * as InstanceType from './typedef/instance'
+import * as RunnerType from './typedef/runner'
 import * as ServiceType from './typedef/service'
 import * as ProcessType from './typedef/process'
 import * as OwnershipType from './typedef/ownership'
@@ -29,6 +30,8 @@ export type Event = EventType.mesg.types.IEvent
 export type Execution = ExecutionType.mesg.types.IExecution
 
 export type Instance = InstanceType.mesg.types.IInstance
+
+export type Runner = RunnerType.mesg.types.IRunner
 
 export type Service = ServiceType.mesg.types.IService
 
@@ -72,11 +75,17 @@ export type InstanceGetOutputs = Promise<Instance>
 export type InstanceListInputs = InstanceType.mesg.api.IListInstanceRequest
 export type InstanceListOutputs = Promise<InstanceType.mesg.api.IListInstanceResponse>
 
-export type InstanceCreateInputs = InstanceType.mesg.api.ICreateInstanceRequest
-export type InstanceCreateOutputs = Promise<InstanceType.mesg.api.ICreateInstanceResponse>
+export type RunnerGetInputs = RunnerType.mesg.api.IGetRunnerRequest
+export type RunnerGetOutputs = Promise<Runner>
 
-export type InstanceDeleteInputs = InstanceType.mesg.api.IDeleteInstanceRequest
-export type InstanceDeleteOutputs = Promise<InstanceType.mesg.api.IDeleteInstanceResponse>
+export type RunnerListInputs = RunnerType.mesg.api.IListRunnerRequest
+export type RunnerListOutputs = Promise<RunnerType.mesg.api.IListRunnerResponse>
+
+export type RunnerCreateInputs = RunnerType.mesg.api.ICreateRunnerRequest
+export type RunnerCreateOutputs = Promise<Runner>
+
+export type RunnerDeleteInputs = RunnerType.mesg.api.IDeleteRunnerRequest
+export type RunnerDeleteOutputs = Promise<RunnerType.mesg.api.IDeleteRunnerResponse>
 
 export type ServiceGetInputs = ServiceType.mesg.api.IGetServiceRequest
 export type ServiceGetOutputs = Promise<Service>
@@ -128,8 +137,12 @@ export type API = {
   instance: {
     get: (request: InstanceGetInputs, credential?: Credential) => InstanceGetOutputs
     list: (request: InstanceListInputs, credential?: Credential) => InstanceListOutputs
-    create: (request: InstanceCreateInputs, credential?: Credential) => InstanceCreateOutputs
-    delete: (request: InstanceDeleteInputs, credential?: Credential) => InstanceDeleteOutputs
+  }
+  runner: {
+    get: (request: RunnerGetInputs, credential?: Credential) => RunnerGetOutputs
+    list: (request: RunnerListInputs, credential?: Credential) => RunnerListOutputs
+    create: (request: RunnerCreateInputs, credential?: Credential) => RunnerCreateOutputs
+    delete: (request: RunnerDeleteInputs, credential?: Credential) => RunnerDeleteOutputs
   }
   service: {
     get: (request: ServiceGetInputs, credential?: Credential) => ServiceGetOutputs

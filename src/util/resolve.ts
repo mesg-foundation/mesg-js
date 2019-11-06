@@ -15,7 +15,7 @@ export const resolveSID = async (api: API, sid: string): Promise<hash> => {
   const service = matching[0]
 
   // find matching instances
-  const { instances } = await api.instance.list({ serviceHash: service.hash })
+  const { instances } = await api.instance.list({ filter: { serviceHash: service.hash } })
   if (!instances || instances.length === 0) throw new Error(`no instances running for the service ${service.sid}`)
   if (instances.length > 1) throw new Error(`multiple instances running for the service ${service.sid}`)
 

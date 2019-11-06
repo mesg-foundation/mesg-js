@@ -5,7 +5,8 @@ import {
   AccountCreateInputs, AccountGetInputs, AccountListInputs, AccountDeleteInputs, AccountCreateOutputs, AccountGetOutputs, AccountListOutputs, AccountDeleteOutputs,
   EventCreateInputs, EventCreateOutputs, EventStreamInputs,
   ExecutionCreateInputs, ExecutionGetInputs, ExecutionUpdateInputs, ExecutionCreateOutputs, ExecutionGetOutputs, ExecutionUpdateOutputs, ExecutionStreamInputs,
-  InstanceCreateInputs, InstanceGetInputs, InstanceListInputs, InstanceDeleteInputs, InstanceCreateOutputs, InstanceGetOutputs, InstanceListOutputs, InstanceDeleteOutputs,
+  InstanceGetInputs, InstanceListInputs, InstanceGetOutputs, InstanceListOutputs,
+  RunnerCreateInputs, RunnerGetInputs, RunnerListInputs, RunnerDeleteInputs, RunnerCreateOutputs, RunnerGetOutputs, RunnerListOutputs, RunnerDeleteOutputs,
   ServiceCreateInputs, ServiceGetInputs, ServiceListInputs, ServiceCreateOutputs, ServiceGetOutputs, ServiceListOutputs, ServiceExistsOutputs,
   ProcessCreateInputs, ProcessGetInputs, ProcessListInputs, ProcessDeleteInputs, ProcessCreateOutputs, ProcessGetOutputs, ProcessListOutputs, ProcessDeleteOutputs,
   OwnershipListInputs, OwnershipListOutputs,
@@ -29,6 +30,7 @@ export default (endpoint: string): API => {
   const event = createClient('Event', 'protobuf/api/event.proto', endpoint)
   const execution = createClient('Execution', 'protobuf/api/execution.proto', endpoint)
   const instance = createClient('Instance', 'protobuf/api/instance.proto', endpoint)
+  const runner = createClient('Runner', 'protobuf/api/runner.proto', endpoint)
   const service = createClient('Service', 'protobuf/api/service.proto', endpoint)
   const process = createClient('Process', 'protobuf/api/process.proto', endpoint)
   const ownership = createClient('Ownership', 'protobuf/api/ownership.proto', endpoint)
@@ -50,10 +52,14 @@ export default (endpoint: string): API => {
       stream: (request: ExecutionStreamInputs, credential?: Credential) => execution.Stream(request)
     },
     instance: {
-      create: promisify(instance, 'Create') as (request: InstanceCreateInputs, credential?: Credential) => InstanceCreateOutputs,
       get: promisify(instance, 'Get') as (request: InstanceGetInputs, credential?: Credential) => InstanceGetOutputs,
       list: promisify(instance, 'List') as (request: InstanceListInputs, credential?: Credential) => InstanceListOutputs,
-      delete: promisify(instance, 'Delete') as (request: InstanceDeleteInputs, credential?: Credential) => InstanceDeleteOutputs
+    },
+    runner: {
+      create: promisify(runner, 'Create') as (request: RunnerCreateInputs, credential?: Credential) => RunnerCreateOutputs,
+      get: promisify(runner, 'Get') as (request: RunnerGetInputs, credential?: Credential) => RunnerGetOutputs,
+      list: promisify(runner, 'List') as (request: RunnerListInputs, credential?: Credential) => RunnerListOutputs,
+      delete: promisify(runner, 'Delete') as (request: RunnerDeleteInputs, credential?: Credential) => RunnerDeleteOutputs
     },
     service: {
       create: promisify(service, 'Create') as (request: ServiceCreateInputs, credential?: Credential) => ServiceCreateOutputs,
